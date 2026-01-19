@@ -18,8 +18,8 @@ Add-Type -AssemblyName System.Drawing
 $global:Languages = @{
 "en" = @{
 AppTitle = "Driver Updater by The CHARITH"
-BtnWU = "Check Windows Update"
-BtnCheckUpdates = "Check Driver Updates"
+# BtnWU removed
+BtnCheckUpdates = "Check & Install Drivers" # Updated text
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
 BtnInstall = "Install From Folder"
@@ -73,8 +73,8 @@ Remove = "Remove Schedule"
 }
 "es" = @{
 AppTitle = "Actualizador de Controladores por The CHARITH"
-BtnWU = "Buscar Windows Update"
-BtnCheckUpdates = "Buscar Controladores"
+# BtnWU removed
+BtnCheckUpdates = "Buscar e Instalar Controladores" # Updated text
 BtnScan = "Escanear Controladores"
 BtnBackup = "Respaldar Controladores"
 BtnInstall = "Instalar desde Carpeta"
@@ -107,7 +107,7 @@ ProxyCleared = "Configuracion de proxy eliminada."
 FilterApplied = "Filtro aplicado:"
 FilterCleared = "Filtros eliminados."
 LanguageChanged = "Idioma cambiado a:"
-HistoryEmpty = "No hay historial de actualizaciones."
+HistoryEmpty = "No hay historial de actualizacoes."
 SettingsTitle = "Configuracion"
 ScheduleTitle = "Programar Actualizaciones"
 FilterTitle = "Filtros de Controladores"
@@ -128,8 +128,8 @@ Remove = "Eliminar Programacion"
 }
 "fr" = @{
 AppTitle = "Mise a jour des pilotes par The CHARITH"
-BtnWU = "Windows Update"
-BtnCheckUpdates = "Verifier les Pilotes"
+# BtnWU removed
+BtnCheckUpdates = "Vérifier et installer les pilotes" # Updated text
 BtnScan = "Analyser les Pilotes"
 BtnBackup = "Sauvegarder"
 BtnInstall = "Installer depuis Dossier"
@@ -183,8 +183,8 @@ Remove = "Supprimer Planification"
 }
 "de" = @{
 AppTitle = "Treiber-Updater von The CHARITH"
-BtnWU = "Windows Update"
-BtnCheckUpdates = "Treiber pruefen"
+# BtnWU removed
+BtnCheckUpdates = "Treiber prüfen und installieren" # Updated text
 BtnScan = "Treiber scannen"
 BtnBackup = "Sicherung"
 BtnInstall = "Aus Ordner installieren"
@@ -198,7 +198,7 @@ BtnHistory = "Verlauf"
 BtnSettings = "Einstellungen"
 BtnFilters = "Filter"
 TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als Administrator aus."
+PermissionError = "Fuehren Sie dieses Skript als administrator aus."
 BackupCanceled = "Sicherung abgebrochen."
 InstallCanceled = "Installation abgebrochen."
 NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
@@ -238,8 +238,8 @@ Remove = "Zeitplan entfernen"
 }
 "pt" = @{
 AppTitle = "Atualizador de Drivers por The CHARITH"
-BtnWU = "Windows Update"
-BtnCheckUpdates = "Verificar Drivers"
+# BtnWU removed
+BtnCheckUpdates = "Verificar e instalar drivers" # Updated text
 BtnScan = "Escanear Drivers"
 BtnBackup = "Backup"
 BtnInstall = "Instalar da Pasta"
@@ -293,8 +293,8 @@ Remove = "Remover Agendamento"
 }
 "it" = @{
 AppTitle = "Aggiornamento Driver di The CHARITH"
-BtnWU = "Windows Update"
-BtnCheckUpdates = "Verifica Driver"
+# BtnWU removed
+BtnCheckUpdates = "Verifica e installa driver" # Updated text
 BtnScan = "Scansiona Driver"
 BtnBackup = "Backup"
 BtnInstall = "Installa da Cartella"
@@ -348,8 +348,8 @@ Remove = "Rimuovi Pianificazione"
 }
 "ru" = @{
 AppTitle = "Rikor Driver Update"
-BtnWU = "Проверить обновления Windows"
-BtnCheckUpdates = "Проверить обновления драйверов"
+# BtnWU removed
+BtnCheckUpdates = "Проверить и установить драйверы" # Updated text
 BtnScan = "Сканировать установленные драйверы"
 BtnBackup = "Резервное копирование"
 BtnInstall = "Установить из папки"
@@ -611,21 +611,7 @@ Add-Content -Path $logFile -Value "$timestamp - $msg"
 }
 Write-SilentLog "Starting silent mode: $Task"
 switch ($Task) {
-"WindowsUpdate" {
-Write-SilentLog "Running Windows Update..."
-try {
-& wuauclt.exe /detectnow 2>&1 | Out-Null
-Start-Sleep -Seconds 2
-Start-Process -FilePath "usoclient.exe" -ArgumentList "StartScan" -NoNewWindow -Wait
-Start-Process -FilePath "usoclient.exe" -ArgumentList "StartDownload" -NoNewWindow -Wait
-Start-Process -FilePath "usoclient.exe" -ArgumentList "StartInstall" -NoNewWindow -Wait
-Write-SilentLog "Windows Update completed"
-Add-HistoryEntry -TaskName "WindowsUpdate" -Status "Completed" -Details "Silent mode"
-} catch {
-Write-SilentLog "Error: $_"
-Add-HistoryEntry -TaskName "WindowsUpdate" -Status "Failed" -Details $_.Exception.Message
-}
-}
+# Removed "WindowsUpdate" case
 "CheckDriverUpdates" {
 Write-SilentLog "Checking for driver updates..."
 try {
@@ -766,9 +752,7 @@ $menuFile.DropDownItems.AddRange(@($menuOpenLogs, $menuSeparator1, $menuExit))
 # Actions Menu
 $menuActions = New-Object Windows.Forms.ToolStripMenuItem
 $menuActions.Text = "&Actions"
-$menuWU = New-Object Windows.Forms.ToolStripMenuItem
-$menuWU.Text = (Get-LocalizedString "BtnWU")
-$menuWU.ShortcutKeys = [System.Windows.Forms.Keys]::F5
+# REMOVED menuWU
 $menuCheckUpdates = New-Object Windows.Forms.ToolStripMenuItem
 $menuCheckUpdates.Text = (Get-LocalizedString "BtnCheckUpdates")
 $menuCheckUpdates.ShortcutKeys = [System.Windows.Forms.Keys]::F6
@@ -786,7 +770,7 @@ $menuSeparator3 = New-Object Windows.Forms.ToolStripSeparator
 $menuCancel = New-Object Windows.Forms.ToolStripMenuItem
 $menuCancel.Text = (Get-LocalizedString "BtnCancel")
 $menuCancel.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::Q
-$menuActions.DropDownItems.AddRange(@($menuWU, $menuCheckUpdates, $menuScan, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel))
+$menuActions.DropDownItems.AddRange(@($menuCheckUpdates, $menuScan, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel)) # Removed menuWU
 # Tools Menu
 $menuTools = New-Object Windows.Forms.ToolStripMenuItem
 $menuTools.Text = "&Tools"
@@ -845,7 +829,7 @@ $buttonContainer.Padding = '0,8,0,8'
 $toolbarPanel.Controls.Add($buttonContainer)
 # Function to center buttons when form resizes
 function Update-ButtonContainerPadding {
-$totalButtonWidth = 155 + 155 + 155 + 120 + 140 + 110 + (5 * 12)  # buttons + gaps
+$totalButtonWidth = 155 + 155 + 155 + 120 + 140 + 110 + (5 * 12)  # buttons + gaps (Removed width for btnWU)
 $availableWidth = $toolbarPanel.ClientSize.Width
 $leftPadding = [Math]::Max(0, [int](($availableWidth - $totalButtonWidth) / 2))
 $buttonContainer.Padding = "$leftPadding,8,0,8"
@@ -890,8 +874,7 @@ $btn.Region = New-RoundedRegion -Width $Width -Height 38 -Radius 6
 return $btn
 }
 # Create toolbar buttons with margins for spacing
-$btnWU = New-ModernButton -Text (Get-LocalizedString "BtnWU") -Width 155 -Primary $true
-$btnWU.Margin = '0,0,12,0'
+# REMOVED $btnWU
 $btnCheckUpdates = New-ModernButton -Text (Get-LocalizedString "BtnCheckUpdates") -Width 155 -Primary $true
 $btnCheckUpdates.Margin = '0,0,12,0'
 $btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 155 -Primary $true
@@ -902,8 +885,8 @@ $btnInstall = New-ModernButton -Text (Get-LocalizedString "BtnInstall") -Width 1
 $btnInstall.Margin = '0,0,12,0'
 $btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 110
 $btnCancel.Margin = '0,0,0,0'
-# Add buttons to centered container
-$buttonContainer.Controls.AddRange(@($btnWU, $btnCheckUpdates, $btnScan, $btnBackup, $btnInstall, $btnCancel))
+# Add buttons to centered container (Removed $btnWU)
+$buttonContainer.Controls.AddRange(@($btnCheckUpdates, $btnScan, $btnBackup, $btnInstall, $btnCancel))
 # -------------------------
 # Toolbar Separator (created here, added later for correct dock order)
 # -------------------------
@@ -1027,73 +1010,30 @@ Add-Content -Path $logPath -Value ("$t - $m")
 try {
 # Execute task based on task name
 switch ($taskName) {
-"WindowsUpdate" {
-L "Starting Windows Update process..."
-try {
-& wuauclt.exe /detectnow 2>&1 | Out-Null
-L "[1/4] Update detection triggered"
-} catch {
-L "[ERROR] Detection failed: $_"
-L "Completed"
-return
-}
-Start-Sleep -Seconds 3
-try {
-$proc = Start-Process -FilePath "usoclient.exe" -ArgumentList "StartScan" -NoNewWindow -Wait -PassThru -ErrorAction Stop
-L "[2/4] Scanning for updates..."
-if ($proc.ExitCode -ne 0) {
-L "  (No updates found or scan in progress)"
-}
-} catch {
-L "[ERROR] Scan failed: $_"
-L "Completed"
-return
-}
-Start-Sleep -Seconds 3
-try {
-$proc = Start-Process -FilePath "usoclient.exe" -ArgumentList "StartDownload" -NoNewWindow -Wait -PassThru -ErrorAction Stop
-if ($proc.ExitCode -eq 0) {
-L "[3/4] Downloading updates..."
-} else {
-L "[3/4] No updates to download (system may be up to date)"
-}
-} catch {
-L "[ERROR] Download failed: $_"
-L "Completed"
-return
-}
-Start-Sleep -Seconds 3
-try {
-$proc = Start-Process -FilePath "usoclient.exe" -ArgumentList "StartInstall" -NoNewWindow -Wait -PassThru -ErrorAction Stop
-if ($proc.ExitCode -eq 0) {
-L "[4/4] Installing updates..."
-} else {
-L "[4/4] No updates to install (system may be up to date)"
-}
-} catch {
-L "[ERROR] Installation failed: $_"
-L "Completed"
-return
-}
-L ""
-L "Windows Update process completed successfully!"
-L "Check Settings -> Windows Update for detailed status."
-L "Completed"
-}
+# REMOVED "WindowsUpdate" case
 "CheckDriverUpdates" {
-L "Checking for available driver updates..."
+L "Checking for available driver updates via Windows Update..."
 try {
 $UpdateSession = New-Object -ComObject Microsoft.Update.Session
 $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-L "Searching Windows Update (this may take a minute)..."
+
+# Search for driver updates that are *not* currently installed
+# This only finds what's available through Windows Update catalog
+L "Searching Windows Update catalog for driver updates (this may take a minute)..."
 $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+
 L ""
 if ($SearchResult.Updates.Count -eq 0) {
-L "No driver updates available. Your system is up to date!"
-} else {
-L "Found $($SearchResult.Updates.Count) driver update(s) available:"
+L "No driver updates found in Windows Update catalog. Your drivers might be up to date!"
+L "Completed"
+return # Exit the job early if no updates found
+}
+
+L "Found $($SearchResult.Updates.Count) potential driver update(s) in Windows Update catalog:"
 L ""
-$updateNum = 1
+
+# Prepare updates for download/installation
+$updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
 foreach ($Update in $SearchResult.Updates) {
 # Apply filters if set
 $showUpdate = $true
@@ -1101,20 +1041,71 @@ if ($filterMfr -and $Update.DriverProvider) {
 if ($Update.DriverProvider -notlike "*$filterMfr*") { $showUpdate = $false }
 }
 if ($showUpdate) {
-L "$updateNum. $($Update.Title)"
-if ($Update.DriverProvider) { L "   Provider: $($Update.DriverProvider)" }
-if ($Update.MaxDownloadSize -gt 0) {
-L "   Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+# Add to download collection if it's eligible
+if ($Update.IsDownloaded -eq $false) {
+$updatesToDownload.Add($Update) | Out-Null
+L "Marked for download: $($Update.Title)"
+} else {
+L "Already downloaded: $($Update.Title)"
 }
-$updateNum++
 }
 }
-L ""
-L "To install: Use 'Check Windows Update' button or go to Settings -> Windows Update"
+
+if ($updatesToDownload.Count -gt 0) {
+L "Downloading $($updatesToDownload.Count) driver update(s)..."
+$Downloader = $UpdateSession.CreateUpdateDownloader()
+$Downloader.Updates = $updatesToDownload
+try {
+$DownloadResult = $Downloader.Download()
+L "Download completed with result: $($DownloadResult.ResultCode)"
+} catch {
+L "[ERROR] Download failed: $_"
+# Proceed to installation attempt even if one fails, or handle errors as needed
+}
+} else {
+L "No new driver updates to download, all applicable ones seem to be already downloaded."
+}
+
+# Prepare updates for installation
+$updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+foreach ($Update in $SearchResult.Updates) {
+# Check if update matches filters again before adding to install list
+$includeInInstall = $true
+if ($filterMfr -and $Update.DriverProvider) {
+if ($Update.DriverProvider -notlike "*$filterMfr*") { $includeInInstall = $false }
+}
+if ($includeInInstall -and $Update.IsDownloaded) { # Only install if downloaded
+$updatesToInstall.Add($Update) | Out-Null
+L "Marked for installation: $($Update.Title)"
+} elseif ($includeInInstall) {
+L "Cannot install (not downloaded): $($Update.Title)"
+}
+}
+
+if ($updatesToInstall.Count -gt 0) {
+L "Installing $($updatesToInstall.Count) driver update(s)..."
+$Installer = $UpdateSession.CreateUpdateInstaller()
+$Installer.Updates = $updatesToInstall
+try {
+# PromptUser is often required for driver installs via this method
+$Installer.ForceQuiet = $false # Or $true if you want no prompts, but might fail
+$InstallResult = $Installer.Install()
+L "Installation completed with result: $($InstallResult.ResultCode)"
+if ($InstallResult.RebootRequired) {
+L "A reboot is required to complete the installation of these drivers."
 }
 } catch {
-L "[ERROR] Failed to check for updates: $_"
-L "Ensure Windows Update service is running."
+L "[ERROR] Installation failed: $_"
+L "This method can sometimes fail depending on the specific driver or system policies."
+}
+} else {
+L "No driver updates ready for installation (none were successfully downloaded or marked)."
+}
+
+} catch {
+L "[ERROR] Failed to check or install driver updates via COM: $_"
+L "This might be due to permissions, COM errors, or complexity of the Windows Update API."
+# Consider fallback methods or logging if needed
 }
 L "Completed"
 }
@@ -1262,14 +1253,16 @@ if ($global:CurrentTaskLog -and (Test-Path $global:CurrentTaskLog)) {
 $content = Get-Content -Path $global:CurrentTaskLog -Tail 100 -ErrorAction SilentlyContinue
 $contentStr = $content -join "`n"
 $p = 0
-# Windows Update progress
-if ($contentStr -match "\[1/4\]") { $p = 25 }
-if ($contentStr -match "\[2/4\]") { $p = 50 }
-if ($contentStr -match "\[3/4\]") { $p = 75 }
-if ($contentStr -match "\[4/4\]") { $p = 90 }
-# Driver update check progress
-if ($contentStr -match "Searching Windows Update") { $p = 30 }
-if ($contentStr -match "Found.*driver update") { $p = 80 }
+# Driver update check progress (NEW LOGIC)
+if ($contentStr -match "Searching Windows Update") { $p = 10 }
+if ($contentStr -match "Found.*potential.*driver update") { $p = 20 }
+if ($contentStr -match "Marked for download") { $p = 30 }
+if ($contentStr -match "Download completed") { $p = 50 }
+if ($contentStr -match "Marked for installation") { $p = 60 }
+if ($contentStr -match "Installing.*driver update") { $p = 70 }
+if ($contentStr -match "Installation completed") { $p = 90 }
+if ($contentStr -match "Completed") { $p = 100 }
+
 # Scan drivers progress
 if ($contentStr -match "Scanning installed") { $p = 30 }
 if ($contentStr -match "Found.*driver.*matching") { $p = 60 }
@@ -1289,11 +1282,12 @@ $p = 20 + [int](($current / $total) * 70)
 }
 }
 }
+
 # Generic progress indicators
 if ($p -eq 0) {
 if ($contentStr -match "Starting") { $p = 10 }
 }
-if ($contentStr -match "Completed") { $p = 100 }
+
 $progress.Value = [Math]::Min(100, [int]$p)
 }
 # Check job finished
@@ -1391,7 +1385,7 @@ Export-Settings
 function Update-UILanguage {
 $form.Text = Get-LocalizedString "AppTitle"
 # Toolbar buttons
-$btnWU.Text = Get-LocalizedString "BtnWU"
+# REMOVED $btnWU.Text update
 $btnCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
 $btnScan.Text = Get-LocalizedString "BtnScan"
 $btnBackup.Text = Get-LocalizedString "BtnBackup"
@@ -1399,7 +1393,7 @@ $btnInstall.Text = Get-LocalizedString "BtnInstall"
 $btnCancel.Text = Get-LocalizedString "BtnCancel"
 # Menu items
 $menuOpenLogs.Text = Get-LocalizedString "BtnOpenLogs"
-$menuWU.Text = Get-LocalizedString "BtnWU"
+# REMOVED $menuWU.Text update
 $menuCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
 $menuScan.Text = Get-LocalizedString "BtnScan"
 $menuBackup.Text = Get-LocalizedString "BtnBackup"
@@ -1817,16 +1811,11 @@ $settingsForm.ShowDialog($form) | Out-Null
 # -------------------------
 # Action Functions (shared by buttons and menus)
 # -------------------------
-function Invoke-WindowsUpdate {
-$status.Clear()
-$progress.Value = 0
-$statusLabel.Text = "  Running Windows Update..."
-Start-BackgroundTask -Name "WindowsUpdate" -TaskArgs @()
-}
+# REMOVED Invoke-WindowsUpdate
 function Invoke-CheckDriverUpdates {
 $status.Clear()
 $progress.Value = 0
-$statusLabel.Text = "  Checking for driver updates..."
+$statusLabel.Text = "  Checking and installing driver updates..."
 Start-BackgroundTask -Name "CheckDriverUpdates" -TaskArgs @()
 }
 function Invoke-ScanDrivers {
@@ -1907,7 +1896,7 @@ $progress.Value = 100
 # -------------------------
 # Button handlers
 # -------------------------
-$btnWU.Add_Click({ Invoke-WindowsUpdate })
+# REMOVED $btnWU.Add_Click
 $btnCheckUpdates.Add_Click({ Invoke-CheckDriverUpdates })
 $btnScan.Add_Click({ Invoke-ScanDrivers })
 $btnBackup.Add_Click({ Invoke-BackupDrivers })
@@ -1916,7 +1905,7 @@ $btnCancel.Add_Click({ Invoke-CancelTask })
 # -------------------------
 # Menu handlers
 # -------------------------
-$menuWU.Add_Click({ Invoke-WindowsUpdate })
+# REMOVED $menuWU.Add_Click
 $menuCheckUpdates.Add_Click({ Invoke-CheckDriverUpdates })
 $menuScan.Add_Click({ Invoke-ScanDrivers })
 $menuBackup.Add_Click({ Invoke-BackupDrivers })
