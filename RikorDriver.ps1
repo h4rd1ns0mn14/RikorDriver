@@ -647,7 +647,7 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
     # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
     # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
-    $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download" # <--- INSERTED YOUR LINK
+    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR LINK
 
     if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download") {
         Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
