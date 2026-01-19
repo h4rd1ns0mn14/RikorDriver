@@ -17,7 +17,7 @@ Add-Type -AssemblyName System.Drawing
 # -------------------------
 $global:Languages = @{
 "en" = @{
-AppTitle = "Rikor Driver Installer" # CHANGED: Updated title
+AppTitle = "Rikor Driver Installer"
 # BtnWU removed
 BtnCheckUpdates = "Search & Install Rikor Drivers" # Updated text
 BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
@@ -73,7 +73,7 @@ Disable = "Disable"
 Remove = "Remove Schedule"
 }
 "es" = @{
-AppTitle = "Instalador de Controladores Rikor" # CHANGED: Updated title
+AppTitle = "Instalador de Controladores Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
 BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
@@ -129,7 +129,7 @@ Disable = "Deshabilitar"
 Remove = "Eliminar Programacion"
 }
 "fr" = @{
-AppTitle = "Installateur de Pilotes Rikor" # CHANGED: Updated title
+AppTitle = "Installateur de Pilotes Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
 BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
@@ -185,7 +185,7 @@ Disable = "Desactiver"
 Remove = "Supprimer Planification"
 }
 "de" = @{
-AppTitle = "Rikor Treiber-Installationsprogramm" # CHANGED: Updated title
+AppTitle = "Rikor Treiber-Installationsprogramm"
 # BtnWU removed
 BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
 BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
@@ -241,7 +241,7 @@ Disable = "Deaktivieren"
 Remove = "Zeitplan entfernen"
 }
 "pt" = @{
-AppTitle = "Instalador de Drivers Rikor" # CHANGED: Updated title
+AppTitle = "Instalador de Drivers Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
 BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
@@ -297,7 +297,7 @@ Disable = "Desabilitar"
 Remove = "Remover Agendamento"
 }
 "it" = @{
-AppTitle = "Installatore Driver Rikor" # CHANGED: Updated title
+AppTitle = "Installatore Driver Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
 BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
@@ -645,11 +645,11 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 # NEW: Add new task case for downloading and installing from ZIP
 "DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
-    # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
-    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR LINK
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
+    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
+    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
 
-    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download") {
+    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
         Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
         Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
         return
@@ -664,17 +664,19 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 
         Write-SilentLog "Downloading drivers archive from: $zipUrl"
         try {
+            # Use basic parsing to avoid issues with complex pages
             Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
             Write-SilentLog "Download completed to: $zipPath"
         } catch {
-            Write-SilentLog "ERROR: Failed to download ZIP: $_"
+            Write-SilentLog "[ERROR] Failed to download ZIP: $_"
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Download failed: $_"
             return
         }
 
-        if ((Get-Item $zipPath).Length -eq 0) {
-             Write-SilentLog "ERROR: Downloaded ZIP file is empty."
+        # Check if ZIP exists and is not empty
+        if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
+             Write-SilentLog "[ERROR] Downloaded ZIP file is missing or empty."
              Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
              Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Downloaded ZIP is empty"
              return
@@ -686,14 +688,14 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
             Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
             Write-SilentLog "Extraction completed."
         } catch {
-            Write-SilentLog "ERROR: Failed to extract ZIP: $_"
+            Write-SilentLog "[ERROR] Failed to extract ZIP: $_"
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction failed: $_"
             return
         }
 
         if (-not (Test-Path $extractDir)) {
-             Write-SilentLog "ERROR: Extraction directory '$extractDir' does not exist after extraction."
+             Write-SilentLog "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
              Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
              Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction dir missing"
              return
@@ -811,7 +813,7 @@ if ($global:FilterSettings.Manufacturer) {
 Write-SilentLog "Applying manufacturer filter: $global:FilterSettings.Manufacturer"
 $drivers = $drivers | Where-Object { $_.Manufacturer -like "*$($global:FilterSettings.Manufacturer)*" }
 }
-Write-SilentLog "Found $($drivers.Count) driver(s) matching criteria"
+Write-SilentLog "Found $($drivers.Count) drivers matching criteria"
 # Group by class
 $driversByClass = $drivers | Group-Object -Property Class
 Write-SilentLog "Categories: $($driversByClass.Count) different driver types"
@@ -1281,14 +1283,14 @@ switch ($taskName) {
 # REMOVED "WindowsUpdate" case
 # REMOVED "CheckDriverUpdates" case
 "DownloadAndInstallDrivers" { # NEW: Combined task name
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
-    # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
-    $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download" # <--- INSERTED YOUR LINK
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
+    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
+    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
 
     # Validate the URL
-    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download") {
+    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
         L "[ERROR] Public ZIP download URL is not configured. Please edit the script."
-        L "Replace 'https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download' with the actual link."
+        L "Replace 'https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w' with the actual link."
         L "Completed"
         return
     }
@@ -1305,6 +1307,7 @@ switch ($taskName) {
         # Download ZIP
         L "Downloading drivers archive from: $zipUrl"
         try {
+            # Use basic parsing to avoid issues with complex pages
             Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
             L "Download completed to: $zipPath"
         } catch {
@@ -1768,8 +1771,401 @@ foreach ($item in $menuLanguage.DropDownItems) {
 $item.Checked = ($item.Tag -eq $global:CurrentLanguage)
 }
 }
-# [Прочие функции, например, Show-HistoryDialog, Show-ScheduleDialog и т.д., идут после Update-UILanguage]
-# [Затем идут Action Functions]
+# -------------------------
+# Dialog Functions
+# -------------------------
+function Show-HistoryDialog {
+$colors = Get-ThemeColors
+$historyForm = New-Object Windows.Forms.Form
+$historyForm.Text = Get-LocalizedString "HistoryTitle"
+$historyForm.Size = '750,500'
+$historyForm.StartPosition = "CenterParent"
+$historyForm.BackColor = $colors.Background
+$historyForm.TopMost = $true
+$historyForm.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+$historyForm.FormBorderStyle = 'FixedDialog'
+$historyForm.MaximizeBox = $false
+# Header
+$header = New-Object Windows.Forms.Label
+$header.Text = Get-LocalizedString "HistoryTitle"
+$header.Dock = 'Top'
+$header.Height = 45
+$header.BackColor = $colors.Primary
+$header.ForeColor = [System.Drawing.Color]::White
+$header.Font = New-Object Drawing.Font("Segoe UI Semibold", 12)
+$header.TextAlign = 'MiddleCenter'
+$historyList = New-Object Windows.Forms.ListView
+$historyList.Dock = 'Fill'
+$historyList.View = 'Details'
+$historyList.FullRowSelect = $true
+$historyList.GridLines = $false
+$historyList.BackColor = $colors.Surface
+$historyList.ForeColor = $colors.Text
+$historyList.BorderStyle = 'None'
+$historyList.Font = New-Object Drawing.Font("Segoe UI", 9)
+$historyList.Columns.Add("Timestamp", 160) | Out-Null
+$historyList.Columns.Add("Task", 140) | Out-Null
+$historyList.Columns.Add("Status", 100) | Out-Null
+$historyList.Columns.Add("Details", 300) | Out-Null
+$history = Get-UpdateHistory
+if ($history) {
+foreach ($entry in $history) {
+$item = New-Object Windows.Forms.ListViewItem($entry.Timestamp)
+$item.SubItems.Add($entry.Task) | Out-Null
+$item.SubItems.Add($entry.Status) | Out-Null
+$item.SubItems.Add($entry.Details) | Out-Null
+$historyList.Items.Add($item) | Out-Null
+}
+}
+# Add controls in correct order: Fill first, then Top (reverse dock processing)
+$historyForm.Controls.Add($historyList)
+$historyForm.Controls.Add($header)
+$historyForm.ShowDialog($form) | Out-Null
+}
+function Show-ScheduleDialog {
+$colors = Get-ThemeColors
+$schedForm = New-Object Windows.Forms.Form
+$schedForm.Text = Get-LocalizedString "ScheduleTitle"
+$schedForm.Size = '420,300'
+$schedForm.StartPosition = "CenterParent"
+$schedForm.BackColor = $colors.Background
+$schedForm.FormBorderStyle = 'FixedDialog'
+$schedForm.MaximizeBox = $false
+$schedForm.TopMost = $true
+$schedForm.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+# Header
+$header = New-Object Windows.Forms.Label
+$header.Text = Get-LocalizedString "ScheduleTitle"
+$header.Dock = 'Top'
+$header.Height = 45
+$header.BackColor = $colors.Primary
+$header.ForeColor = [System.Drawing.Color]::White
+$header.Font = New-Object Drawing.Font("Segoe UI Semibold", 12)
+$header.TextAlign = 'MiddleCenter'
+$contentPanel = New-Object Windows.Forms.Panel
+$contentPanel.Dock = 'Fill'
+$contentPanel.Padding = '20,15,20,15'
+$contentPanel.BackColor = $colors.Surface
+# Add controls in correct order: Fill first, then Top (reverse dock processing)
+$schedForm.Controls.Add($contentPanel)
+$schedForm.Controls.Add($header)
+$lblFreq = New-Object Windows.Forms.Label
+$lblFreq.Text = "Frequency:"
+$lblFreq.Location = '0,10'
+$lblFreq.Size = '100,25'
+$lblFreq.ForeColor = $colors.Text
+$contentPanel.Controls.Add($lblFreq)
+$cmbFreq = New-Object Windows.Forms.ComboBox
+$cmbFreq.Location = '110,8'
+$cmbFreq.Size = '180,28'
+$cmbFreq.DropDownStyle = 'DropDownList'
+$cmbFreq.BackColor = $colors.Background
+$cmbFreq.ForeColor = $colors.Text
+$cmbFreq.Items.AddRange(@((Get-LocalizedString "Daily"), (Get-LocalizedString "Weekly"), (Get-LocalizedString "Monthly")))
+$cmbFreq.SelectedIndex = 0
+$contentPanel.Controls.Add($cmbFreq)
+$lblTime = New-Object Windows.Forms.Label
+$lblTime.Text = Get-LocalizedString "Time"
+$lblTime.Location = '0,50'
+$lblTime.Size = '100,25'
+$lblTime.ForeColor = $colors.Text
+$contentPanel.Controls.Add($lblTime)
+$txtTime = New-Object Windows.Forms.TextBox
+$txtTime.Location = '110,48'
+$txtTime.Size = '180,28'
+$txtTime.Text = "03:00"
+$txtTime.BackColor = $colors.Background
+$txtTime.ForeColor = $colors.Text
+$contentPanel.Controls.Add($txtTime)
+$existingTask = Get-ScheduledUpdateTask
+$lblStatus = New-Object Windows.Forms.Label
+$lblStatus.Location = '0,95'
+$lblStatus.Size = '350,25'
+$lblStatus.Font = New-Object Drawing.Font("Segoe UI Semibold", 9)
+if ($existingTask) {
+$lblStatus.Text = "Current schedule: Active"
+$lblStatus.ForeColor = $colors.Success
+} else {
+$lblStatus.Text = "No schedule configured"
+$lblStatus.ForeColor = $colors.TextSecondary
+}
+$contentPanel.Controls.Add($lblStatus)
+# Buttons panel
+$btnPanel = New-Object Windows.Forms.Panel
+$btnPanel.Location = '0,135'
+$btnPanel.Size = '360,40'
+$contentPanel.Controls.Add($btnPanel)
+$btnEnable = New-Object Windows.Forms.Button
+$btnEnable.Text = Get-LocalizedString "Enable"
+$btnEnable.Location = '0,0'
+$btnEnable.Size = '110,36'
+$btnEnable.FlatStyle = 'Flat'
+$btnEnable.FlatAppearance.BorderSize = 0
+$btnEnable.BackColor = $colors.Primary
+$btnEnable.ForeColor = [System.Drawing.Color]::White
+$btnEnable.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnEnable.Add_Click({
+$freqMap = @{
+(Get-LocalizedString "Daily") = "Daily"
+(Get-LocalizedString "Weekly") = "Weekly"
+(Get-LocalizedString "Monthly") = "Monthly"
+}
+$freq = $freqMap[$cmbFreq.SelectedItem]
+if (-not $freq) { $freq = "Daily" }
+if (Set-ScheduledUpdate -Frequency $freq -Time $txtTime.Text) {
+$lblStatus.Text = Get-LocalizedString "ScheduleCreated"
+$lblStatus.ForeColor = $colors.Success
+}
+})
+$btnPanel.Controls.Add($btnEnable)
+$btnRemove = New-Object Windows.Forms.Button
+$btnRemove.Text = Get-LocalizedString "Remove"
+$btnRemove.Location = '120,0'
+$btnRemove.Size = '120,36'
+$btnRemove.FlatStyle = 'Flat'
+$btnRemove.FlatAppearance.BorderSize = 0
+$btnRemove.BackColor = $colors.Secondary
+$btnRemove.ForeColor = $colors.Text
+$btnRemove.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnRemove.Add_Click({
+Remove-ScheduledUpdate
+$lblStatus.Text = Get-LocalizedString "ScheduleRemoved"
+$lblStatus.ForeColor = $colors.TextSecondary
+})
+$btnPanel.Controls.Add($btnRemove)
+$btnClose = New-Object Windows.Forms.Button
+$btnClose.Text = Get-LocalizedString "Close"
+$btnClose.Location = '250,0'
+$btnClose.Size = '100,36'
+$btnClose.FlatStyle = 'Flat'
+$btnClose.FlatAppearance.BorderSize = 0
+$btnClose.BackColor = $colors.Secondary
+$btnClose.ForeColor = $colors.Text
+$btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnClose.Add_Click({ $schedForm.Close() })
+$btnPanel.Controls.Add($btnClose)
+$schedForm.ShowDialog($form) | Out-Null
+}
+function Show-FiltersDialog {
+$colors = Get-ThemeColors
+$filterForm = New-Object Windows.Forms.Form
+$filterForm.Text = Get-LocalizedString "FilterTitle"
+$filterForm.Size = '420,260'
+$filterForm.StartPosition = "CenterParent"
+$filterForm.BackColor = $colors.Background
+$filterForm.FormBorderStyle = 'FixedDialog'
+$filterForm.MaximizeBox = $false
+$filterForm.TopMost = $true
+$filterForm.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+# Header
+$header = New-Object Windows.Forms.Label
+$header.Text = Get-LocalizedString "FilterTitle"
+$header.Dock = 'Top'
+$header.Height = 45
+$header.BackColor = $colors.Primary
+$header.ForeColor = [System.Drawing.Color]::White
+$header.Font = New-Object Drawing.Font("Segoe UI Semibold", 12)
+$header.TextAlign = 'MiddleCenter'
+$contentPanel = New-Object Windows.Forms.Panel
+$contentPanel.Dock = 'Fill'
+$contentPanel.Padding = '20,15,20,15'
+$contentPanel.BackColor = $colors.Surface
+# Add controls in correct order: Fill first, then Top (reverse dock processing)
+$filterForm.Controls.Add($contentPanel)
+$filterForm.Controls.Add($header)
+$lblClass = New-Object Windows.Forms.Label
+$lblClass.Text = Get-LocalizedString "ClassFilter"
+$lblClass.Location = '0,10'
+$lblClass.Size = '160,25'
+$lblClass.ForeColor = $colors.Text
+$contentPanel.Controls.Add($lblClass)
+$txtClass = New-Object Windows.Forms.TextBox
+$txtClass.Location = '170,8'
+$txtClass.Size = '180,28'
+$txtClass.Text = $global:FilterSettings.Class
+$txtClass.BackColor = $colors.Background
+$txtClass.ForeColor = $colors.Text
+$contentPanel.Controls.Add($txtClass)
+$lblMfr = New-Object Windows.Forms.Label
+$lblMfr.Text = Get-LocalizedString "ManufacturerFilter"
+$lblMfr.Location = '0,50'
+$lblMfr.Size = '160,25'
+$lblMfr.ForeColor = $colors.Text
+$contentPanel.Controls.Add($lblMfr)
+$txtMfr = New-Object Windows.Forms.TextBox
+$txtMfr.Location = '170,48'
+$txtMfr.Size = '180,28'
+$txtMfr.Text = $global:FilterSettings.Manufacturer
+$txtMfr.BackColor = $colors.Background
+$txtMfr.ForeColor = $colors.Text
+$contentPanel.Controls.Add($txtMfr)
+# Buttons panel
+$btnPanel = New-Object Windows.Forms.Panel
+$btnPanel.Location = '0,100'
+$btnPanel.Size = '360,40'
+$contentPanel.Controls.Add($btnPanel)
+$btnApply = New-Object Windows.Forms.Button
+$btnApply.Text = Get-LocalizedString "Apply"
+$btnApply.Location = '0,0'
+$btnApply.Size = '110,36'
+$btnApply.FlatStyle = 'Flat'
+$btnApply.FlatAppearance.BorderSize = 0
+$btnApply.BackColor = $colors.Primary
+$btnApply.ForeColor = [System.Drawing.Color]::White
+$btnApply.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnApply.Add_Click({
+$global:FilterSettings.Class = $txtClass.Text
+$global:FilterSettings.Manufacturer = $txtMfr.Text
+Export-Settings
+Add-StatusUI $form $status "$(Get-LocalizedString 'FilterApplied') Class='$($txtClass.Text)', Manufacturer='$($txtMfr.Text)'"
+$filterForm.Close()
+})
+$btnPanel.Controls.Add($btnApply)
+$btnClear = New-Object Windows.Forms.Button
+$btnClear.Text = Get-LocalizedString "Clear"
+$btnClear.Location = '120,0'
+$btnClear.Size = '100,36'
+$btnClear.FlatStyle = 'Flat'
+$btnClear.FlatAppearance.BorderSize = 0
+$btnClear.BackColor = $colors.Secondary
+$btnClear.ForeColor = $colors.Text
+$btnClear.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnClear.Add_Click({
+$txtClass.Text = ""
+$txtMfr.Text = ""
+$global:FilterSettings.Class = ""
+$global:FilterSettings.Manufacturer = ""
+Export-Settings
+Add-StatusUI $form $status (Get-LocalizedString "FilterCleared")
+})
+$btnPanel.Controls.Add($btnClear)
+$btnClose = New-Object Windows.Forms.Button
+$btnClose.Text = Get-LocalizedString "Close"
+$btnClose.Location = '230,0'
+$btnClose.Size = '100,36'
+$btnClose.FlatStyle = 'Flat'
+$btnClose.FlatAppearance.BorderSize = 0
+$btnClose.BackColor = $colors.Secondary
+$btnClose.ForeColor = $colors.Text
+$btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnClose.Add_Click({ $filterForm.Close() })
+$btnPanel.Controls.Add($btnClose)
+$filterForm.ShowDialog($form) | Out-Null
+}
+function Show-SettingsDialog {
+$colors = Get-ThemeColors
+$settingsForm = New-Object Windows.Forms.Form
+$settingsForm.Text = Get-LocalizedString "SettingsTitle"
+$settingsForm.Size = '500,340'
+$settingsForm.StartPosition = "CenterParent"
+$settingsForm.BackColor = $colors.Background
+$settingsForm.FormBorderStyle = 'FixedDialog'
+$settingsForm.MaximizeBox = $false
+$settingsForm.TopMost = $true
+$settingsForm.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+# Header
+$header = New-Object Windows.Forms.Label
+$header.Text = Get-LocalizedString "SettingsTitle"
+$header.Dock = 'Top'
+$header.Height = 45
+$header.BackColor = $colors.Primary
+$header.ForeColor = [System.Drawing.Color]::White
+$header.Font = New-Object Drawing.Font("Segoe UI Semibold", 12)
+$header.TextAlign = 'MiddleCenter'
+$contentPanel = New-Object Windows.Forms.Panel
+$contentPanel.Dock = 'Fill'
+$contentPanel.Padding = '20,15,20,15'
+$contentPanel.BackColor = $colors.Surface
+# Add controls in correct order: Fill first, then Top (reverse dock processing)
+$settingsForm.Controls.Add($contentPanel)
+$settingsForm.Controls.Add($header)
+# Proxy section
+$lblProxySection = New-Object Windows.Forms.Label
+$lblProxySection.Text = "Network Proxy"
+$lblProxySection.Location = '0,5'
+$lblProxySection.Size = '150,20'
+$lblProxySection.ForeColor = $colors.Primary
+$lblProxySection.Font = New-Object Drawing.Font("Segoe UI Semibold", 9.5)
+$contentPanel.Controls.Add($lblProxySection)
+$lblProxy = New-Object Windows.Forms.Label
+$lblProxy.Text = Get-LocalizedString "ProxyLabel"
+$lblProxy.Location = '0,35'
+$lblProxy.Size = '130,25'
+$lblProxy.ForeColor = $colors.Text
+$contentPanel.Controls.Add($lblProxy)
+$txtProxy = New-Object Windows.Forms.TextBox
+$txtProxy.Location = '140,33'
+$txtProxy.Size = '220,28'
+$txtProxy.Text = $global:ProxySettings.Address
+$txtProxy.BackColor = $colors.Background
+$txtProxy.ForeColor = $colors.Text
+$contentPanel.Controls.Add($txtProxy)
+$chkProxy = New-Object Windows.Forms.CheckBox
+$chkProxy.Text = Get-LocalizedString "Enable"
+$chkProxy.Location = '370,33'
+$chkProxy.Size = '80,25'
+$chkProxy.Checked = $global:ProxySettings.Enabled
+$chkProxy.ForeColor = $colors.Text
+$contentPanel.Controls.Add($chkProxy)
+$btnApplyProxy = New-Object Windows.Forms.Button
+$btnApplyProxy.Text = Get-LocalizedString "Apply"
+$btnApplyProxy.Location = '140,70'
+$btnApplyProxy.Size = '110,34'
+$btnApplyProxy.FlatStyle = 'Flat'
+$btnApplyProxy.FlatAppearance.BorderSize = 0
+$btnApplyProxy.BackColor = $colors.Primary
+$btnApplyProxy.ForeColor = [System.Drawing.Color]::White
+$btnApplyProxy.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnApplyProxy.Add_Click({
+Set-ProxySettings -ProxyAddr $txtProxy.Text -Enable $chkProxy.Checked
+if ($chkProxy.Checked -and $txtProxy.Text) {
+Add-StatusUI $form $status "$(Get-LocalizedString 'ProxyConfigured') $($txtProxy.Text)"
+} else {
+Add-StatusUI $form $status (Get-LocalizedString "ProxyCleared")
+}
+})
+$contentPanel.Controls.Add($btnApplyProxy)
+# Separator
+$separator = New-Object Windows.Forms.Label
+$separator.Location = '0,120'
+$separator.Size = '440,1'
+$separator.BackColor = $colors.Border
+$contentPanel.Controls.Add($separator)
+# Info section
+$lblInfoSection = New-Object Windows.Forms.Label
+$lblInfoSection.Text = "Application Info"
+$lblInfoSection.Location = '0,130'
+$lblInfoSection.Size = '150,20'
+$lblInfoSection.ForeColor = $colors.Primary
+$lblInfoSection.Font = New-Object Drawing.Font("Segoe UI Semibold", 9.5)
+$contentPanel.Controls.Add($lblInfoSection)
+$lblInfo = New-Object Windows.Forms.Label
+$lblInfo.Text = "Logs: $LogBase"
+$lblInfo.Location = '0,155'
+$lblInfo.Size = '440,20'
+$lblInfo.ForeColor = $colors.TextSecondary
+$lblInfo.Font = New-Object Drawing.Font("Segoe UI", 8.5)
+$contentPanel.Controls.Add($lblInfo)
+$lblInfo2 = New-Object Windows.Forms.Label
+$lblInfo2.Text = "Settings: $SettingsFile"
+$lblInfo2.Location = '0,175'
+$lblInfo2.Size = '440,20'
+$lblInfo2.ForeColor = $colors.TextSecondary
+$lblInfo2.Font = New-Object Drawing.Font("Segoe UI", 8.5)
+$contentPanel.Controls.Add($lblInfo2)
+$btnClose = New-Object Windows.Forms.Button
+$btnClose.Text = Get-LocalizedString "Close"
+$btnClose.Location = '170,210'
+$btnClose.Size = '110,36'
+$btnClose.FlatStyle = 'Flat'
+$btnClose.FlatAppearance.BorderSize = 0
+$btnClose.BackColor = $colors.Secondary
+$btnClose.ForeColor = $colors.Text
+$btnClose.Cursor = [System.Windows.Forms.Cursors]::Hand
+$btnClose.Add_Click({ $settingsForm.Close() })
+$contentPanel.Controls.Add($btnClose)
+$settingsForm.ShowDialog($form) | Out-Null
+}
 # -------------------------
 # Action Functions (shared by buttons and menus)
 # -------------------------
