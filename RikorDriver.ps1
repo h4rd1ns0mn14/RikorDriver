@@ -17,7 +17,7 @@ Add-Type -AssemblyName System.Drawing
 # -------------------------
 $global:Languages = @{
 "en" = @{
-AppTitle = "Driver Updater by The CHARITH"
+AppTitle = "Rikor Driver Installer"
 # BtnWU removed
 BtnCheckUpdates = "Search & Install Rikor Drivers" # Updated text
 BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
@@ -73,7 +73,7 @@ Disable = "Disable"
 Remove = "Remove Schedule"
 }
 "es" = @{
-AppTitle = "Actualizador de Controladores por The CHARITH"
+AppTitle = "Instalador de Controladores Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
 BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
@@ -129,7 +129,7 @@ Disable = "Deshabilitar"
 Remove = "Eliminar Programacion"
 }
 "fr" = @{
-AppTitle = "Mise a jour des pilotes par The CHARITH"
+AppTitle = "Installateur de Pilotes Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
 BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
@@ -185,7 +185,7 @@ Disable = "Desactiver"
 Remove = "Supprimer Planification"
 }
 "de" = @{
-AppTitle = "Treiber-Updater von The CHARITH"
+AppTitle = "Rikor Treiber-Installationsprogramm"
 # BtnWU removed
 BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
 BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
@@ -202,7 +202,7 @@ BtnHistory = "Verlauf"
 BtnSettings = "Einstellungen"
 BtnFilters = "Filter"
 TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als Administrator aus."
+PermissionError = "Fuehren Sie dieses Skript als administrator aus."
 BackupCanceled = "Sicherung abgebrochen."
 InstallCanceled = "Installation abgebrochen."
 NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
@@ -241,7 +241,7 @@ Disable = "Deaktivieren"
 Remove = "Zeitplan entfernen"
 }
 "pt" = @{
-AppTitle = "Atualizador de Drivers por The CHARITH"
+AppTitle = "Instalador de Drivers Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
 BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
@@ -297,7 +297,7 @@ Disable = "Desabilitar"
 Remove = "Remover Agendamento"
 }
 "it" = @{
-AppTitle = "Aggiornamento Driver di The CHARITH"
+AppTitle = "Installatore Driver Rikor"
 # BtnWU removed
 BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
 BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
@@ -435,7 +435,7 @@ Assert-AdminPrivilege
 # Globals and paths
 # -------------------------
 $AppTitle = Get-LocalizedString "AppTitle"
-$LogBase = Join-Path $env:USERPROFILE "Documents\The CHARITH_DriverUpdater"
+$LogBase = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller"
 $HistoryFile = Join-Path $LogBase "UpdateHistory.json"
 $SettingsFile = Join-Path $LogBase "Settings.json"
 if (!(Test-Path $LogBase)) { New-Item -ItemType Directory -Path $LogBase -Force | Out-Null }
@@ -552,7 +552,7 @@ Set-ProxySettings -ProxyAddr $global:ProxySettings.Address -Enable $true
 # System Restore Point
 # -------------------------
 function New-RestorePoint {
-param([string]$Description = "Driver Updater Restore Point")
+param([string]$Description = "Rikor Driver Installer Restore Point")
 try {
 # Enable System Restore on system drive if not already enabled
 Enable-ComputerRestore -Drive "$env:SystemDrive\" -ErrorAction SilentlyContinue
@@ -568,7 +568,7 @@ return $false
 # -------------------------
 # Scheduled Updates
 # -------------------------
-$ScheduledTaskName = "DriverUpdater_ScheduledCheck"
+$ScheduledTaskName = "RikorDriverInstaller_ScheduledCheck"
 function Get-ScheduledUpdateTask {
 try {
 return Get-ScheduledTask -TaskName $ScheduledTaskName -ErrorAction SilentlyContinue
@@ -674,11 +674,12 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 }
 "DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK)
-    $zipUrl = "DIRECT_DOWNLOAD_ZIP_URL" # <--- REPLACE THIS URL
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
+    # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
+    $zipUrl = "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download" # <--- REPLACED WITH YOUR LINK
 
-    if (-not $zipUrl -or $zipUrl -eq "DIRECT_DOWNLOAD_ZIP_URL") {
-        Write-SilentLog "ERROR: Public ZIP download URL is not configured in silent mode."
+    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download") {
+        Write-SilentLog "ERROR: Public ZIP download URL is not configured correctly in silent mode."
         Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
         return
     }
@@ -1283,13 +1284,14 @@ L "Completed"
 }
 # NEW: Add new task case for downloading and installing from ZIP
 "DownloadAndInstallDrivers" {
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK)
-    $zipUrl = "DIRECT_DOWNLOAD_ZIP_URL" # <--- REPLACE THIS URL
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
+    # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
+    $zipUrl = "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download" # <--- REPLACED WITH YOUR LINK
 
     # Validate the URL
-    if (-not $zipUrl -or $zipUrl -eq "DIRECT_DOWNLOAD_ZIP_URL") {
-        L "[ERROR] Public ZIP download URL is not configured. Please edit the script."
-        L "Replace 'DIRECT_DOWNLOAD_ZIP_URL' with the actual link."
+    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download") {
+        L "[ERROR] Public ZIP download URL is not configured correctly. Please edit the script."
+        L "Replace the placeholder URL with the actual link."
         L "Completed"
         return
     }
@@ -1749,7 +1751,7 @@ $form.Text = Get-LocalizedString "AppTitle"
 # REMOVED $btnWU.Text update
 $btnCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
 # NEW: Update new button text
-$btnDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall")
+$btnDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall" # FIXED: Removed extra closing parenthesis
 $btnScan.Text = Get-LocalizedString "BtnScan"
 $btnBackup.Text = Get-LocalizedString "BtnBackup"
 $btnInstall.Text = Get-LocalizedString "BtnInstall"
@@ -1759,7 +1761,7 @@ $menuOpenLogs.Text = Get-LocalizedString "BtnOpenLogs"
 # REMOVED $menuWU.Text update
 $menuCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
 # NEW: Update new menu item text
-$menuDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall")
+$menuDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall" # FIXED: Removed extra closing parenthesis
 $menuScan.Text = Get-LocalizedString "BtnScan"
 $menuBackup.Text = Get-LocalizedString "BtnBackup"
 $menuInstall.Text = Get-LocalizedString "BtnInstall"
@@ -2256,7 +2258,7 @@ $status.Clear()
 $statusLabel.Text = "  Creating restore point..."
 Add-StatusUI $form $status "Creating system restore point..."
 $progress.Value = 50
-if (New-RestorePoint -Description "Driver Updater - $(Get-Date -Format 'yyyy-MM-dd HH:mm')") {
+if (New-RestorePoint -Description "Rikor Driver Installer - $(Get-Date -Format 'yyyy-MM-dd HH:mm')") {
 Add-StatusUI $form $status (Get-LocalizedString "RestorePointCreated")
 $statusLabel.Text = "  Restore point created"
 } else {
