@@ -676,9 +676,9 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
     # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
     # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
-    $zipUrl = "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download" # <--- REPLACED WITH YOUR LINK
+    $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download" # <--- UPDATED TO NEW LINK
 
-    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download") {
+    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download") {
         Write-SilentLog "ERROR: Public ZIP download URL is not configured correctly in silent mode."
         Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
         return
@@ -1286,10 +1286,10 @@ L "Completed"
 "DownloadAndInstallDrivers" {
     # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE)
     # Example: $zipUrl = "https://nc.rikor.com/s/SOME_RANDOM_STRING/download"
-    $zipUrl = "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download" # <--- REPLACED WITH YOUR LINK
+    $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download" # <--- UPDATED TO NEW LINK
 
     # Validate the URL
-    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/HACfDagnPgXtnxm/download") {
+    if (-not $zipUrl -or $zipUrl -eq "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download") {
         L "[ERROR] Public ZIP download URL is not configured correctly. Please edit the script."
         L "Replace the placeholder URL with the actual link."
         L "Completed"
