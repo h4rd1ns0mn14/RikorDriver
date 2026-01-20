@@ -861,7 +861,6 @@ $btn.Cursor = [System.Windows.Forms.Cursors]::Hand
 $btn.Font = New-Object Drawing.Font("Segoe UI Semibold", 10)
 $btn.Tag = $Primary
 $btn.TextAlign = 'MiddleCenter'
-$btn.UseVisualStyles = $true
 $btn.TextImageRelation = 'ImageBeforeText'
 # Apply rounded corners
 $btn.Region = New-RoundedRegion -Width $Width -Height 42 -Radius 10
@@ -873,6 +872,7 @@ return $btn
 # NEW: Create button for download and install (only one button remains)
 $btnDownloadAndInstall = New-ModernButton -Text (Get-LocalizedString "BtnDownloadAndInstall") -Width 160 -Primary $true
 $btnDownloadAndInstall.Margin = '0,0,12,0'
+# The main form elements
 $btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 155 -Primary $true
 $btnScan.Margin = '0,0,12,0'
 $btnBackup = New-ModernButton -Text (Get-LocalizedString "BtnBackup") -Width 120
@@ -1045,7 +1045,87 @@ switch ($taskName) {
             Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
             L "Download completed to: $zipPath"
         } catch {
-            L "[ERROR] Failed to download ZIP: $_"
+            L "[ERROR] Failed to download ZIP from Rikor server: $_"
+            L "Attempting fallback to Microsoft Update..."
+            
+            # Log the connection attempt to Rikor server
+            L "LOG: Connection to Rikor server failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            
+            # Fallback to Microsoft Update
+            try {
+                L "Checking for Microsoft updates..."
+                
+                # Log Microsoft Update check attempt
+                L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                
+                # Use Windows Update API to check for and install updates
+                $updateSession = New-Object -ComObject Microsoft.Update.Session
+                $updateSearcher = $updateSession.CreateUpdateSearcher()
+                
+                # Search for updates
+                L "Searching for applicable updates..."
+                $searchResult = $updateSearcher.Search("IsInstalled=0")
+                
+                if ($searchResult.Updates.Count -eq 0) {
+                    L "No updates found from Microsoft Update."
+                    L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                } else {
+                    L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                    
+                    # Create collection for updates to download
+                    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($update in $searchResult.Updates) {
+                        L "  - $($update.Title)"
+                        $updatesToDownload.Add($update) | Out-Null
+                    }
+                    
+                    # Download updates
+                    L "Downloading updates..."
+                    $downloader = $updateSession.CreateUpdateDownloader()
+                    $downloader.Updates = $updatesToDownload
+                    $downloadResult = $downloader.Download()
+                    
+                    if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                        L "Download completed successfully."
+                        
+                        # Create collection for updates to install
+                        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                        foreach ($update in $searchResult.Updates) {
+                            if ($update.IsDownloaded) {
+                                $updatesToInstall.Add($update) | Out-Null
+                            }
+                        }
+                        
+                        if ($updatesToInstall.Count -gt 0) {
+                            L "Installing $($updatesToInstall.Count) update(s)..."
+                            
+                            # Install updates
+                            $installer = $updateSession.CreateUpdateInstaller()
+                            $installer.Updates = $updatesToInstall
+                            $installResult = $installer.Install()
+                            
+                            if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                L "Microsoft updates installed successfully."
+                                L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                            } else {
+                                L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                            }
+                        } else {
+                            L "[WARNING] No updates were downloaded successfully."
+                        }
+                    } else {
+                        L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                        L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                }
+            } catch {
+                L "[ERROR] Failed to check/install Microsoft updates: $_"
+                L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            }
+            
+            # Clean up temp directory
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             L "Completed"
             return
@@ -1054,6 +1134,86 @@ switch ($taskName) {
         # Check if ZIP exists and is not empty
         if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
             L "[ERROR] Downloaded ZIP file is missing or empty."
+            L "Attempting fallback to Microsoft Update..."
+            
+            # Log the ZIP validation failure
+            L "LOG: ZIP validation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            
+            # Fallback to Microsoft Update
+            try {
+                L "Checking for Microsoft updates..."
+                
+                # Log Microsoft Update check attempt
+                L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                
+                # Use Windows Update API to check for and install updates
+                $updateSession = New-Object -ComObject Microsoft.Update.Session
+                $updateSearcher = $updateSession.CreateUpdateSearcher()
+                
+                # Search for updates
+                L "Searching for applicable updates..."
+                $searchResult = $updateSearcher.Search("IsInstalled=0")
+                
+                if ($searchResult.Updates.Count -eq 0) {
+                    L "No updates found from Microsoft Update."
+                    L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                } else {
+                    L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                    
+                    # Create collection for updates to download
+                    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($update in $searchResult.Updates) {
+                        L "  - $($update.Title)"
+                        $updatesToDownload.Add($update) | Out-Null
+                    }
+                    
+                    # Download updates
+                    L "Downloading updates..."
+                    $downloader = $updateSession.CreateUpdateDownloader()
+                    $downloader.Updates = $updatesToDownload
+                    $downloadResult = $downloader.Download()
+                    
+                    if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                        L "Download completed successfully."
+                        
+                        # Create collection for updates to install
+                        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                        foreach ($update in $searchResult.Updates) {
+                            if ($update.IsDownloaded) {
+                                $updatesToInstall.Add($update) | Out-Null
+                            }
+                        }
+                        
+                        if ($updatesToInstall.Count -gt 0) {
+                            L "Installing $($updatesToInstall.Count) update(s)..."
+                            
+                            # Install updates
+                            $installer = $updateSession.CreateUpdateInstaller()
+                            $installer.Updates = $updatesToInstall
+                            $installResult = $installer.Install()
+                            
+                            if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                L "Microsoft updates installed successfully."
+                                L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                            } else {
+                                L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                            }
+                        } else {
+                            L "[WARNING] No updates were downloaded successfully."
+                        }
+                    } else {
+                        L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                        L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                }
+            } catch {
+                L "[ERROR] Failed to check/install Microsoft updates: $_"
+                L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            }
+            
+            # Clean up temp directory
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             L "Completed"
             return
@@ -1067,6 +1227,86 @@ switch ($taskName) {
             L "Extraction completed."
         } catch {
             L "[ERROR] Failed to extract ZIP: $_"
+            L "Attempting fallback to Microsoft Update..."
+            
+            # Log the extraction failure
+            L "LOG: ZIP extraction failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            
+            # Fallback to Microsoft Update
+            try {
+                L "Checking for Microsoft updates..."
+                
+                # Log Microsoft Update check attempt
+                L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                
+                # Use Windows Update API to check for and install updates
+                $updateSession = New-Object -ComObject Microsoft.Update.Session
+                $updateSearcher = $updateSession.CreateUpdateSearcher()
+                
+                # Search for updates
+                L "Searching for applicable updates..."
+                $searchResult = $updateSearcher.Search("IsInstalled=0")
+                
+                if ($searchResult.Updates.Count -eq 0) {
+                    L "No updates found from Microsoft Update."
+                    L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                } else {
+                    L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                    
+                    # Create collection for updates to download
+                    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($update in $searchResult.Updates) {
+                        L "  - $($update.Title)"
+                        $updatesToDownload.Add($update) | Out-Null
+                    }
+                    
+                    # Download updates
+                    L "Downloading updates..."
+                    $downloader = $updateSession.CreateUpdateDownloader()
+                    $downloader.Updates = $updatesToDownload
+                    $downloadResult = $downloader.Download()
+                    
+                    if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                        L "Download completed successfully."
+                        
+                        # Create collection for updates to install
+                        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                        foreach ($update in $searchResult.Updates) {
+                            if ($update.IsDownloaded) {
+                                $updatesToInstall.Add($update) | Out-Null
+                            }
+                        }
+                        
+                        if ($updatesToInstall.Count -gt 0) {
+                            L "Installing $($updatesToInstall.Count) update(s)..."
+                            
+                            # Install updates
+                            $installer = $updateSession.CreateUpdateInstaller()
+                            $installer.Updates = $updatesToInstall
+                            $installResult = $installer.Install()
+                            
+                            if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                L "Microsoft updates installed successfully."
+                                L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                            } else {
+                                L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                            }
+                        } else {
+                            L "[WARNING] No updates were downloaded successfully."
+                        }
+                    } else {
+                        L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                        L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                }
+            } catch {
+                L "[ERROR] Failed to check/install Microsoft updates: $_"
+                L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            }
+            
+            # Clean up temp directory
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             L "Completed"
             return
@@ -1075,6 +1315,86 @@ switch ($taskName) {
         # Verify extracted content
         if (-not (Test-Path $extractDir)) {
              L "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
+             L "Attempting fallback to Microsoft Update..."
+             
+             # Log the extraction directory validation failure
+             L "LOG: Extraction directory validation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+             
+             # Fallback to Microsoft Update
+             try {
+                 L "Checking for Microsoft updates..."
+                 
+                 # Log Microsoft Update check attempt
+                 L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                 
+                 # Use Windows Update API to check for and install updates
+                 $updateSession = New-Object -ComObject Microsoft.Update.Session
+                 $updateSearcher = $updateSession.CreateUpdateSearcher()
+                 
+                 # Search for updates
+                 L "Searching for applicable updates..."
+                 $searchResult = $updateSearcher.Search("IsInstalled=0")
+                 
+                 if ($searchResult.Updates.Count -eq 0) {
+                     L "No updates found from Microsoft Update."
+                     L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                 } else {
+                     L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                     
+                     # Create collection for updates to download
+                     $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                     foreach ($update in $searchResult.Updates) {
+                         L "  - $($update.Title)"
+                         $updatesToDownload.Add($update) | Out-Null
+                     }
+                     
+                     # Download updates
+                     L "Downloading updates..."
+                     $downloader = $updateSession.CreateUpdateDownloader()
+                     $downloader.Updates = $updatesToDownload
+                     $downloadResult = $downloader.Download()
+                     
+                     if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                         L "Download completed successfully."
+                         
+                         # Create collection for updates to install
+                         $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                         foreach ($update in $searchResult.Updates) {
+                             if ($update.IsDownloaded) {
+                                 $updatesToInstall.Add($update) | Out-Null
+                             }
+                         }
+                         
+                         if ($updatesToInstall.Count -gt 0) {
+                             L "Installing $($updatesToInstall.Count) update(s)..."
+                             
+                             # Install updates
+                             $installer = $updateSession.CreateUpdateInstaller()
+                             $installer.Updates = $updatesToInstall
+                             $installResult = $installer.Install()
+                             
+                             if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                 L "Microsoft updates installed successfully."
+                                 L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                 L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                             } else {
+                                 L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                 L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                             }
+                         } else {
+                             L "[WARNING] No updates were downloaded successfully."
+                         }
+                     } else {
+                         L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                         L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                     }
+                 }
+             } catch {
+                 L "[ERROR] Failed to check/install Microsoft updates: $_"
+                 L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+             }
+             
+             # Clean up temp directory
              Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
              L "Completed"
              return
@@ -1158,6 +1478,88 @@ switch ($taskName) {
             L "Installation from archive complete: $successCount successful, $failCount failed"
             if ($successCount -gt 0) {
                 L "Note: Reboot may be required for some drivers to take effect."
+            } else {
+                # If no drivers were successfully installed, attempt fallback to Microsoft Update
+                if ($failCount -gt 0) {
+                    L "All driver installations failed, attempting fallback to Microsoft Update..."
+                    
+                    # Log the driver installation failure
+                    L "LOG: All driver installations failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    
+                    # Fallback to Microsoft Update
+                    try {
+                        L "Checking for Microsoft updates..."
+                        
+                        # Log Microsoft Update check attempt
+                        L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                        
+                        # Use Windows Update API to check for and install updates
+                        $updateSession = New-Object -ComObject Microsoft.Update.Session
+                        $updateSearcher = $updateSession.CreateUpdateSearcher()
+                        
+                        # Search for updates
+                        L "Searching for applicable updates..."
+                        $searchResult = $updateSearcher.Search("IsInstalled=0")
+                        
+                        if ($searchResult.Updates.Count -eq 0) {
+                            L "No updates found from Microsoft Update."
+                            L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                        } else {
+                            L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                            
+                            # Create collection for updates to download
+                            $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                            foreach ($update in $searchResult.Updates) {
+                                L "  - $($update.Title)"
+                                $updatesToDownload.Add($update) | Out-Null
+                            }
+                            
+                            # Download updates
+                            L "Downloading updates..."
+                            $downloader = $updateSession.CreateUpdateDownloader()
+                            $downloader.Updates = $updatesToDownload
+                            $downloadResult = $downloader.Download()
+                            
+                            if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                                L "Download completed successfully."
+                                
+                                # Create collection for updates to install
+                                $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                                foreach ($update in $searchResult.Updates) {
+                                    if ($update.IsDownloaded) {
+                                        $updatesToInstall.Add($update) | Out-Null
+                                    }
+                                }
+                                
+                                if ($updatesToInstall.Count -gt 0) {
+                                    L "Installing $($updatesToInstall.Count) update(s)..."
+                                    
+                                    # Install updates
+                                    $installer = $updateSession.CreateUpdateInstaller()
+                                    $installer.Updates = $updatesToInstall
+                                    $installResult = $installer.Install()
+                                    
+                                    if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                        L "Microsoft updates installed successfully."
+                                        L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                        L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                                    } else {
+                                        L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                        L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                    }
+                                } else {
+                                    L "[WARNING] No updates were downloaded successfully."
+                                }
+                            } else {
+                                L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                                L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                            }
+                        }
+                    } catch {
+                        L "[ERROR] Failed to check/install Microsoft updates: $_"
+                        L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                }
             }
         } catch {
             L "[ERROR] Installation process failed: $_"
@@ -1166,6 +1568,92 @@ switch ($taskName) {
 
     } catch {
         L "[ERROR] An unexpected error occurred during download/extraction: $_"
+        
+        # Check if this is a server connectivity or download-related error
+        $errorMessage = $_.Exception.Message.ToString().ToLower()
+        if ($errorMessage.Contains("webexception") -or $errorMessage.Contains("timeout") -or
+            $errorMessage.Contains("connection") -or $errorMessage.Contains("not found") -or
+            $errorMessage.Contains("404") -or $errorMessage.Contains("access denied")) {
+            
+            L "Detected server connectivity/download error, attempting fallback to Microsoft Update..."
+            
+            # Log the server connectivity issue
+            L "LOG: Server connectivity error detected at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            
+            # Fallback to Microsoft Update
+            try {
+                L "Checking for Microsoft updates..."
+                
+                # Log Microsoft Update check attempt
+                L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                
+                # Use Windows Update API to check for and install updates
+                $updateSession = New-Object -ComObject Microsoft.Update.Session
+                $updateSearcher = $updateSession.CreateUpdateSearcher()
+                
+                # Search for updates
+                L "Searching for applicable updates..."
+                $searchResult = $updateSearcher.Search("IsInstalled=0")
+                
+                if ($searchResult.Updates.Count -eq 0) {
+                    L "No updates found from Microsoft Update."
+                    L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                } else {
+                    L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+                    
+                    # Create collection for updates to download
+                    $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($update in $searchResult.Updates) {
+                        L "  - $($update.Title)"
+                        $updatesToDownload.Add($update) | Out-Null
+                    }
+                    
+                    # Download updates
+                    L "Downloading updates..."
+                    $downloader = $updateSession.CreateUpdateDownloader()
+                    $downloader.Updates = $updatesToDownload
+                    $downloadResult = $downloader.Download()
+                    
+                    if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                        L "Download completed successfully."
+                        
+                        # Create collection for updates to install
+                        $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                        foreach ($update in $searchResult.Updates) {
+                            if ($update.IsDownloaded) {
+                                $updatesToInstall.Add($update) | Out-Null
+                            }
+                        }
+                        
+                        if ($updatesToInstall.Count -gt 0) {
+                            L "Installing $($updatesToInstall.Count) update(s)..."
+                            
+                            # Install updates
+                            $installer = $updateSession.CreateUpdateInstaller()
+                            $installer.Updates = $updatesToInstall
+                            $installResult = $installer.Install()
+                            
+                            if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                                L "Microsoft updates installed successfully."
+                                L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                                L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                            } else {
+                                L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                                L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                            }
+                        } else {
+                            L "[WARNING] No updates were downloaded successfully."
+                        }
+                    } else {
+                        L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                        L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                }
+            } catch {
+                L "[ERROR] Failed to check/install Microsoft updates: $_"
+                L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            }
+        }
     } finally {
         # Always attempt to clean up the temporary directory
         L "Cleaning up temporary directory: $tempDir"
@@ -1178,6 +1666,82 @@ switch ($taskName) {
     }
     L "Completed"
 }
+"MicrosoftUpdate" {
+    L "Checking for Microsoft updates..."
+    
+    # Log Microsoft Update check attempt
+    L "LOG: Starting Microsoft Update check at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+    
+    try {
+        # Use Windows Update API to check for and install updates
+        $updateSession = New-Object -ComObject Microsoft.Update.Session
+        $updateSearcher = $updateSession.CreateUpdateSearcher()
+        
+        # Search for updates
+        L "Searching for applicable updates..."
+        $searchResult = $updateSearcher.Search("IsInstalled=0")
+        
+        if ($searchResult.Updates.Count -eq 0) {
+            L "No updates found from Microsoft Update."
+            L "LOG: No Microsoft updates available at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+        } else {
+            L "Found $($searchResult.Updates.Count) update(s) from Microsoft Update."
+            
+            # Create collection for updates to download
+            $updatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+            foreach ($update in $searchResult.Updates) {
+                L "  - $($update.Title)"
+                $updatesToDownload.Add($update) | Out-Null
+            }
+            
+            # Download updates
+            L "Downloading updates..."
+            $downloader = $updateSession.CreateUpdateDownloader()
+            $downloader.Updates = $updatesToDownload
+            $downloadResult = $downloader.Download()
+            
+            if ($downloadResult.ResultCode -eq 2) { # 2 means completed successfully
+                L "Download completed successfully."
+                
+                # Create collection for updates to install
+                $updatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                foreach ($update in $searchResult.Updates) {
+                    if ($update.IsDownloaded) {
+                        $updatesToInstall.Add($update) | Out-Null
+                    }
+                }
+                
+                if ($updatesToInstall.Count -gt 0) {
+                    L "Installing $($updatesToInstall.Count) update(s)..."
+                    
+                    # Install updates
+                    $installer = $updateSession.CreateUpdateInstaller()
+                    $installer.Updates = $updatesToInstall
+                    $installResult = $installer.Install()
+                    
+                    if ($installResult.ResultCode -eq 2) { # 2 means completed successfully
+                        L "Microsoft updates installed successfully."
+                        L "LOG: Microsoft updates installed successfully at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                        L "Status: Updates installed - $($installResult.RebootRequired ? 'Reboot required' : 'No reboot required')"
+                    } else {
+                        L "[ERROR] Failed to install Microsoft updates. Result code: $($installResult.ResultCode)"
+                        L "LOG: Microsoft update installation failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+                    }
+                } else {
+                    L "[WARNING] No updates were downloaded successfully."
+                }
+            } else {
+                L "[ERROR] Failed to download Microsoft updates. Result code: $($downloadResult.ResultCode)"
+                L "LOG: Microsoft update download failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+            }
+        }
+    } catch {
+        L "[ERROR] Failed to check/install Microsoft updates: $_"
+        L "LOG: Microsoft Update process failed at $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')"
+    }
+    L "Completed"
+}
+
 "ScanDrivers" {
 L "Scanning installed drivers..."
 try {
@@ -1988,6 +2552,7 @@ $statusLabel.Text = "  Restore point failed"
 $progress.Value = 100
 }
 # -------------------------
+
 # Button handlers
 # -------------------------
 # REMOVED $btnWU.Add_Click
