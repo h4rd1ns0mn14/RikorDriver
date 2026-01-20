@@ -72,286 +72,6 @@ Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
 }
-"es" = @{
-AppTitle = "Instalador de Controladores Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
-BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Controladores"
-BtnBackup = "Respaldar Controladores"
-BtnInstall = "Instalar desde Carpeta"
-BtnCancel = "Cancelar Tarea"
-BtnOpenLogs = "Abrir Registros"
-BtnDarkMode = "Modo Oscuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Programar Actualizaciones"
-BtnRestorePoint = "Crear Punto Restauracion"
-BtnHistory = "Historial"
-BtnSettings = "Configuracion"
-BtnFilters = "Filtros"
-TaskRunning = "Ya hay una tarea en ejecucion. Cancelela primero."
-PermissionError = "Ejecute este script como Administrador."
-BackupCanceled = "Respaldo cancelado por el usuario."
-InstallCanceled = "Instalacion cancelada por el usuario."
-NoTaskToCancel = "No hay tarea para cancelar."
-TaskCancelled = "[CANCELADO] Tarea cancelada por el usuario."
-LogFolderMissing = "Carpeta de registros no encontrada."
-StartingTask = "-> Iniciando tarea:"
-TaskFinished = "=== Tarea finalizada:"
-SelectBackupFolder = "Seleccione carpeta para guardar respaldo"
-SelectDriverFolder = "Seleccione carpeta con archivos .inf"
-ScheduleCreated = "Tarea programada creada!"
-ScheduleRemoved = "Tarea programada eliminada."
-RestorePointCreated = "Punto de restauracion creado!"
-RestorePointFailed = "Error al crear punto de restauracion."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracion de proxy eliminada."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros eliminados."
-LanguageChanged = "Idioma cambiado a:"
-HistoryEmpty = "No hay historial de actualizaciones."
-SettingsTitle = "Configuracion"
-ScheduleTitle = "Programar Actualizaciones"
-FilterTitle = "Filtros de Controladores"
-HistoryTitle = "Historial de Actualizaciones"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensual"
-Time = "Hora:"
-ProxyLabel = "Direccion Proxy:"
-ClassFilter = "Filtrar por Clase:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpiar"
-Close = "Cerrar"
-Enable = "Habilitar"
-Disable = "Deshabilitar"
-Remove = "Eliminar Programacion"
-}
-"fr" = @{
-AppTitle = "Installateur de Pilotes Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
-BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
-BtnScan = "Analyser les Pilotes"
-BtnBackup = "Sauvegarder"
-BtnInstall = "Installer depuis Dossier"
-BtnCancel = "Annuler"
-BtnOpenLogs = "Ouvrir Journaux"
-BtnDarkMode = "Mode Sombre"
-BtnLightMode = "Mode Clair"
-BtnSchedule = "Planifier"
-BtnRestorePoint = "Point de Restauration"
-BtnHistory = "Historique"
-BtnSettings = "Parametres"
-BtnFilters = "Filtres"
-TaskRunning = "Une tache est deja en cours. Annulez-la d'abord."
-PermissionError = "Executez ce script en tant qu'Administrateur."
-BackupCanceled = "Sauvegarde annulee."
-InstallCanceled = "Installation annulee."
-NoTaskToCancel = "Aucune tache a annuler."
-TaskCancelled = "[ANNULE] Tache annulee."
-LogFolderMissing = "Dossier des journaux manquant."
-StartingTask = "-> Demarrage de la tache:"
-TaskFinished = "=== Tache terminee:"
-SelectBackupFolder = "Selectionnez le dossier de sauvegarde"
-SelectDriverFolder = "Selectionnez le dossier avec les fichiers .inf"
-ScheduleCreated = "Tache planifiee creee!"
-ScheduleRemoved = "Tache planifiee supprimee."
-RestorePointCreated = "Point de restauration cree!"
-RestorePointFailed = "Echec de creation du point de restauration."
-ProxyConfigured = "Proxy configure:"
-ProxyCleared = "Parametres proxy effaces."
-FilterApplied = "Filtre applique:"
-FilterCleared = "Filtres effaces."
-LanguageChanged = "Langue changee en:"
-HistoryEmpty = "Aucun historique trouve."
-SettingsTitle = "Parametres"
-ScheduleTitle = "Planifier les Mises a Jour"
-FilterTitle = "Filtres des Pilotes"
-HistoryTitle = "Historique des Mises a Jour"
-Daily = "Quotidien"
-Weekly = "Hebdomadaire"
-Monthly = "Mensuel"
-Time = "Heure:"
-ProxyLabel = "Adresse Proxy:"
-ClassFilter = "Filtrer par Classe:"
-ManufacturerFilter = "Filtrer par Fabricant:"
-Apply = "Appliquer"
-Clear = "Effacer"
-Close = "Fermer"
-Enable = "Activer"
-Disable = "Desactiver"
-Remove = "Supprimer Planification"
-}
-"de" = @{
-AppTitle = "Rikor Treiber-Installationsprogramm"
-# BtnWU removed
-BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
-BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
-BtnScan = "Treiber scannen"
-BtnBackup = "Sicherung"
-BtnInstall = "Aus Ordner installieren"
-BtnCancel = "Abbrechen"
-BtnOpenLogs = "Protokolle"
-BtnDarkMode = "Dunkelmodus"
-BtnLightMode = "Hellmodus"
-BtnSchedule = "Zeitplan"
-BtnRestorePoint = "Wiederherstellungspunkt"
-BtnHistory = "Verlauf"
-BtnSettings = "Einstellungen"
-BtnFilters = "Filter"
-TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als administrator aus."
-BackupCanceled = "Sicherung abgebrochen."
-InstallCanceled = "Installation abgebrochen."
-NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
-TaskCancelled = "[ABGEBROCHEN] Aufgabe abgebrochen."
-LogFolderMissing = "Protokollordner fehlt."
-StartingTask = "-> Starte Aufgabe:"
-TaskFinished = "=== Aufgabe beendet:"
-SelectBackupFolder = "Sicherungsordner auswaehlen"
-SelectDriverFolder = "Ordner mit .inf-Dateien auswaehlen"
-ScheduleCreated = "Geplante Aufgabe erstellt!"
-ScheduleRemoved = "Geplante Aufgabe entfernt."
-RestorePointCreated = "Wiederherstellungspunkt erstellt!"
-RestorePointFailed = "Fehler beim Erstellen des Wiederherstellungspunkts."
-ProxyConfigured = "Proxy konfiguriert:"
-ProxyCleared = "Proxy-Einstellungen geloescht."
-FilterApplied = "Filter angewendet:"
-FilterCleared = "Filter geloescht."
-LanguageChanged = "Sprache geaendert zu:"
-HistoryEmpty = "Kein Verlauf gefunden."
-SettingsTitle = "Einstellungen"
-ScheduleTitle = "Updates planen"
-FilterTitle = "Treiberfilter"
-HistoryTitle = "Update-Verlauf"
-Daily = "Taeglich"
-Weekly = "Woechentlich"
-Monthly = "Monatlich"
-Time = "Zeit:"
-ProxyLabel = "Proxy-Adresse:"
-ClassFilter = "Nach Klasse filtern:"
-ManufacturerFilter = "Nach Hersteller filtern:"
-Apply = "Anwenden"
-Clear = "Loeschen"
-Close = "Schliessen"
-Enable = "Aktivieren"
-Disable = "Deaktivieren"
-Remove = "Zeitplan entfernen"
-}
-"pt" = @{
-AppTitle = "Instalador de Drivers Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
-BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Drivers"
-BtnBackup = "Backup"
-BtnInstall = "Instalar da Pasta"
-BtnCancel = "Cancelar"
-BtnOpenLogs = "Abrir Logs"
-BtnDarkMode = "Modo Escuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Agendar"
-BtnRestorePoint = "Ponto de Restauracao"
-BtnHistory = "Historico"
-BtnSettings = "Configuracoes"
-BtnFilters = "Filtros"
-TaskRunning = "Uma tarefa ja esta em execucao."
-PermissionError = "Execute este script como Administrador."
-BackupCanceled = "Backup cancelado."
-InstallCanceled = "Instalacao cancelada."
-NoTaskToCancel = "Nenhuma tarefa para cancelar."
-TaskCancelled = "[CANCELADO] Tarefa cancelada."
-LogFolderMissing = "Pasta de logs nao encontrada."
-StartingTask = "-> Iniciando tarefa:"
-TaskFinished = "=== Tarefa concluida:"
-SelectBackupFolder = "Selecione a pasta de backup"
-SelectDriverFolder = "Selecione a pasta com arquivos .inf"
-ScheduleCreated = "Tarefa agendada criada!"
-ScheduleRemoved = "Tarefa agendada removida."
-RestorePointCreated = "Ponto de restauracao criado!"
-RestorePointFailed = "Falha ao criar ponto de restauracao."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracoes de proxy limpas."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros limpos."
-LanguageChanged = "Idioma alterado para:"
-HistoryEmpty = "Nenhum historico encontrado."
-SettingsTitle = "Configuracoes"
-ScheduleTitle = "Agendar Atualizacoes"
-FilterTitle = "Filtros de Drivers"
-HistoryTitle = "Historico de Atualizacoes"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensal"
-Time = "Hora:"
-ProxyLabel = "Endereco Proxy:"
-ClassFilter = "Filtrar por Classe:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpar"
-Close = "Fechar"
-Enable = "Habilitar"
-Disable = "Desabilitar"
-Remove = "Remover Agendamento"
-}
-"it" = @{
-AppTitle = "Installatore Driver Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
-BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
-BtnScan = "Scansiona Driver"
-BtnBackup = "Backup"
-BtnInstall = "Installa da Cartella"
-BtnCancel = "Annulla"
-BtnOpenLogs = "Apri Log"
-BtnDarkMode = "Modalita Scura"
-BtnLightMode = "Modalita Chiara"
-BtnSchedule = "Pianifica"
-BtnRestorePoint = "Punto di Ripristino"
-BtnHistory = "Cronologia"
-BtnSettings = "Impostazioni"
-BtnFilters = "Filtri"
-TaskRunning = "Un'attivita e gia in esecuzione."
-PermissionError = "Esegui questo script come Amministratore."
-BackupCanceled = "Backup annullato."
-InstallCanceled = "Installazione annullata."
-NoTaskToCancel = "Nessuna attivita da annullare."
-TaskCancelled = "[ANNULLATO] Attivita annullata."
-LogFolderMissing = "Cartella log mancante."
-StartingTask = "-> Avvio attivita:"
-TaskFinished = "=== Attivita completata:"
-SelectBackupFolder = "Seleziona cartella di backup"
-SelectDriverFolder = "Seleziona cartella con file .inf"
-ScheduleCreated = "Attivita pianificata creata!"
-ScheduleRemoved = "Attivita pianificata rimossa."
-RestorePointCreated = "Punto di ripristino creato!"
-RestorePointFailed = "Errore nella creazione del punto di ripristino."
-ProxyConfigured = "Proxy configurato:"
-ProxyCleared = "Impostazioni proxy cancellate."
-FilterApplied = "Filtro applicato:"
-FilterCleared = "Filtri cancellati."
-LanguageChanged = "Lingua cambiata in:"
-HistoryEmpty = "Nessuna cronologia trovata."
-SettingsTitle = "Impostazioni"
-ScheduleTitle = "Pianifica Aggiornamenti"
-FilterTitle = "Filtri Driver"
-HistoryTitle = "Cronologia Aggiornamenti"
-Daily = "Giornaliero"
-Weekly = "Settimanale"
-Monthly = "Mensile"
-Time = "Ora:"
-ProxyLabel = "Indirizzo Proxy:"
-ClassFilter = "Filtra per Classe:"
-ManufacturerFilter = "Filtra per Produttore:"
-Apply = "Applica"
-Clear = "Cancella"
-Close = "Chiudi"
-Enable = "Abilita"
-Disable = "Disabilita"
-Remove = "Rimuovi Pianificazione"
-}
 "ru" = @{
 AppTitle = "Rikor Driver Installer" # CHANGED: Updated title
 # BtnWU removed
@@ -950,37 +670,37 @@ $form.Invoke($method)
 $global:UIColors = @{
 # Dark Theme
 Dark = @{
-Background = [System.Drawing.Color]::FromArgb(18, 18, 18)
-Surface = [System.Drawing.Color]::FromArgb(30, 30, 30)
-SurfaceHover = [System.Drawing.Color]::FromArgb(45, 45, 45)
-Primary = [System.Drawing.Color]::FromArgb(156, 39, 176)  # Purple accent
-PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206)
-Secondary = [System.Drawing.Color]::FromArgb(66, 66, 66)
-Text = [System.Drawing.Color]::FromArgb(240, 240, 240)
+Background = [System.Drawing.Color]::FromArgb(24, 24, 27)
+Surface = [System.Drawing.Color]::FromArgb(35, 35, 38)
+SurfaceHover = [System.Drawing.Color]::FromArgb(50, 50, 53)
+Primary = [System.Drawing.Color]::FromArgb(100, 100, 255)  # Modern blue accent
+PrimaryHover = [System.Drawing.Color]::FromArgb(130, 130, 255)
+Secondary = [System.Drawing.Color]::FromArgb(66, 66, 69)
+Text = [System.Drawing.Color]::FromArgb(250, 250, 250)
 TextSecondary = [System.Drawing.Color]::FromArgb(170, 170, 170)
-Border = [System.Drawing.Color]::FromArgb(60, 60, 60)
+Border = [System.Drawing.Color]::FromArgb(60, 60, 63)
 Success = [System.Drawing.Color]::FromArgb(76, 175, 80)
 Warning = [System.Drawing.Color]::FromArgb(255, 152, 0)
 Error = [System.Drawing.Color]::FromArgb(244, 67, 54)
-MenuBar = [System.Drawing.Color]::FromArgb(25, 25, 25)
-StatusBar = [System.Drawing.Color]::FromArgb(126, 34, 152)
+MenuBar = [System.Drawing.Color]::FromArgb(24, 24, 27)
+StatusBar = [System.Drawing.Color]::FromArgb(100, 100, 255)
 }
 # Light Theme
 Light = @{
-Background = [System.Drawing.Color]::FromArgb(255, 255, 255)
-Surface = [System.Drawing.Color]::FromArgb(245, 247, 250)
-SurfaceHover = [System.Drawing.Color]::FromArgb(235, 238, 242)
-Primary = [System.Drawing.Color]::FromArgb(156, 39, 176)  # Purple accent
-PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206)
-Secondary = [System.Drawing.Color]::FromArgb(224, 224, 224)
+Background = [System.Drawing.Color]::FromArgb(250, 250, 251)
+Surface = [System.Drawing.Color]::FromArgb(255, 255, 255)
+SurfaceHover = [System.Drawing.Color]::FromArgb(245, 245, 247)
+Primary = [System.Drawing.Color]::FromArgb(100, 100, 255)  # Modern blue accent
+PrimaryHover = [System.Drawing.Color]::FromArgb(130, 130, 255)
+Secondary = [System.Drawing.Color]::FromArgb(230, 230, 232)
 Text = [System.Drawing.Color]::FromArgb(33, 33, 33)
 TextSecondary = [System.Drawing.Color]::FromArgb(117, 117, 117)
-Border = [System.Drawing.Color]::FromArgb(224, 224, 224)
-Success = [System.Drawing.Color]::FromArgb(67, 160, 71)
-Warning = [System.Drawing.Color]::FromArgb(251, 140, 0)
-Error = [System.Drawing.Color]::FromArgb(229, 57, 53)
+Border = [System.Drawing.Color]::FromArgb(220, 220, 222)
+Success = [System.Drawing.Color]::FromArgb(76, 175, 80)
+Warning = [System.Drawing.Color]::FromArgb(255, 152, 0)
+Error = [System.Drawing.Color]::FromArgb(244, 67, 54)
 MenuBar = [System.Drawing.Color]::FromArgb(255, 255, 255)
-StatusBar = [System.Drawing.Color]::FromArgb(156, 39, 176)
+StatusBar = [System.Drawing.Color]::FromArgb(100, 100, 255)
 }
 }
 function Get-ThemeColors {
@@ -992,10 +712,14 @@ return $global:UIColors.Light
 # -------------------------
 $form = New-Object Windows.Forms.Form
 $form.Text = $AppTitle
-$form.Size = '1050,720'
-$form.MinimumSize = '1050,720'
+$form.Size = '1100,780'
+$form.MinimumSize = '1100,780'
 $form.StartPosition = "CenterScreen"
-$form.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+$form.Font = New-Object Drawing.Font("Segoe UI", 10)
+$form.Icon = [System.Drawing.SystemIcons]::Application
+$form.FormBorderStyle = 'Fixed3D'
+$form.MaximizeBox = $true
+$form.MinimizeBox = $true
 # -------------------------
 # Menu Strip
 # -------------------------
@@ -1062,8 +786,8 @@ $menuSeparator5 = New-Object Windows.Forms.ToolStripSeparator
 # Language submenu
 $menuLanguage = New-Object Windows.Forms.ToolStripMenuItem
 $menuLanguage.Text = "Language"
-$langItems = @("English (en)", "Español (es)", "Français (fr)", "Deutsch (de)", "Português (pt)", "Italiano (it)", "Русский (ru)")
-$langCodes = @("en", "es", "fr", "de", "pt", "it", "ru")
+$langItems = @("English (en)", "Русский (ru)")
+$langCodes = @("en", "ru")
 for ($i = 0; $i -lt $langItems.Count; $i++) {
 $langMenuItem = New-Object Windows.Forms.ToolStripMenuItem
 $langMenuItem.Text = $langItems[$i]
@@ -1084,7 +808,7 @@ $menuStrip.Items.AddRange(@($menuFile, $menuActions, $menuTools, $menuView, $men
 # -------------------------
 $toolbarPanel = New-Object Windows.Forms.Panel
 $toolbarPanel.Dock = 'Top'
-$toolbarPanel.Height = 56
+$toolbarPanel.Height = 64
 # Note: toolbarPanel and menuStrip are added later for correct dock order
 # FlowLayoutPanel for centered buttons
 $buttonContainer = New-Object Windows.Forms.FlowLayoutPanel
@@ -1092,7 +816,7 @@ $buttonContainer.Dock = 'Fill'
 $buttonContainer.FlowDirection = 'LeftToRight'
 $buttonContainer.WrapContents = $false
 $buttonContainer.AutoSize = $false
-$buttonContainer.Padding = '0,8,0,8'
+$buttonContainer.Padding = '0,12,0,12'
 $toolbarPanel.Controls.Add($buttonContainer)
 # Function to center buttons when form resizes
 function Update-ButtonContainerPadding {
@@ -1100,11 +824,11 @@ function Update-ButtonContainerPadding {
 $totalButtonWidth = 160 + 155 + 120 + 140 + 110 + (4 * 12)  # buttons + gaps (Removed width for btnWU and old btnCheckUpdates)
 $availableWidth = $toolbarPanel.ClientSize.Width
 $leftPadding = [Math]::Max(0, [int](($availableWidth - $totalButtonWidth) / 2))
-$buttonContainer.Padding = "$leftPadding,8,0,8"
+$buttonContainer.Padding = "$leftPadding,12,0,12"
 }
 # Modern Button Style
 function New-RoundedRegion {
-param([int]$Width, [int]$Height, [int]$Radius = 8)
+param([int]$Width, [int]$Height, [int]$Radius = 10)
 $path = New-Object System.Drawing.Drawing2D.GraphicsPath
 $r = $Radius
 $w = $Width
@@ -1130,15 +854,17 @@ param(
 $btn = New-Object System.Windows.Forms.Button
 $btn.Text = if ($IconChar) { "$IconChar  $Text" } else { $Text }
 $btn.Width = $Width
-$btn.Height = 38
+$btn.Height = 42
 $btn.FlatStyle = "Flat"
 $btn.FlatAppearance.BorderSize = 0
 $btn.Cursor = [System.Windows.Forms.Cursors]::Hand
-$btn.Font = New-Object Drawing.Font("Segoe UI Semibold", 9)
+$btn.Font = New-Object Drawing.Font("Segoe UI Semibold", 10)
 $btn.Tag = $Primary
 $btn.TextAlign = 'MiddleCenter'
+$btn.UseVisualStyles = $true
+$btn.TextImageRelation = 'ImageBeforeText'
 # Apply rounded corners
-$btn.Region = New-RoundedRegion -Width $Width -Height 38 -Radius 6
+$btn.Region = New-RoundedRegion -Width $Width -Height 42 -Radius 10
 return $btn
 }
 # Create toolbar buttons with margins for spacing
@@ -1168,27 +894,27 @@ $toolbarSeparator.Height = 1
 # -------------------------
 $statusBar = New-Object Windows.Forms.Panel
 $statusBar.Dock = 'Bottom'
-$statusBar.Height = 28
+$statusBar.Height = 32
 $statusLabel = New-Object Windows.Forms.Label
 $statusLabel.Text = "  Ready"
 $statusLabel.Dock = 'Left'
 $statusLabel.Width = 600
 $statusLabel.TextAlign = 'MiddleLeft'
-$statusLabel.Font = New-Object Drawing.Font("Segoe UI", 9)
+$statusLabel.Font = New-Object Drawing.Font("Segoe UI", 9.5)
 $statusBar.Controls.Add($statusLabel)
 $versionLabel = New-Object Windows.Forms.Label
 $versionLabel.Text = "v3.0  "
 $versionLabel.Dock = 'Right'
 $versionLabel.Width = 60
 $versionLabel.TextAlign = 'MiddleRight'
-$versionLabel.Font = New-Object Drawing.Font("Segoe UI", 8.5)
+$versionLabel.Font = New-Object Drawing.Font("Segoe UI", 9)
 $statusBar.Controls.Add($versionLabel)
 # -------------------------
 # Main Content Container
 # -------------------------
 $contentPanel = New-Object Windows.Forms.Panel
 $contentPanel.Dock = 'Fill'
-$contentPanel.Padding = '16,16,16,8'
+$contentPanel.Padding = '20,20,20,12'
 # Add controls in correct order for docking
 # Windows Forms docks controls in reverse order (last added = first docked)
 # Order: Fill first, then Bottom, then Top (in reverse visual order)
@@ -1209,8 +935,13 @@ $status.Multiline = $true
 $status.ReadOnly = $true
 $status.Dock = 'Fill'
 $status.ScrollBars = 'Vertical'
-$status.BorderStyle = 'None'
-$status.Font = New-Object Drawing.Font("Cascadia Code, Consolas, Courier New", 9.5)
+$status.BorderStyle = 'FixedSingle'
+$status.Font = New-Object Drawing.Font("Cascadia Code, Consolas, Courier New", 10)
+$status.BackColor = [System.Drawing.Color]::FromArgb(255, 255, 255)
+$status.ForeColor = [System.Drawing.Color]::FromArgb(33, 33, 33)
+$status.WordWrap = $false
+$status.HideSelection = $false
+$status.SelectionHangingIndent = 2
 $statusBorderPanel.Controls.Add($status)
 # Progress Panel (Dock Bottom - add after Fill so it appears at bottom)
 $progressPanel = New-Object Windows.Forms.Panel
@@ -1228,18 +959,21 @@ $progress = New-Object Windows.Forms.ProgressBar
 $progress.Dock = 'Fill'
 $progress.Style = 'Continuous'
 $progress.Value = 0
+$progress.MarqueeAnimationSpeed = 0
 $progressBorderPanel.Controls.Add($progress)
 # Header Label (Dock Top - add last so it appears at top)
 $headerLabel = New-Object Windows.Forms.Label
 $headerLabel.Text = "Output Console"
 $headerLabel.Dock = 'Top'
-$headerLabel.Height = 26
-$headerLabel.Font = New-Object Drawing.Font("Segoe UI Semibold", 9.5)
+$headerLabel.Height = 30
+$headerLabel.Font = New-Object Drawing.Font("Segoe UI Semibold", 10)
 $headerLabel.TextAlign = 'MiddleLeft'
+$headerLabel.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
+$headerLabel.ForeColor = [System.Drawing.Color]::FromArgb(33, 33, 33)
 $contentPanel.Controls.Add($headerLabel)
 # Language combobox for compatibility
 $cmbLang = New-Object Windows.Forms.ComboBox
-$cmbLang.Items.AddRange(@("en", "es", "fr", "de", "pt", "it", "ru"))
+$cmbLang.Items.AddRange(@("en", "ru"))
 $cmbLang.SelectedItem = $global:CurrentLanguage
 # DataGrid for drivers result (hidden initially)
 $driversGrid = New-Object Windows.Forms.DataGridView
