@@ -1,4 +1,3 @@
-# Improved Driver Updater Rikor
 # Enhanced version with proper error handling, internet connectivity checks, and dual language support
 param(
     [switch]$Silent,
@@ -392,7 +391,7 @@ function Get-ThemeColors {
             Text = [System.Drawing.Color]::White
             TextSecondary = [System.Drawing.Color]::FromArgb(200, 255, 255, 255)
             Border = [System.Drawing.Color]::FromArgb(65, 65, 65)
-            Primary = [System.Drawing.Color]::FromArgb(0, 120, 215)
+            Primary = [System.Drawing.Color]::FromArgb(0, 120, 215)  # Blue color instead of purple
             PrimaryHover = [System.Drawing.Color]::FromArgb(0, 100, 190)
             Secondary = [System.Drawing.Color]::FromArgb(65, 65, 65)
             SurfaceHover = [System.Drawing.Color]::FromArgb(60, 60, 60)
@@ -409,15 +408,15 @@ function Get-ThemeColors {
             Text = [System.Drawing.Color]::Black
             TextSecondary = [System.Drawing.Color]::FromArgb(150, 0, 0, 0)
             Border = [System.Drawing.Color]::FromArgb(220, 220, 220)
-            Primary = [System.Drawing.Color]::FromArgb(0, 120, 215)
-            PrimaryHover = [System.Drawing.Color]::FromArgb(0, 100, 190)
+            Primary = [System.Drawing.Color]::FromArgb(128, 0, 128)  # Purple color
+            PrimaryHover = [System.Drawing.Color]::FromArgb(100, 0, 100)  # Darker purple
             Secondary = [System.Drawing.Color]::FromArgb(240, 240, 240)
             SurfaceHover = [System.Drawing.Color]::FromArgb(235, 235, 235)
             Success = [System.Drawing.Color]::FromArgb(43, 194, 83)
             Warning = [System.Drawing.Color]::FromArgb(255, 191, 0)
             Error = [System.Drawing.Color]::FromArgb(232, 17, 35)
             MenuBar = [System.Drawing.Color]::FromArgb(245, 245, 245)
-            StatusBar = [System.Drawing.Color]::FromArgb(0, 120, 215)
+            StatusBar = [System.Drawing.Color]::FromArgb(128, 0, 128)  # Purple color
         }
     }
 }
@@ -850,8 +849,8 @@ function Start-BackgroundTask {
                             # Corrected: Using if-else instead of ternary operator
                             if ($installationResult.ResultCode -eq 2) {
                                 L "$(Get-LocalizedString 'UpdateSuccess')"
-                                $rebootRequired = if ($installationResult.RebootRequired) { "Reboot required" } else { "No reboot required" }
-                                L "Status: Updates installed - $rebootRequired"
+                                $rebootStatus = if ($installationResult.RebootRequired) { "Reboot required" } else { "No reboot required" }
+                                L "Status: Updates installed - $rebootStatus"
                             } else {
                                 L "[ERROR] $(Get-LocalizedString 'UpdateFailed') - Result code: $($installationResult.ResultCode)"
                             }
