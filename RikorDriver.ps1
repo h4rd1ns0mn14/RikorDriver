@@ -21,7 +21,7 @@ $global:Languages = @{
     "en" = @{
         AppTitle = "Rikor Driver Installer"
         BtnSmartUpdate = "Install & Update Drivers"
-        BtnScan = "Scan for Missing Drivers"
+        BtnScan = "Scan for Missing Drivers" # Updated
         BtnBackup = "Backup Drivers"
         BtnInstall = "Install From Folder"
         BtnCancel = "Cancel Task"
@@ -71,12 +71,12 @@ $global:Languages = @{
         Enable = "Enable"
         Disable = "Disable"
         Remove = "Remove Schedule"
-        PSWU_Ensuring = "Ensuring PSWindowsUpdate module is available..."
-        PSWU_Downloading = "Downloading PSWindowsUpdate module from PowerShell Gallery..."
-        PSWU_Extracting = "Extracting PSWindowsUpdate module..."
-        PSWU_Importing = "Importing PSWindowsUpdate module..."
-        PSWU_Available = "PSWindowsUpdate module is available."
-        PSWU_Failed = "Failed to ensure PSWindowsUpdate module availability."
+        PSWU_Ensuring = "Ensuring PSWindowsUpdate module is available..." # Updated
+        PSWU_Downloading = "Downloading PSWindowsUpdate module from PowerShell Gallery..." # NEW
+        PSWU_Extracting = "Extracting PSWindowsUpdate module..." # NEW
+        PSWU_Importing = "Importing PSWindowsUpdate module..." # NEW
+        PSWU_Available = "PSWindowsUpdate module is available." # NEW
+        PSWU_Failed = "Failed to ensure PSWindowsUpdate module availability." # Updated
         SmartUpdate_RikorDownload = "Attempting to download and install drivers from Rikor source..."
         SmartUpdate_RikorInstallFailed = "Rikor source installation failed. Trying Microsoft Update..."
         SmartUpdate_WUSearch = "Searching for driver updates on Microsoft Update..."
@@ -89,10 +89,11 @@ $global:Languages = @{
         SmartUpdate_ArchiveEmpty = "Downloaded file is too small or empty. Skipping Rikor source."
         WU_Probing = "Probing for driver updates (this may take a few moments)..."
         WU_InitiatingInstall = "Initiating installation of selected driver updates..."
-        Scan_MissingDriversFound = "Found {0} missing driver(s):"
-        Scan_NoMissingDrivers = "No missing driver updates found."
-        Scan_ExportCSV = "Exporting missing drivers list to CSV..."
-        Scan_Failed = "Failed to scan for missing drivers."
+        Scan_MissingDriversFound = "Found {0} missing driver(s):" # NEW
+        Scan_NoMissingDrivers = "No missing driver updates found." # NEW
+        Scan_ExportCSV = "Exporting missing drivers list to CSV..." # NEW
+        Scan_Failed = "Failed to scan for missing drivers." # NEW
+
     }
     "ru" = @{
         AppTitle = "Установщик драйверов Rikor"
@@ -147,12 +148,12 @@ $global:Languages = @{
         Enable = "Включить"
         Disable = "Отключить"
         Remove = "Удалить расписание"
-        PSWU_Ensuring = "Проверка наличия модуля PSWindowsUpdate..."
-        PSWU_Downloading = "Загрузка модуля PSWindowsUpdate с PowerShell Gallery..."
-        PSWU_Extracting = "Распаковка модуля PSWindowsUpdate..."
-        PSWU_Importing = "Импорт модуля PSWindowsUpdate..."
-        PSWU_Available = "Модуль PSWindowsUpdate доступен."
-        PSWU_Failed = "Не удалось обеспечить доступность модуля PSWindowsUpdate."
+        PSWU_Ensuring = "Проверка наличия модуля PSWindowsUpdate..." # Updated
+        PSWU_Downloading = "Загрузка модуля PSWindowsUpdate с PowerShell Gallery..." # NEW
+        PSWU_Extracting = "Распаковка модуля PSWindowsUpdate..." # NEW
+        PSWU_Importing = "Импорт модуля PSWindowsUpdate..." # NEW
+        PSWU_Available = "Модуль PSWindowsUpdate доступен." # NEW
+        PSWU_Failed = "Не удалось обеспечить доступность модуля PSWindowsUpdate." # Updated
         SmartUpdate_RikorDownload = "Попытка загрузки и установки драйверов из источника Rikor..."
         SmartUpdate_RikorInstallFailed = "Не удалось установить из источника Rikor. Пробую Microsoft Update..."
         SmartUpdate_WUSearch = "Поиск обновлений драйверов в Центре обновления Windows..."
@@ -165,10 +166,10 @@ $global:Languages = @{
         SmartUpdate_ArchiveEmpty = "Загруженный файл слишком мал или пуст. Пропускаю источник Rikor."
         WU_Probing = "Поиск обновлений драйверов (это может занять некоторое время)..."
         WU_InitiatingInstall = "Запуск установки выбранных обновлений драйверов..."
-        Scan_MissingDriversFound = "Найдено {0} недостающих драйверов:"
-        Scan_NoMissingDrivers = "Недостающие обновления драйверов не найдены."
-        Scan_ExportCSV = "Экспорт списка недостающих драйверов в CSV..."
-        Scan_Failed = "Не удалось отсканировать недостающие драйверы."
+        Scan_MissingDriversFound = "Найдено {0} недостающих драйверов:" # NEW
+        Scan_NoMissingDrivers = "Недостающие обновления драйверов не найдены." # NEW
+        Scan_ExportCSV = "Экспорт списка недостающих драйверов в CSV..." # NEW
+        Scan_Failed = "Не удалось отсканировать недостающие драйверы." # NEW
     }
 }
 
@@ -211,7 +212,7 @@ $AppTitle = Get-LocalizedString "AppTitle"
 $LogBase = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller"
 $HistoryFile = Join-Path $LogBase "UpdateHistory.json"
 $SettingsFile = Join-Path $LogBase "Settings.json"
-if (!(Test-Path $LogBase)) { New-Item -ItemType Directory -Path $LogBase -Force | Out-Null }
+if (-not (Test-Path $LogBase)) { New-Item -ItemType Directory -Path $LogBase -Force | Out-Null }
 
 $global:CurrentJob = $null
 $global:CurrentTaskLog = $null
@@ -345,8 +346,8 @@ function Set-ScheduledUpdate {
     )
     try {
         Remove-ScheduledUpdate
-        $scriptPath = $PSCommandPath
-        if (-not $scriptPath) { $scriptPath = $MyInvocation.PSCommandPath }
+        $scriptPath = $PSScriptRoot # Use PSScriptRoot
+        # if (-not $scriptPath) { $scriptPath = $MyInvocation.PSCommandPath } # Not needed with PSScriptRoot
         $action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Silent -Task SmartUpdate"
         switch ($Frequency) {
             "Daily" { $trigger = New-ScheduledTaskTrigger -Daily -At $Time }
@@ -406,17 +407,18 @@ if ($Silent -and $Task) {
                 Write-SilentLog "Extracting archive to: $extractDir"
                 Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
 
-                $infFiles = Get-ChildItem -Path $extractDir -Recurse -Include *.inf
+                $infFiles = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf"
                 if ($infFiles.Count -eq 0) {
                     Write-SilentLog "[WARNING] No .inf files found in the archive. Nothing to install from archive."
                 } else {
                     Write-SilentLog "Found $($infFiles.Count) .inf files. Installing from Rikor pack..."
                     $successCount = 0; $failCount = 0
                     foreach ($inf in $infFiles) {
+                        Write-SilentLog "Installing $($inf.Name)..."
                         try {
                             & pnputil.exe /add-driver $inf.FullName /install /force 2>&1 | Out-Null
-                            if ($LASTEXITCODE -eq 0) { $successCount++ } else { $failCount++ }
-                        } catch { $failCount++ }
+                            if ($LASTEXITCODE -eq 0) { $successCount++ } else { $failCount++; Write-SilentLog " -> Failed (Code: $LASTEXITCODE)" }
+                        } catch { $failCount++; Write-SilentLog " -> Failed (Exception: $_)" }
                     }
                     Write-SilentLog "Installation from Rikor pack complete: $successCount successful, $failCount failed."
                     $downloadSucceeded = $true
@@ -431,7 +433,7 @@ if ($Silent -and $Task) {
                 Write-SilentLog (Get-LocalizedString "SmartUpdate_WUSearch")
                 try {
                     # Manual download and import of PSWindowsUpdate module for silent mode
-                    $modulePath = Join-Path (Split-Path $MyInvocation.MyCommand.Definition) "Modules\PSWindowsUpdate"
+                    $modulePath = Join-Path $PSScriptRoot "Modules\PSWindowsUpdate"
                     if (-not (Test-Path $modulePath)) {
                         Write-SilentLog (Get-LocalizedString "PSWU_Downloading")
                         $moduleZipUrl = "https://www.powershellgallery.com/api/v2/package/PSWindowsUpdate" # Direct download link for the nupkg
@@ -477,7 +479,7 @@ if ($Silent -and $Task) {
             Write-SilentLog "Silent mode: Scanning for missing drivers..."
             try {
                 # Manual download and import of PSWindowsUpdate module for silent mode
-                $modulePath = Join-Path (Split-Path $MyInvocation.MyCommand.Definition) "Modules\PSWindowsUpdate"
+                $modulePath = Join-Path $PSScriptRoot "Modules\PSWindowsUpdate"
                 if (-not (Test-Path $modulePath)) {
                     Write-SilentLog (Get-LocalizedString "PSWU_Downloading")
                     $moduleZipUrl = "https://www.powershellgallery.com/api/v2/package/PSWindowsUpdate" # Direct download link for the nupkg
@@ -520,7 +522,7 @@ if ($Silent -and $Task) {
 
                     Write-SilentLog (Get-LocalizedString "Scan_ExportCSV")
                     $csvPath = Join-Path (Split-Path $logFile) "MissingDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
-                    $filteredDrivers | Select-Object Title, Manufacturer, @{Name='Categories';Expression={ $_.Categories -join ', ' }}, Version, LastDeploymentChangeTime | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+                    $filteredDrivers | Select-Object Title, Manufacturer, @{Name='Categories';Expression={ $_.Categories -join ', ' }}, Version, LastDeploymentChangeTime | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UT
                     Write-SilentLog "Exported to: $csvPath"
                 }
             } catch {
@@ -531,7 +533,7 @@ if ($Silent -and $Task) {
             $dest = $innerArgs[0]
             Write-SilentLog "Backing up drivers to: $dest"
             try {
-                if (!(Test-Path $dest)) { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
+                if (-not (Test-Path $dest)) { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
                 & dism.exe /online /export-driver /destination:$dest 2>&1 | Out-Null
                 $exportedCount = (Get-ChildItem -Path $dest -Recurse -Directory -ErrorAction SilentlyContinue).Count
                 Write-SilentLog "Backup completed: $exportedCount driver package(s) exported."
@@ -544,10 +546,11 @@ if ($Silent -and $Task) {
             Write-SilentLog "Installing drivers from: $folder"
             try {
                 if (-not (Test-Path $folder)) { Write-SilentLog "[ERROR] Folder not found: $folder"; return }
-                $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+                $infFiles = Get-ChildItem -Path $folder -Recurse -Include "*.inf"
                 if ($infFiles.Count -eq 0) { Write-SilentLog "[ERROR] No .inf driver files found in folder"; return }
                 $successCount = 0; $failCount = 0
                 foreach ($inf in $infFiles) {
+                    Write-SilentLog "Installing $($inf.Name)..."
                     try {
                         & pnputil.exe /add-driver $inf.FullName /install /force 2>&1 | Out-Null
                         if ($LASTEXITCODE -eq 0) { $successCount++ } else { $failCount++ }
@@ -573,6 +576,7 @@ if ($Silent -and $Task) {
 function New-TaskLog([string]$taskName) {
     $ts = (Get-Date).ToString("yyyyMMdd_HHmmss")
     $logFile = Join-Path $LogBase "$($taskName)_$ts.log"
+    New-Item -ItemType Directory -Path (Split-Path $logFile) -Force | Out-Null # Ensure log directory exists
     New-Item -Path $logFile -ItemType File -Force | Out-Null
     return $logFile
 }
@@ -593,7 +597,7 @@ function Add-StatusUI {
 # -------------------------
 $global:UIColors = @{
     Dark = @{ Background = [System.Drawing.Color]::FromArgb(18, 18, 18); Surface = [System.Drawing.Color]::FromArgb(30, 30, 30); SurfaceHover = [System.Drawing.Color]::FromArgb(45, 45, 45); Primary = [System.Drawing.Color]::FromArgb(156, 39, 176); PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206); Secondary = [System.Drawing.Color]::FromArgb(66, 66, 66); Text = [System.Drawing.Color]::FromArgb(240, 240, 240); TextSecondary = [System.Drawing.Color]::FromArgb(170, 170, 170); Border = [System.Drawing.Color]::FromArgb(60, 60, 60); Success = [System.Drawing.Color]::FromArgb(76, 175, 80); Warning = [System.Drawing.Color]::FromArgb(255, 152, 0); Error = [System.Drawing.Color]::FromArgb(244, 67, 54); MenuBar = [System.Drawing.Color]::FromArgb(25, 25, 25); StatusBar = [System.Drawing.Color]::FromArgb(126, 34, 152) }
-    Light = @{ Background = [System.Drawing.Color]::FromArgb(255, 255, 255); Surface = [System.Drawing.Color]::FromArgb(245, 247, 250); SurfaceHover = [System.Drawing.Color]::FromArgb(235, 238, 242); Primary = [System.Drawing.Color]::FromArgb(156, 39, 176); PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206); Secondary = [System.Drawing.Color]::FromArgb(224, 224, 224); Text = [System.Drawing.Color]::FromArgb(33, 33, 33); TextSecondary = [System.Drawing.Color]::FromArgb(117, 117, 117); Border = [System.Drawing.Color]::FromArgb(224, 224, 224); Success = [System.Drawing.Color]::FromArgb(67, 160, 71); Warning = [System.Drawing.Color]::FromArgb(251, 1, 0); Error = [System.Drawing.Color]::FromArgb(229, 57, 53); MenuBar = [System.Drawing.Color]::FromArgb(255, 255, 255); StatusBar = [System.Drawing.Color]::FromArgb(156, 39, 176) }
+    Light = @{ Background = [System.Drawing.Color]::FromArgb(255, 255, 255); Surface = [System.Drawing.Color]::FromArgb(245, 247, 250); SurfaceHover = [System.Drawing.Color]::FromArgb(235, 238, 242); Primary = [System.Drawing.Color]::FromArgb(156, 39, 176); PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206); Secondary = [System.Drawing.Color]::FromArgb(224, 224, 224); Text = [System.Drawing.Color]::FromArgb(33, 33, 33); TextSecondary = [System.Drawing.Color]::FromArgb(117, 117, 117); Border = [System.Drawing.Color]::FromArgb(224, 224, 224); Success = [System.Drawing.Color]::FromArgb(67, 160, 71); Warning = [System.Drawing.Color]::FromArgb(251, 140, 0); Error = [System.Drawing.Color]::FromArgb(229, 57, 53); MenuBar = [System.Drawing.Color]::FromArgb(255, 255, 255); StatusBar = [System.Drawing.Color]::FromArgb(156, 39, 176) }
 }
 function Get-ThemeColors {
     if ($global:DarkModeEnabled) { return $global:UIColors.Dark }
@@ -809,7 +813,7 @@ $cmbLang.SelectedItem = $global:CurrentLanguage
 $driversGrid = New-Object Windows.Forms.DataGridView
 $driversGrid.ReadOnly = $true
 $driversGrid.AllowUserToAddRows = $false
-$driversGrid.AllowUserToDeleteRows = false
+$driversGrid.AllowUserToDeleteRows = $false # Corrected to $false
 $driversGrid.Height = 60
 $driversGrid.Visible = $false
 
@@ -824,7 +828,7 @@ function Ensure-PSWindowsUpdateModule {
     param($formRef, $statusRef)
 
     $moduleName = "PSWindowsUpdate"
-    $modulePath = Join-Path (Split-Path $MyInvocation.MyCommand.Definition) "Modules\$moduleName"
+    $modulePath = Join-Path $PSScriptRoot "Modules\$moduleName" # Corrected pathing
 
     # Check if module is already imported or available
     if (Get-Module -Name $moduleName -ErrorAction SilentlyContinue) {
@@ -867,15 +871,23 @@ function Ensure-PSWindowsUpdateModule {
         Add-StatusUI $formRef $statusRef (Get-LocalizedString "PSWU_Extracting")
 
         # Nupkg is actually a zip file. Extract it.
-        Expand-Archive -Path $moduleZipPath -DestinationPath $modulePath -Force -ErrorAction Stop
+        # It's a zip within a zip basically, or a nupkg is a zip with a specific structure.
+        # We need to extract the actual module folder, which is inside a version folder.
+        Expand-Archive -Path $moduleZipPath -DestinationPath "$modulePath\_temp" -Force -ErrorAction Stop
 
-        # Nupkg contains a folder structure like PSWindowsUpdate\5.0.0.1\PSWindowsUpdate.psd1
-        # We need to move the actual module content up one level
-        $versionFolder = (Get-ChildItem -Path $modulePath -Directory | Sort-Object Name -Descending | Select-Object -First 1).FullName
-        if ($versionFolder) {
-            Move-Item -Path "$versionFolder\*" -Destination $modulePath -Force
-            Remove-Item -Path $versionFolder -Recurse -Force
+        # Find the actual module folder inside the extracted nupkg (e.g., PSWindowsUpdate\5.0.0.1)
+        $extractedContentPath = Get-ChildItem -Path "$modulePath\_temp" -Directory -Filter "$moduleName*" | Select-Object -First 1
+        if ($extractedContentPath) {
+            $versionFolder = Get-ChildItem -Path $extractedContentPath.FullName -Directory | Sort-Object Name -Descending | Select-Object -First 1
+            if ($versionFolder) {
+                Move-Item -Path "$versionFolder.FullName\*" -Destination $modulePath -Force
+            } else {
+                 # If no version folder, the module files might be directly in $extractedContentPath
+                 Move-Item -Path "$extractedContentPath.FullName\*" -Destination $modulePath -Force
+            }
         }
+
+        Remove-Item "$modulePath\_temp" -Recurse -Force -ErrorAction SilentlyContinue
         Remove-Item $moduleZipPath -Force -ErrorAction SilentlyContinue
 
         Add-StatusUI $formRef $statusRef (Get-LocalizedString "PSWU_Importing")
@@ -982,7 +994,7 @@ function Start-BackgroundTask {
                         L "Extracting archive to: $extractDir"
                         Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
 
-                        $infFiles = Get-ChildItem -Path $extractDir -Recurse -Include *.inf
+                        $infFiles = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf"
                         if ($infFiles.Count -eq 0) {
                             L "[WARNING] No .inf files found in the archive. Nothing to install from archive."
                         } else {
@@ -1004,6 +1016,7 @@ function Start-BackgroundTask {
                     } finally {
                         if (Test-Path $tempDir) { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
                     }
+
                     L " " # Spacer
                     if (-not $downloadSucceeded) {
                          L (Get-LocalizedString "SmartUpdate_WUSearch")
@@ -1073,7 +1086,7 @@ function Start-BackgroundTask {
                     $dest = $innerArgs[0]
                     L "Backing up drivers to: $dest"
                     try {
-                        if (!(Test-Path $dest)) { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
+                        if (-not (Test-Path $dest)) { New-Item -ItemType Directory -Path $dest -Force | Out-Null }
                         L "Exporting drivers (this may take several minutes)..."
                         & dism.exe /online /export-driver /destination:$dest 2>&1 | Out-Null
                         $exportedCount = (Get-ChildItem -Path $dest -Recurse -Directory -ErrorAction SilentlyContinue).Count
@@ -1087,7 +1100,7 @@ function Start-BackgroundTask {
                     L "Installing drivers from: $folder"
                     try {
                         if (-not (Test-Path $folder)) { L "[ERROR] Folder not found: $folder"; return }
-                        $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+                        $infFiles = Get-ChildItem -Path $folder -Recurse -Include "*.inf"
                         if ($infFiles.Count -eq 0) { L "[ERROR] No .inf driver files found in folder"; return }
                         L "Found $($infFiles.Count) driver file(s). Installing..."
                         $successCount = 0; $failCount = 0
@@ -1174,7 +1187,6 @@ $timer.Add_Tick({
 
             $progress.Value = [Math]::Min(100, [int]$p)
         }
-
 
         if ($null -ne $global:CurrentJob) {
             $jobState = (Get-Job -Id $global:CurrentJob.Id -ErrorAction SilentlyContinue).State
@@ -1302,8 +1314,8 @@ function Show-HistoryDialog {
     $historyList = New-Object Windows.Forms.ListView
     $historyList.Dock = 'Fill'
     $historyList.View = 'Details'
-    $historyList.FullRowSelect = true
-    $historyList.GridLines = false
+    $historyList.FullRowSelect = $true
+    $historyList.GridLines = $false
     $historyList.BackColor = $colors.Surface
     $historyList.ForeColor = $colors.Text
     $historyList.BorderStyle = 'None'
@@ -1561,8 +1573,8 @@ function Show-SettingsDialog {
     $settingsForm.StartPosition = "CenterParent"
     $settingsForm.BackColor = $colors.Background
     $settingsForm.FormBorderStyle = 'FixedDialog'
-    $settingsForm.MaximizeBox = false
-    $settingsForm.TopMost = true
+    $settingsForm.MaximizeBox = $false
+    $settingsForm.TopMost = $true
     $settingsForm.Font = New-Object Drawing.Font("Segoe UI", 9.5)
     $header = New-Object Windows.Forms.Label
     $header.Text = Get-LocalizedString "SettingsTitle"
