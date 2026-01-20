@@ -21,7 +21,7 @@ $global:Languages = @{
     "en" = @{
         AppTitle = "Rikor Driver Installer"
         BtnSmartUpdate = "Install & Update Drivers"
-        BtnScan = "Scan Installed Drivers"
+        BtnScan = "Scan for Missing Drivers" # Updated
         BtnBackup = "Backup Drivers"
         BtnInstall = "Install From Folder"
         BtnCancel = "Cancel Task"
@@ -91,11 +91,16 @@ $global:Languages = @{
         PowerShellGet_Installing = "Ensuring PowerShellGet module is updated..."
         PowerShellGet_Installed = "PowerShellGet module is up-to-date."
         PowerShellGet_Failed = "Failed to update PowerShellGet module."
+        WU_Probing = "Probing for driver updates (this may take a few moments)..."
+        WU_InitiatingInstall = "Initiating installation of selected driver updates..."
+        Scan_MissingDriversFound = "Found {0} missing driver(s):" # NEW
+        Scan_NoMissingDrivers = "No missing driver updates found." # NEW
+        Scan_ExportCSV = "Exporting missing drivers list to CSV..." # NEW
     }
     "ru" = @{
         AppTitle = "Установщик драйверов Rikor"
         BtnSmartUpdate = "Установить и обновить драйверы"
-        BtnScan = "Сканировать установленные драйверы"
+        BtnScan = "Сканировать недостающие драйверы" # Updated
         BtnBackup = "Резервное копирование"
         BtnInstall = "Установить из папки"
         BtnCancel = "Отменить задачу"
@@ -165,6 +170,11 @@ $global:Languages = @{
         PowerShellGet_Installing = "Обновление модуля PowerShellGet..."
         PowerShellGet_Installed = "Модуль PowerShellGet обновлен."
         PowerShellGet_Failed = "Не удалось обновить модуль PowerShellGet."
+        WU_Probing = "Поиск обновлений драйверов (это может занять некоторое время)..."
+        WU_InitiatingInstall = "Запуск установки выбранных обновлений драйверов..."
+        Scan_MissingDriversFound = "Найдено {0} недостающих драйверов:" # NEW
+        Scan_NoMissingDrivers = "Недостающие обновления драйверов не найдены." # NEW
+        Scan_ExportCSV = "Экспорт списка недостающих драйверов в CSV..." # NEW
     }
 }
 
@@ -443,7 +453,8 @@ if ($Silent -and $Task) {
                     # Proactively install/update NuGet package provider without user interaction
                     Write-SilentLog (Get-LocalizedString "NuGet_Installing")
                     try {
-                        Install-Module PowerShellGet -Force -Confirm:$false -Scope AllUsers -ErrorAction SilentlyContinue | Out-Null
+                        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+                        Install-Module PowerShellGet -Force -Confirm:$false -Scope AllUsers -AcceptLicense -ErrorAction Stop
                         Import-Module PowerShellGet -Force -ErrorAction Stop
                         Write-SilentLog (Get-LocalizedString "PowerShellGet_Installed")
                         Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ErrorAction Stop
@@ -456,37 +467,82 @@ if ($Silent -and $Task) {
 
                     if (-not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
                         Write-SilentLog (Get-LocalizedString "PSWU_Installing")
-                        Install-Module PSWindowsUpdate -Force -Confirm:$false -Scope AllUsers -SkipPublisherCheck
+                        Install-Module PSWindowsUpdate -Force -Confirm:$false -Scope AllUsers -AcceptLicense -SkipPublisherCheck
                         Write-SilentLog (Get-LocalizedString "PSWU_Installed")
                     }
                     Import-Module PSWindowsUpdate -Force
-                    $updates = Get-WindowsUpdate -Driver -AcceptAll -Install
-                    Write-SilentLog (Get-LocalizedString "SmartUpdate_WUFound", @($updates.Count))
-                    Add-HistoryEntry -TaskName "SmartUpdate" -Status "Completed" -Details "Installed $($updates.Count) drivers from WU."
+                    Write-SilentLog (Get-LocalizedString "WU_Probing")
+                    $updates = Get-WindowsUpdate -Driver -ErrorAction Stop
+
+                    if ($null -eq $updates -or $updates.Count -eq 0) {
+                        Write-SilentLog (Get-LocalizedString "SmartUpdate_WUNoUpdates")
+                    } else {
+                        Write-SilentLog (Get-LocalizedString "SmartUpdate_WUFound", @($updates.Count))
+                        Write-SilentLog (Get-LocalizedString "WU_InitiatingInstall")
+                        $updates | ForEach-Object { Write-SilentLog " -> $($_.Title)" }
+                        Install-WindowsUpdate -Driver -AcceptAll -IgnoreReboot -ErrorAction Stop
+                        Write-SilentLog (Get-LocalizedString "SmartUpdate_WUInstallComplete")
+                    }
                 } catch {
                     Write-SilentLog (Get-LocalizedString "SmartUpdate_WUInstallFailed") + " $_"
                     Add-HistoryEntry -TaskName "SmartUpdate" -Status "Failed" -Details (Get-LocalizedString "SmartUpdate_WUInstallFailed") + " $_"
                 }
             }
         }
-        "ScanDrivers" {
-            Write-SilentLog "Scanning installed drivers..."
+        "ScanDrivers" { # Updated for silent mode as well
+            Write-SilentLog "Silent mode: Scanning for missing drivers..."
             try {
-                $drivers = Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, InfName, Class, DriverDate
-                if ($global:FilterSettings.Class) {
-                    Write-SilentLog "Applying class filter: $($global:FilterSettings.Class)"
-                    $drivers = $drivers | Where-Object { $_.Class -like "*$($global:FilterSettings.Class)*" }
+                # Proactively install/update NuGet package provider without user interaction
+                Write-SilentLog (Get-LocalizedString "NuGet_Installing")
+                try {
+                    Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+                    Install-Module PowerShellGet -Force -Confirm:$false -Scope AllUsers -AcceptLicense -ErrorAction Stop
+                    Import-Module PowerShellGet -Force -ErrorAction Stop
+                    Write-SilentLog (Get-LocalizedString "PowerShellGet_Installed")
+                    Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force -Confirm:$false -ErrorAction Stop
+                    Write-SilentLog (Get-LocalizedString "NuGet_Installed")
+                } catch {
+                    Write-SilentLog "[ERROR] " + (Get-LocalizedString "NuGet_Failed") + ": $_"
+                    Write-SilentLog "[ERROR] " + (Get-LocalizedString "PowerShellGet_Failed") + ": $_"
+                    throw "[ERROR] Failed to setup package management for PSWindowsUpdate."
                 }
-                if ($global:FilterSettings.Manufacturer) {
-                    Write-SilentLog "Applying manufacturer filter: $($global:FilterSettings.Manufacturer)"
-                    $drivers = $drivers | Where-Object { $_.Manufacturer -like "*$($global:FilterSettings.Manufacturer)*" }
+                if (-not (Get-Module -ListAvailable -Name PSWindowsUpdate)) {
+                    Write-SilentLog (Get-LocalizedString "PSWU_Installing")
+                    Install-Module PSWindowsUpdate -Force -Confirm:$false -Scope AllUsers -AcceptLicense -SkipPublisherCheck
+                    Write-SilentLog (Get-LocalizedString "PSWU_Installed")
                 }
-                Write-SilentLog "Found $($drivers.Count) drivers matching criteria"
-                $csvPath = Join-Path (Split-Path $logFile) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
-                $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
-                Write-SilentLog "Exported to: $csvPath"
+                Import-Module PSWindowsUpdate -Force
+                Write-SilentLog (Get-LocalizedString "WU_Probing")
+                $missingDrivers = Get-WindowsUpdate -Driver -NotInstalled -ErrorAction Stop
+
+                if ($missingDrivers.Count -eq 0) {
+                    Write-SilentLog (Get-LocalizedString "Scan_NoMissingDrivers")
+                } else {
+                    Write-SilentLog (Get-LocalizedString "Scan_MissingDriversFound", @($missingDrivers.Count))
+                    foreach ($driver in $missingDrivers) {
+                        Write-SilentLog "  - $($driver.Title) (Manufacturer: $($driver.Manufacturer), Version: $($driver.Version))"
+                    }
+
+                    # Apply filters (if needed for silent mode)
+                    $filteredDrivers = $missingDrivers
+                    if ($global:FilterSettings.Class) {
+                        $filteredDrivers = $filteredDrivers | Where-Object { $_.Categories -join ', ' -like "*$($global:FilterSettings.Class)*" }
+                    }
+                    if ($global:FilterSettings.Manufacturer) {
+                        $filteredDrivers = $filteredDrivers | Where-Object { $_.Manufacturer -like "*$($global:FilterSettings.Manufacturer)*" }
+                    }
+
+                    if ($filteredDrivers.Count -lt $missingDrivers.Count) {
+                        Write-SilentLog "Filtered down to $($filteredDrivers.Count) drivers by criteria."
+                    }
+
+                    Write-SilentLog (Get-LocalizedString "Scan_ExportCSV")
+                    $csvPath = Join-Path (Split-Path $logFile) "MissingDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
+                    $filteredDrivers | Select-Object Title, Manufacturer, @{Name='Categories';Expression={ $_.Categories -join ', ' }}, Version, LastDeploymentChangeTime | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+                    Write-SilentLog "Exported to: $csvPath"
+                }
             } catch {
-                Write-SilentLog "[ERROR] Failed to scan drivers: $_"
+                Write-SilentLog "[ERROR] Failed to scan for missing drivers: $_"
             }
         }
         "BackupDrivers" {
@@ -791,13 +847,16 @@ function Install-PSWindowsUpdateModule {
         return $true
     }
 
-    # Proactively install/update NuGet package provider without user interaction
+    # Proactively ensure PSGallery is trusted and install/update NuGet package provider without user interaction
     Add-StatusUI $formRef $statusRef (Get-LocalizedString "NuGet_Installing")
     try {
+        # Ensure PSGallery is trusted to prevent repository prompts
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted -ErrorAction SilentlyContinue
+
         # Ensure PowerShellGet is updated first (often a good practice for module installations)
         Add-StatusUI $formRef $statusRef (Get-LocalizedString "PowerShellGet_Installing")
-        Install-Module PowerShellGet -Force -Confirm:$false -Scope CurrentUser -ErrorAction SilentlyContinue | Out-Null
-        Import-Module PowerShellGet -Force -ErrorAction Stop
+        Install-Module PowerShellGet -Force -Confirm:$false -Scope CurrentUser -AcceptLicense -ErrorAction Stop
+        Import-Module PowerShellGet -Force -ErrorAction Stop # Import updated version
         Add-StatusUI $formRef $statusRef (Get-LocalizedString "PowerShellGet_Installed")
 
         # Install NuGet provider without confirmation
@@ -811,7 +870,7 @@ function Install-PSWindowsUpdateModule {
 
     Add-StatusUI $formRef $statusRef "-> $(Get-LocalizedString 'PSWU_Installing')"
     try {
-        Install-Module PSWindowsUpdate -Force -Confirm:$false -Scope CurrentUser -SkipPublisherCheck -ErrorAction Stop
+        Install-Module PSWindowsUpdate -Force -Confirm:$false -Scope CurrentUser -AcceptLicense -SkipPublisherCheck -ErrorAction Stop
         Add-StatusUI $formRef $statusRef "-> $(Get-LocalizedString 'PSWU_Installed')"
         return $true
     } catch {
@@ -834,7 +893,7 @@ function Start-BackgroundTask {
     }
 
     # Special handling for module installation which cannot run in a background job easily
-    if ($Name -eq "SmartUpdate") {
+    if ($Name -eq "SmartUpdate" -or $Name -eq "ScanDrivers") { # Added ScanDrivers here
         if (-not (Install-PSWindowsUpdateModule -formRef $form -statusRef $status)) {
             return $null # Stop if user declines or installation fails
         }
@@ -846,7 +905,7 @@ function Start-BackgroundTask {
 
     # Pass global variables explicitly to the job's script block
     $job = Start-Job -Name $Name -ScriptBlock {
-        param($taskName, $logPath, $innerArgs, $jobLanguages, $jobCurrentLanguage)
+        param($taskName, $logPath, $innerArgs, $jobLanguages, $jobCurrentLanguage, $jobFilterSettings) # Added jobFilterSettings
 
         # Redefine Get-LocalizedString within the job's scope
         function Get-LocalizedString([string]$key, [array]$args = $null) {
@@ -858,6 +917,7 @@ function Start-BackgroundTask {
             } else {
                 $jobLanguages["en"][$key] # Fallback to English
             }
+
             if ($args) {
                 return $string -f $args
             }
@@ -917,20 +977,25 @@ function Start-BackgroundTask {
                     }
 
                     L " " # Spacer
-                    L (Get-LocalizedString "SmartUpdate_WUSearch")
+                    if (-not $downloadSucceeded) {
+                         L (Get-LocalizedString "SmartUpdate_WUSearch")
+                    } else {
+                         L "Rikor drivers installed, now checking for additional updates from Microsoft Update."
+                    }
+
                     try {
                         # Module Import is necessary inside the job as well.
                         # We assume it's installed from the UI pre-check.
                         Import-Module PSWindowsUpdate -Force -ErrorAction Stop
 
-                        L "Searching for available driver updates..."
+                        L (Get-LocalizedString "WU_Probing") # Added this log
                         $driverUpdates = Get-WindowsUpdate -Driver -ErrorAction Stop
 
                         if ($null -eq $driverUpdates -or $driverUpdates.Count -eq 0) {
                             L (Get-LocalizedString "SmartUpdate_WUNoUpdates")
                         } else {
                             L (Get-LocalizedString "SmartUpdate_WUFound", @($driverUpdates.Count))
-                            L (Get-LocalizedString "SmartUpdate_WUInstall")
+                            L (Get-LocalizedString "WU_InitiatingInstall") # Added this log
                             $driverUpdates | ForEach-Object { L " -> $($_.Title)" }
 
                             # Install drivers found
@@ -941,19 +1006,43 @@ function Start-BackgroundTask {
                         L "[ERROR] " + (Get-LocalizedString "SmartUpdate_WUInstallFailed") + ": $_"
                     }
                 }
-                "ScanDrivers" {
-                    L "Scanning installed drivers..."
+                "ScanDrivers" { # Updated for scanning missing drivers
+                    L "Scanning for missing drivers..."
                     try {
-                        $drivers = Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, InfName, Class, DriverDate
-                        # Note: Filter settings are global and not passed to jobs in this specific case,
-                        # but if they were needed, they would also need to be passed as arguments.
-                        # For now, assuming silent scan doesn't need dynamic filters from UI.
-                        L "Found $($drivers.Count) drivers matching criteria"
-                        $csvPath = Join-Path (Split-Path $logPath) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
-                        $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
-                        L "Exported to: $csvPath"
+                        Import-Module PSWindowsUpdate -Force -ErrorAction Stop
+                        L (Get-LocalizedString "WU_Probing")
+                        $missingDrivers = Get-WindowsUpdate -Driver -NotInstalled -ErrorAction Stop
+
+                        $filteredDrivers = $missingDrivers
+                        if ($jobFilterSettings.Class) {
+                            L "Applying class filter: $($jobFilterSettings.Class)"
+                            $filteredDrivers = $filteredDrivers | Where-Object { $_.Categories -join ', ' -like "*$($jobFilterSettings.Class)*" }
+                        }
+                        if ($jobFilterSettings.Manufacturer) {
+                            L "Applying manufacturer filter: $($jobFilterSettings.Manufacturer)"
+                            $filteredDrivers = $filteredDrivers | Where-Object { $_.Manufacturer -like "*$($jobFilterSettings.Manufacturer)*" }
+                        }
+
+                        if ($filteredDrivers.Count -eq 0) {
+                            L (Get-LocalizedString "Scan_NoMissingDrivers")
+                        } else {
+                            L (Get-LocalizedString "Scan_MissingDriversFound", @($filteredDrivers.Count))
+                            L "----------------------------------------------------"
+                            $filteredDrivers | ForEach-Object {
+                                L "  - Title: $($_.Title)"
+                                L "    Manufacturer: $($_.Manufacturer)"
+                                L "    Version: $($_.Version)"
+                                L "    Categories: $($_.Categories -join ', ')"
+                                L "----------------------------------------------------"
+                            }
+
+                            L (Get-LocalizedString "Scan_ExportCSV")
+                            $csvPath = Join-Path (Split-Path $logPath) "MissingDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
+                            $filteredDrivers | Select-Object Title, Manufacturer, @{Name='Categories';Expression={ $_.Categories -join ', ' }}, Version, LastDeploymentChangeTime | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
+                            L "Exported to: $csvPath"
+                        }
                     } catch {
-                        L "[ERROR] Failed to scan drivers: $_"
+                        L "[ERROR] Failed to scan for missing drivers: $_"
                     }
                 }
                 "BackupDrivers" {
@@ -999,7 +1088,7 @@ function Start-BackgroundTask {
         } finally {
             L "Completed"
         }
-    } -ArgumentList $Name, $log, $TaskArgs, $global:Languages, $global:CurrentLanguage # Pass global variables here
+    } -ArgumentList $Name, $log, $TaskArgs, $global:Languages, $global:CurrentLanguage, $global:FilterSettings # Pass global variables here
 
     $global:CurrentJob = $job
     $timer.Start()
@@ -1026,19 +1115,26 @@ $timer.Add_Tick({
             $content = Get-Content -Path $global:CurrentTaskLog -Tail 100 -ErrorAction SilentlyContinue -Raw
             $p = $progress.Value # Keep current progress if no new markers found
 
+            # SmartUpdate progress
             if ($content -match "Smart Update started") { $p = 1 }
             if ($content -match "Attempting to download") { $p = 5 }
             if ($content -match "Download completed successfully") { $p = 20 }
             if ($content -match "Extracting archive") { $p = 25 }
             if ($content -match "Installing from Rikor pack") { $p = 40 }
             if ($content -match "Installation from Rikor pack complete") { $p = 55 }
-            if ($content -match "Searching for driver updates on Microsoft Update") { $p = 60 }
-            if ($content -match "Installing PSWindowsUpdate module") { $p = 65 }
+            if ($content -match "Rikor drivers installed, now checking for additional updates from Microsoft Update." -or $content -match "Rikor source installation failed. Trying Microsoft Update...") { $p = 60 }
+            if ($content -match "Searching for driver updates on Microsoft Update" -or $content -match "Probing for driver updates") { $p = 65 }
+            if ($content -match "Installing PSWindowsUpdate module") { $p = 67 }
             if ($content -match "PSWindowsUpdate module installed") { $p = 70 }
-            if ($content -match "Searching for available driver updates") { $p = 75 }
             if ($content -match "Found \d+ driver updates") { $p = 80 }
-            if ($content -match "Installing updates from Microsoft Update") { $p = 85 }
+            if ($content -match "Initiating installation of selected driver updates" -or $content -match "Installing updates from Microsoft Update") { $p = 85 }
             if ($content -match "Installation from Microsoft Update complete") { $p = 95 }
+
+            # ScanDrivers progress
+            if ($content -match "Scanning for missing drivers") { $p = 10 }
+            if ($content -match "Found \d+ missing driver\(s\)") { $p = 80 }
+            if ($content -match "Exporting missing drivers list to CSV") { $p = 90 }
+
             if ($content -match "Completed") { $p = 100 }
 
             # For general InstallDrivers
@@ -1246,7 +1342,7 @@ function Show-ScheduleDialog {
     $lblTime.ForeColor = $colors.Text
     $contentPanel.Controls.Add($lblTime)
     $txtTime = New-Object Windows.Forms.TextBox
-    $txtTime.Location = '110,48'
+    $txtTime.Location = '170,48'
     $txtTime.Size = '180,28'
     $txtTime.Text = "03:00"
     $txtTime.BackColor = $colors.Background
