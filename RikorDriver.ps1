@@ -1,4 +1,4 @@
-# Driver Updater Rikor v 2.0 - Fixed Critical Issues
+﻿# Driver Updater Rikor v 2.0 - Fixed Critical Issues
 # Run as Administrator
 # Usage: .\RikorDriver.ps1
 # Silent mode: .\RikorDriver.ps1 -Silent -Task "CheckDriverUpdates"
