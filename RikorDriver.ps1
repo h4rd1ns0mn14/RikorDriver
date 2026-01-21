@@ -1046,6 +1046,10 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
                          if ($LASTEXITCODE -eq 0) {
                               $successCount++
                               Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
+                         } elseif ($LASTEXITCODE -eq 259) {
+                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
+                              $successCount++ # Count as success since no error occurred, just nothing to do
+                              Write-SilentLog "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
@@ -1870,19 +1874,72 @@ switch ($taskName) {
             # Force TLS 1.2 for Nextcloud compatibility
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             
-            # Use .NET WebClient for reliable download from Nextcloud (handles dynamic links better)
+            # Use custom download function with progress for reliable download from Nextcloud
+            L "Starting download with progress tracking..."
             try {
-                L "Using .NET WebClient for download..."
-                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                # Define helper function for download with progress
+                function Download-WithProgress {
+                    param(
+                        [string]$Url,
+                        [string]$Path,
+                        [string]$Activity = "Downloading"
+                    )
+                    
+                    # Create WebClient with events for progress tracking
+                    $webClient = New-Object System.Net.WebClient
+                    $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                    
+                    # Create temporary file for download
+                    $tempPath = $Path + ".tmp"
+                    
+                    # Register progress event handler
+                    $webClient.add_DownloadProgressChanged({
+                        param($sender, $event)
+                        
+                        if ($event.TotalBytesToReceive -gt 0) {
+                            $percent = [math]::Round(($event.BytesReceived / $event.TotalBytesToReceive) * 100, 2)
+                            $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+                            $totalMB = [math]::Round($event.TotalBytesToReceive / 1MB, 2)
+                            
+                            Write-Progress -Activity $Activity -Status "$percent% Complete ($receivedMB/$totalMB MB)" -PercentComplete $percent
+                        } else {
+                            # For dynamic files where size is unknown, just show received bytes
+                            $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+                            Write-Progress -Activity $Activity -Status "Received: $receivedMB MB" -PercentComplete 0
+                        }
+                    })
+                    
+                    try {
+                        $webClient.DownloadFile($Url, $tempPath)
+                        
+                        # Move temp file to final location when complete
+                        Move-Item -Path $tempPath -Destination $Path -Force
+                        L "Download completed: $Path"
+                    } finally {
+                        # Clean up temp file if it still exists
+                        if (Test-Path $tempPath) {
+                            Remove-Item $tempPath -ErrorAction SilentlyContinue
+                        }
+                        # Clear progress bar
+                        Write-Progress -Activity $Activity -Completed
+                    }
+                }
                 
-                $webClient = New-Object System.Net.WebClient
-                $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                
-                $webClient.DownloadFile($zipUrl, $zipPath)
-                L "Download completed using .NET WebClient: $zipPath"
+                Download-WithProgress -Url $zipUrl -Path $zipPath -Activity "Downloading Drivers Archive"
+                L "Download completed successfully: $zipPath"
             } catch {
-                L "[ERROR] Download failed with .NET WebClient: $_"
-                throw
+                L "[ERROR] Download failed with progress tracking: $_"
+                # Fallback to basic download
+                try {
+                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                    $webClient = New-Object System.Net.WebClient
+                    $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                    $webClient.DownloadFile($zipUrl, $zipPath)
+                    L "Fallback download completed: $zipPath"
+                } catch {
+                    L "[ERROR] Fallback download also failed: $_"
+                    throw
+                }
             }
             L "Download completed to: $zipPath"
         } catch {
@@ -1981,6 +2038,10 @@ switch ($taskName) {
                          if ($LASTEXITCODE -eq 0) {
                               $successCount++
                               L "     -> Added and installed successfully." # Optional verbose log
+                         } elseif ($LASTEXITCODE -eq 259) {
+                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
+                              $successCount++ # Count as success since no error occurred, just nothing to do
+                              L "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
@@ -1998,6 +2059,10 @@ switch ($taskName) {
                          if ($LASTEXITCODE -eq 0) {
                               $successCount++
                               L "     -> Added and installed successfully." # Optional verbose log
+                         } elseif ($LASTEXITCODE -eq 259) {
+                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
+                              $successCount++ # Count as success since no error occurred, just nothing to do
+                              L "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
