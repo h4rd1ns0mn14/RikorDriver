@@ -617,7 +617,32 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
             
             if ($SearchResult.Updates.Count -eq 0) {
                 Write-SilentLog "No driver updates available from Microsoft Update"
-                Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+                # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                $history = @()
+                if (Test-Path $historyFile) {
+                    try {
+                        $content = Get-Content -Path $historyFile -Raw
+                        if ($content) {
+                            $parsed = $content | ConvertFrom-Json
+                            if ($parsed -is [array]) {
+                                $history = $parsed
+                            } else {
+                                $history = @($parsed)
+                            }
+                        }
+                    } catch { $history = @() }
+                }
+                $entry = [PSCustomObject]@{
+                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    Task = "DownloadAndInstallDrivers"
+                    Status = "Completed"
+                    Details = "No updates found (fallback to MS Update)"
+                }
+                $history = @($entry) + $history
+                # Keep last 100 entries
+                if ($history.Count -gt 100) { $history = $history[0..99] }
+                $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
             } else {
                 Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
                 Write-SilentLog ""
@@ -672,16 +697,91 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
                             }
                         }
                         Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
-                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                        $history = @()
+                        if (Test-Path $historyFile) {
+                            try {
+                                $content = Get-Content -Path $historyFile -Raw
+                                if ($content) {
+                                    $parsed = $content | ConvertFrom-Json
+                                    if ($parsed -is [array]) {
+                                        $history = $parsed
+                                    } else {
+                                        $history = @($parsed)
+                                    }
+                                }
+                            } catch { $history = @() }
+                        }
+                        $entry = [PSCustomObject]@{
+                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                            Task = "DownloadAndInstallDrivers"
+                            Status = "Completed"
+                            Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                        }
+                        $history = @($entry) + $history
+                        # Keep last 100 entries
+                        if ($history.Count -gt 100) { $history = $history[0..99] }
+                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
                     } else {
                         Write-SilentLog "[WARNING] No updates were downloaded successfully from Microsoft Update"
-                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Download failed for all updates from MS Update"
+                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                        $history = @()
+                        if (Test-Path $historyFile) {
+                            try {
+                                $content = Get-Content -Path $historyFile -Raw
+                                if ($content) {
+                                    $parsed = $content | ConvertFrom-Json
+                                    if ($parsed -is [array]) {
+                                        $history = $parsed
+                                    } else {
+                                        $history = @($parsed)
+                                    }
+                                }
+                            } catch { $history = @() }
+                        }
+                        $entry = [PSCustomObject]@{
+                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                            Task = "DownloadAndInstallDrivers"
+                            Status = "Completed"
+                            Details = "Download failed for all updates from MS Update"
+                        }
+                        $history = @($entry) + $history
+                        # Keep last 100 entries
+                        if ($history.Count -gt 100) { $history = $history[0..99] }
+                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
                     }
                 }
             }
         } catch {
             Write-SilentLog "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
-            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details $_.Exception.Message
+            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+            $history = @()
+            if (Test-Path $historyFile) {
+                try {
+                    $content = Get-Content -Path $historyFile -Raw
+                    if ($content) {
+                        $parsed = $content | ConvertFrom-Json
+                        if ($parsed -is [array]) {
+                            $history = $parsed
+                        } else {
+                            $history = @($parsed)
+                        }
+                    }
+                } catch { $history = @() }
+            }
+            $entry = [PSCustomObject]@{
+                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                Task = "DownloadAndInstallDrivers"
+                Status = "Failed"
+                Details = $_.Exception.Message
+            }
+            $history = @($entry) + $history
+            # Keep last 100 entries
+            if ($history.Count -gt 100) { $history = $history[0..99] }
+            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
         }
         Write-SilentLog "Completed"
         return
@@ -690,7 +790,32 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
     # Validate the URL
     if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
         Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
-        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
+        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+        $history = @()
+        if (Test-Path $historyFile) {
+            try {
+                $content = Get-Content -Path $historyFile -Raw
+                if ($content) {
+                    $parsed = $content | ConvertFrom-Json
+                    if ($parsed -is [array]) {
+                        $history = $parsed
+                    } else {
+                        $history = @($parsed)
+                    }
+                }
+            } catch { $history = @() }
+        }
+        $entry = [PSCustomObject]@{
+            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+            Task = "DownloadAndInstallDrivers"
+            Status = "Failed"
+            Details = "URL not configured"
+        }
+        $history = @($entry) + $history
+        # Keep last 100 entries
+        if ($history.Count -gt 100) { $history = $history[0..99] }
+        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
         return
     }
 
@@ -709,7 +834,32 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         } catch {
             Write-SilentLog "[ERROR] Failed to download ZIP: $_"
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Download failed: $_"
+            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+            $history = @()
+            if (Test-Path $historyFile) {
+                try {
+                    $content = Get-Content -Path $historyFile -Raw
+                    if ($content) {
+                        $parsed = $content | ConvertFrom-Json
+                        if ($parsed -is [array]) {
+                            $history = $parsed
+                        } else {
+                            $history = @($parsed)
+                        }
+                    }
+                } catch { $history = @() }
+            }
+            $entry = [PSCustomObject]@{
+                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                Task = "DownloadAndInstallDrivers"
+                Status = "Failed"
+                Details = "Download failed: $_"
+            }
+            $history = @($entry) + $history
+            # Keep last 100 entries
+            if ($history.Count -gt 100) { $history = $history[0..99] }
+            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
             return
         }
 
@@ -717,7 +867,32 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
              Write-SilentLog "[ERROR] Downloaded ZIP file is missing or empty."
              Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Downloaded ZIP is empty"
+             # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+             $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+             $history = @()
+             if (Test-Path $historyFile) {
+                 try {
+                     $content = Get-Content -Path $historyFile -Raw
+                     if ($content) {
+                         $parsed = $content | ConvertFrom-Json
+                         if ($parsed -is [array]) {
+                             $history = $parsed
+                         } else {
+                             $history = @($parsed)
+                         }
+                     }
+                 } catch { $history = @() }
+             }
+             $entry = [PSCustomObject]@{
+                 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                 Task = "DownloadAndInstallDrivers"
+                 Status = "Failed"
+                 Details = "Downloaded ZIP is empty"
+             }
+             $history = @($entry) + $history
+             # Keep last 100 entries
+             if ($history.Count -gt 100) { $history = $history[0..99] }
+             $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
              return
         }
 
@@ -729,14 +904,64 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         } catch {
             Write-SilentLog "[ERROR] Failed to extract ZIP: $_"
             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction failed: $_"
+            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+            $history = @()
+            if (Test-Path $historyFile) {
+                try {
+                    $content = Get-Content -Path $historyFile -Raw
+                    if ($content) {
+                        $parsed = $content | ConvertFrom-Json
+                        if ($parsed -is [array]) {
+                            $history = $parsed
+                        } else {
+                            $history = @($parsed)
+                        }
+                    }
+                } catch { $history = @() }
+            }
+            $entry = [PSCustomObject]@{
+                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                Task = "DownloadAndInstallDrivers"
+                Status = "Failed"
+                Details = "Extraction failed: $_"
+            }
+            $history = @($entry) + $history
+            # Keep last 100 entries
+            if ($history.Count -gt 100) { $history = $history[0..99] }
+            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
             return
         }
 
         if (-not (Test-Path $extractDir)) {
              Write-SilentLog "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
              Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction dir missing"
+             # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+             $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+             $history = @()
+             if (Test-Path $historyFile) {
+                 try {
+                     $content = Get-Content -Path $historyFile -Raw
+                     if ($content) {
+                         $parsed = $content | ConvertFrom-Json
+                         if ($parsed -is [array]) {
+                             $history = $parsed
+                         } else {
+                             $history = @($parsed)
+                         }
+                     }
+                 } catch { $history = @() }
+             }
+             $entry = [PSCustomObject]@{
+                 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                 Task = "DownloadAndInstallDrivers"
+                 Status = "Failed"
+                 Details = "Extraction dir missing"
+             }
+             $history = @($entry) + $history
+             # Keep last 100 entries
+             if ($history.Count -gt 100) { $history = $history[0..99] }
+             $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
              return
         }
 
@@ -786,19 +1011,15 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
                     $hasError = $false
                     $out | ForEach-Object {
                         # Check for common failure indicators in pnputil output
-                        if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+                        if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)" -and -not $hasError) {
                             Write-SilentLog "     $_" # Log the error line
                             $hasError = $true
                             $failCount++
-                        } elseif ($_ -match "^Published the driver") {
-                             # Successfully added to driver store
-                             # Actual installation success is harder to determine without checking exit code,
-                             # but if no explicit error occurred, assume success for counting.
-                             # pnputil exit code 0 usually means added/installed ok, non-zero means error.
                         }
                     }
+                    # After processing all output, check the exit code to determine success/failure
                     if (-not $hasError) {
-                         # If no specific error was logged, check the exit code
+                         # If no specific error was logged in the output, check the exit code
                          if ($LASTEXITCODE -eq 0) {
                               $successCount++
                               Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
@@ -837,7 +1058,32 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         }
     }
     Write-SilentLog "Completed"
-    Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Silent mode run"
+    # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+    $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+    $history = @()
+    if (Test-Path $historyFile) {
+        try {
+            $content = Get-Content -Path $historyFile -Raw
+            if ($content) {
+                $parsed = $content | ConvertFrom-Json
+                if ($parsed -is [array]) {
+                    $history = $parsed
+                } else {
+                    $history = @($parsed)
+                }
+            }
+        } catch { $history = @() }
+    }
+    $entry = [PSCustomObject]@{
+        Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+        Task = "DownloadAndInstallDrivers"
+        Status = "Completed"
+        Details = "Silent mode run"
+    }
+    $history = @($entry) + $history
+    # Keep last 100 entries
+    if ($history.Count -gt 100) { $history = $history[0..99] }
+    $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
 }
 "ScanDrivers" {
 Write-SilentLog "Scanning installed drivers..."
@@ -958,7 +1204,32 @@ Write-SilentLog "Completed"
 }
 default {
 Write-SilentLog "Unknown task: $Task"
-Add-HistoryEntry -TaskName $Task -Status "Failed" -Details "Unknown task"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+    try {
+        $content = Get-Content -Path $historyFile -Raw
+        if ($content) {
+            $parsed = $content | ConvertFrom-Json
+            if ($parsed -is [array]) {
+                $history = $parsed
+            } else {
+                $history = @($parsed)
+            }
+        }
+    } catch { $history = @() }
+}
+$entry = [PSCustomObject]@{
+    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Task = $Task
+    Status = "Failed"
+    Details = "Unknown task"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
 }
 }
 Write-SilentLog "Silent mode completed"
@@ -1349,7 +1620,32 @@ switch ($taskName) {
             
             if ($SearchResult.Updates.Count -eq 0) {
                 L "No driver updates available from Microsoft Update"
-                Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+                # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                $history = @()
+                if (Test-Path $historyFile) {
+                    try {
+                        $content = Get-Content -Path $historyFile -Raw
+                        if ($content) {
+                            $parsed = $content | ConvertFrom-Json
+                            if ($parsed -is [array]) {
+                                $history = $parsed
+                            } else {
+                                $history = @($parsed)
+                            }
+                        }
+                    } catch { $history = @() }
+                }
+                $entry = [PSCustomObject]@{
+                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                    Task = "DownloadAndInstallDrivers"
+                    Status = "Completed"
+                    Details = "No updates found (fallback to MS Update)"
+                }
+                $history = @($entry) + $history
+                # Keep last 100 entries
+                if ($history.Count -gt 100) { $history = $history[0..99] }
+                $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
             } else {
                 L "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
                 L ""
@@ -1404,16 +1700,91 @@ switch ($taskName) {
                             }
                         }
                         L "Successfully installed: $successCount, Failed: $failCount"
-                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                        $history = @()
+                        if (Test-Path $historyFile) {
+                            try {
+                                $content = Get-Content -Path $historyFile -Raw
+                                if ($content) {
+                                    $parsed = $content | ConvertFrom-Json
+                                    if ($parsed -is [array]) {
+                                        $history = $parsed
+                                    } else {
+                                        $history = @($parsed)
+                                    }
+                                }
+                            } catch { $history = @() }
+                        }
+                        $entry = [PSCustomObject]@{
+                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                            Task = "DownloadAndInstallDrivers"
+                            Status = "Completed"
+                            Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                        }
+                        $history = @($entry) + $history
+                        # Keep last 100 entries
+                        if ($history.Count -gt 100) { $history = $history[0..99] }
+                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
                     } else {
                         L "[WARNING] No updates were downloaded successfully from Microsoft Update"
-                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Download failed for all updates from MS Update"
+                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+                        $history = @()
+                        if (Test-Path $historyFile) {
+                            try {
+                                $content = Get-Content -Path $historyFile -Raw
+                                if ($content) {
+                                    $parsed = $content | ConvertFrom-Json
+                                    if ($parsed -is [array]) {
+                                        $history = $parsed
+                                    } else {
+                                        $history = @($parsed)
+                                    }
+                                }
+                            } catch { $history = @() }
+                        }
+                        $entry = [PSCustomObject]@{
+                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                            Task = "DownloadAndInstallDrivers"
+                            Status = "Completed"
+                            Details = "Download failed for all updates from MS Update"
+                        }
+                        $history = @($entry) + $history
+                        # Keep last 100 entries
+                        if ($history.Count -gt 100) { $history = $history[0..99] }
+                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
                     }
                 }
             }
         } catch {
             L "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
-            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details $_.Exception.Message
+            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+            $history = @()
+            if (Test-Path $historyFile) {
+                try {
+                    $content = Get-Content -Path $historyFile -Raw
+                    if ($content) {
+                        $parsed = $content | ConvertFrom-Json
+                        if ($parsed -is [array]) {
+                            $history = $parsed
+                        } else {
+                            $history = @($parsed)
+                        }
+                    }
+                } catch { $history = @() }
+            }
+            $entry = [PSCustomObject]@{
+                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+                Task = "DownloadAndInstallDrivers"
+                Status = "Failed"
+                Details = $_.Exception.Message
+            }
+            $history = @($entry) + $history
+            # Keep last 100 entries
+            if ($history.Count -gt 100) { $history = $history[0..99] }
+            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
         }
         L "Completed"
         return
@@ -1522,18 +1893,33 @@ switch ($taskName) {
                     # Use pnputil to add and install the driver
                     $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
                     $hasError = $false
+                    # Check for common failure indicators in pnputil output
+                    $hasError = $false
                     $out | ForEach-Object {
-                        # Check for common failure indicators in pnputil output
-                        if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+                        if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)" -and -not $hasError) {
                             L "     $_" # Log the error line
                             $hasError = $true
                             $failCount++
-                        } elseif ($_ -match "^Published the driver") {
-                             # Successfully added to driver store
-                             # Actual installation success is harder to determine without checking exit code,
-                             # but if no explicit error occurred, assume success for counting.
-                             # pnputil exit code 0 usually means added/installed ok, non-zero means error.
                         }
+                    }
+                    
+                    # After processing all output, check the exit code to determine success/failure
+                    if (-not $hasError) {
+                         # If no specific error was logged in the output, check the exit code
+                         if ($LASTEXITCODE -eq 0) {
+                              $successCount++
+                              L "     -> Added and installed successfully." # Optional verbose log
+                         } else {
+                              # pnputil reported an error via exit code, even if not captured in output
+                              $failCount++
+                              L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+                              $hasError = $true
+                         }
+                    }
+                    
+                    if (-not $hasError) {
+                         $successCount++
+                         L "     -> Added and installed successfully."
                     }
                     if (-not $hasError) {
                          # If no specific error was logged, check the exit code
@@ -1783,7 +2169,32 @@ if ($jobState -in @("Completed","Failed","Stopped","Disconnected","Blocked","Sus
 Start-Sleep -Milliseconds 200
 # Log to history
 $taskName = $global:CurrentJob.Name
-Add-HistoryEntry -TaskName $taskName -Status $jobState -Details "Task completed"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+    try {
+        $content = Get-Content -Path $historyFile -Raw
+        if ($content) {
+            $parsed = $content | ConvertFrom-Json
+            if ($parsed -is [array]) {
+                $history = $parsed
+            } else {
+                $history = @($parsed)
+            }
+        }
+    } catch { $history = @() }
+}
+$entry = [PSCustomObject]@{
+    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Task = $taskName
+    Status = $jobState
+    Details = "Task completed"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
 # pull final output and mark complete
 $finishedText = Get-LocalizedString 'TaskFinished'
 $invoke = [System.Windows.Forms.MethodInvoker]{
