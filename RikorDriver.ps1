@@ -589,10 +589,105 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 # NEW: Add new task case for downloading and installing from ZIP
 "DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
+    
     # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
     # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
     $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
 
+    # Check if Rikor server is available first
+    $rikorServerAvailable = $false
+    try {
+        # Test connection to the URL
+        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 10 -UseBasicParsing -ErrorAction Stop
+        if ($response.StatusCode -eq 200) {
+            $rikorServerAvailable = $true
+        }
+    } catch {
+        Write-SilentLog "[INFO] Rikor server is not accessible: $_"
+    }
+
+    if (-not $rikorServerAvailable) {
+        Write-SilentLog "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
+        
+        try {
+            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+            Write-SilentLog "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
+            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+            
+            if ($SearchResult.Updates.Count -eq 0) {
+                Write-SilentLog "No driver updates available from Microsoft Update"
+                Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+            } else {
+                Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
+                Write-SilentLog ""
+                foreach ($Update in $SearchResult.Updates) {
+                    Write-SilentLog "  - $($Update.Title)"
+                    Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+                }
+                Write-SilentLog ""
+                Write-SilentLog "Downloading and installing driver updates from Microsoft Update..."
+
+                # Create update collection for download and install
+                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                foreach ($Update in $SearchResult.Updates) {
+                    if ($Update.EulaAccepted -eq $false) {
+                        $Update.AcceptEula()
+                    }
+                    $UpdatesToDownload.Add($Update) | Out-Null
+                }
+
+                # Download updates
+                if ($UpdatesToDownload.Count -gt 0) {
+                    Write-SilentLog "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
+                    $Downloader = $UpdateSession.CreateUpdateDownloader()
+                    $Downloader.Updates = $UpdatesToDownload
+                    $DownloadResult = $Downloader.Download()
+                    Write-SilentLog "Download completed with result code: $($DownloadResult.ResultCode)"
+
+                    # Install downloaded updates
+                    $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($Update in $SearchResult.Updates) {
+                        if ($Update.IsDownloaded) {
+                            $UpdatesToInstall.Add($Update) | Out-Null
+                        }
+                    }
+
+                    if ($UpdatesToInstall.Count -gt 0) {
+                        Write-SilentLog "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
+                        $Installer = $UpdateSession.CreateUpdateInstaller()
+                        $Installer.Updates = $UpdatesToInstall
+                        $InstallResult = $Installer.Install()
+                        Write-SilentLog "Installation completed with result code: $($InstallResult.ResultCode)"
+                        Write-SilentLog "Reboot required: $($InstallResult.RebootRequired)"
+
+                        $successCount = 0
+                        $failCount = 0
+                        for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+                            $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+                            if ($resultCode -eq 2) { # 2 = Succeeded
+                                $successCount++
+                            } else {
+                                $failCount++
+                            }
+                        }
+                        Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
+                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                    } else {
+                        Write-SilentLog "[WARNING] No updates were downloaded successfully from Microsoft Update"
+                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Download failed for all updates from MS Update"
+                    }
+                }
+            }
+        } catch {
+            Write-SilentLog "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
+            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details $_.Exception.Message
+        }
+        Write-SilentLog "Completed"
+        return
+    }
+
+    # Validate the URL
     if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
         Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
         Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
@@ -1230,6 +1325,99 @@ switch ($taskName) {
     # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
     # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
     $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
+
+    # Check if Rikor server is available first
+    $rikorServerAvailable = $false
+    try {
+        # Test connection to the URL
+        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 10 -UseBasicParsing -ErrorAction Stop
+        if ($response.StatusCode -eq 200) {
+            $rikorServerAvailable = $true
+        }
+    } catch {
+        L "[INFO] Rikor server is not accessible: $_"
+    }
+
+    if (-not $rikorServerAvailable) {
+        L "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
+        
+        try {
+            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+            L "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
+            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+            
+            if ($SearchResult.Updates.Count -eq 0) {
+                L "No driver updates available from Microsoft Update"
+                Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+            } else {
+                L "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
+                L ""
+                foreach ($Update in $SearchResult.Updates) {
+                    L "  - $($Update.Title)"
+                    L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+                }
+                L ""
+                L "Downloading and installing driver updates from Microsoft Update..."
+
+                # Create update collection for download and install
+                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                foreach ($Update in $SearchResult.Updates) {
+                    if ($Update.EulaAccepted -eq $false) {
+                        $Update.AcceptEula()
+                    }
+                    $UpdatesToDownload.Add($Update) | Out-Null
+                }
+
+                # Download updates
+                if ($UpdatesToDownload.Count -gt 0) {
+                    L "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
+                    $Downloader = $UpdateSession.CreateUpdateDownloader()
+                    $Downloader.Updates = $UpdatesToDownload
+                    $DownloadResult = $Downloader.Download()
+                    L "Download completed with result code: $($DownloadResult.ResultCode)"
+
+                    # Install downloaded updates
+                    $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                    foreach ($Update in $SearchResult.Updates) {
+                        if ($Update.IsDownloaded) {
+                            $UpdatesToInstall.Add($Update) | Out-Null
+                        }
+                    }
+
+                    if ($UpdatesToInstall.Count -gt 0) {
+                        L "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
+                        $Installer = $UpdateSession.CreateUpdateInstaller()
+                        $Installer.Updates = $UpdatesToInstall
+                        $InstallResult = $Installer.Install()
+                        L "Installation completed with result code: $($InstallResult.ResultCode)"
+                        L "Reboot required: $($InstallResult.RebootRequired)"
+
+                        $successCount = 0
+                        $failCount = 0
+                        for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+                            $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+                            if ($resultCode -eq 2) { # 2 = Succeeded
+                                $successCount++
+                            } else {
+                                $failCount++
+                            }
+                        }
+                        L "Successfully installed: $successCount, Failed: $failCount"
+                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                    } else {
+                        L "[WARNING] No updates were downloaded successfully from Microsoft Update"
+                        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Download failed for all updates from MS Update"
+                    }
+                }
+            }
+        } catch {
+            L "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
+            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details $_.Exception.Message
+        }
+        L "Completed"
+        return
+    }
 
     # Validate the URL
     if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
