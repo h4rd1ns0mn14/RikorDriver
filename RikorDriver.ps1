@@ -837,7 +837,7 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 
         $zipPath = Join-Path $tempDir "drivers.zip"
 
-        Write-SilentLog "Downloading drivers archive from: $zipUrl"
+        Write-SilentLog "Starting download of drivers archive..."
         try {
             # Use basic parsing to avoid issues with complex pages
             # Use .NET WebClient for reliable download from Nextcloud (handles dynamic links better)
@@ -1869,7 +1869,7 @@ switch ($taskName) {
         $zipPath = Join-Path $tempDir "drivers.zip"
 
         # Download ZIP
-        L "Downloading drivers archive from: $zipUrl"
+        L "Starting download of drivers archive..."
         try {
             # Force TLS 1.2 for Nextcloud compatibility
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -1896,16 +1896,18 @@ switch ($taskName) {
                     $webClient.add_DownloadProgressChanged({
                         param($sender, $event)
                         
+                        # If server returned file size (TotalBytesToReceive > 0)
                         if ($event.TotalBytesToReceive -gt 0) {
                             $percent = [math]::Round(($event.BytesReceived / $event.TotalBytesToReceive) * 100, 2)
                             $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
                             $totalMB = [math]::Round($event.TotalBytesToReceive / 1MB, 2)
                             
                             Write-Progress -Activity $Activity -Status "$percent% Complete ($receivedMB/$totalMB MB)" -PercentComplete $percent
-                        } else {
-                            # For dynamic files where size is unknown, just show received bytes
+                        }
+                        else {
+                            # If file size is unknown (typical for Nextcloud dynamic links), show downloaded amount only
                             $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
-                            Write-Progress -Activity $Activity -Status "Received: $receivedMB MB" -PercentComplete 0
+                            Write-Progress -Activity $Activity -Status "Downloaded: $receivedMB MB (Size unknown...)" -PercentComplete 0
                         }
                     })
                     
