@@ -1,23 +1,14 @@
-﻿# Driver Updater Rikor v 2.0 - Fixed Critical Issues
+# Driver Updater Rikor v 1.0
 # Run as Administrator
-# Usage: .\RikorDriver.ps1
-# Silent mode: .\RikorDriver.ps1 -Silent -Task "CheckDriverUpdates"
-#
-# CHANGELOG v2.0:
-# - Fixed double error counting in pnputil
-# - Added INF file validation
-# - Improved temp file cleanup
-# - Added admin rights check in background jobs
-# - Restored Microsoft Update driver search
-# - Removed broken Google Drive download (server unavailable)
+# Usage: irm https://raw.githubusercontent.com/h4rd1ns0mn14/RikorDriver/refs/heads/main/RikorDriver.ps1 | iex
+# Silent mode: .\updateAllDrivers.ps1 -Silent -Task "CheckDriverUpdates"
 param(
 [switch]$Silent,
 [string]$Task = "",
 [string]$Language = "en",
 [string]$ProxyAddress = "",
 [string]$FilterClass = "",
-[string]$FilterManufacturer = "",
-[array]$AdditionalArgs = @()
+[string]$FilterManufacturer = ""
 )
 Add-Type -AssemblyName System.Windows.Forms
 Add-Type -AssemblyName System.Drawing
@@ -26,8 +17,10 @@ Add-Type -AssemblyName System.Drawing
 # -------------------------
 $global:Languages = @{
 "en" = @{
-AppTitle = "Rikor Driver Installer V2.0"
-BtnDownloadRikor = "Download Drivers from Rikor Server"
+AppTitle = "Rikor Driver Installer"
+# BtnWU removed
+BtnCheckUpdates = "Search & Install Rikor Drivers" # Updated text
+BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
 BtnInstall = "Install From Folder"
@@ -79,57 +72,285 @@ Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
 }
-BtnDownloadRikor = "��������� �������� � ������� Rikor"
-BtnScan = "����������� ������������� ��������"
-BtnBackup = "��������� �����������"
-BtnInstall = "���������� �� �����"
-BtnCancel = "�������� ������"
-BtnOpenLogs = "������� �������"
-BtnDarkMode = "Ҹ���� ����"
-BtnLightMode = "������� ����"
-BtnSchedule = "������������� ����������"
-BtnRestorePoint = "������� ����� ��������������"
-BtnHistory = "������� ����������"
-BtnSettings = "���������"
-BtnFilters = "�������"
-TaskRunning = "������ ��� �����������. ������� �������� �."
-PermissionError = "��������� ���� ������ �� ����� ��������������."
-BackupCanceled = "��������� ����������� �������� �������������."
-InstallCanceled = "��������� �������� �������������."
-NoTaskToCancel = "��� ���������� ������ ��� ������."
-TaskCancelled = "[��������] ������ �������� �������������."
-LogFolderMissing = "����� ������� �� �������."
-StartingTask = "-> ������ ������:"
-TaskFinished = "=== ������ ���������:"
-SelectBackupFolder = "�������� ����� ��� ���������� ��������� ����� ���������"
-SelectDriverFolder = "�������� ����� � ������� ��������� (.inf)"
-ScheduleCreated = "��������������� ������ ������� �������!"
-ScheduleRemoved = "��������������� ������ �������."
-RestorePointCreated = "����� �������������� ������� ������� �������!"
-RestorePointFailed = "�� ������� ������� ����� ��������������."
-ProxyConfigured = "������ ��������:"
-ProxyCleared = "��������� ������ ��������."
-FilterApplied = "������ �������:"
-FilterCleared = "������� ��������."
-LanguageChanged = "���� ������ ��:"
-HistoryEmpty = "������� ���������� �� �������."
-SettingsTitle = "���������"
-ScheduleTitle = "������������� ����������"
-FilterTitle = "������� ���������"
-HistoryTitle = "������� ����������"
-Daily = "���������"
-Weekly = "�����������"
-Monthly = "����������"
-Time = "�����:"
-ProxyLabel = "����� ������:"
-ClassFilter = "������ �� ������:"
-ManufacturerFilter = "������ �� �������������:"
-Apply = "���������"
-Clear = "��������"
-Close = "�������"
-Enable = "��������"
-Disable = "���������"
-Remove = "������� ����������"
+"es" = @{
+AppTitle = "Instalador de Controladores Rikor"
+# BtnWU removed
+BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
+BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
+BtnScan = "Escanear Controladores"
+BtnBackup = "Respaldar Controladores"
+BtnInstall = "Instalar desde Carpeta"
+BtnCancel = "Cancelar Tarea"
+BtnOpenLogs = "Abrir Registros"
+BtnDarkMode = "Modo Oscuro"
+BtnLightMode = "Modo Claro"
+BtnSchedule = "Programar Actualizaciones"
+BtnRestorePoint = "Crear Punto Restauracion"
+BtnHistory = "Historial"
+BtnSettings = "Configuracion"
+BtnFilters = "Filtros"
+TaskRunning = "Ya hay una tarea en ejecucion. Cancelela primero."
+PermissionError = "Ejecute este script como Administrador."
+BackupCanceled = "Respaldo cancelado por el usuario."
+InstallCanceled = "Instalacion cancelada por el usuario."
+NoTaskToCancel = "No hay tarea para cancelar."
+TaskCancelled = "[CANCELADO] Tarea cancelada por el usuario."
+LogFolderMissing = "Carpeta de registros no encontrada."
+StartingTask = "-> Iniciando tarea:"
+TaskFinished = "=== Tarea finalizada:"
+SelectBackupFolder = "Seleccione carpeta para guardar respaldo"
+SelectDriverFolder = "Seleccione carpeta con archivos .inf"
+ScheduleCreated = "Tarea programada creada!"
+ScheduleRemoved = "Tarea programada eliminada."
+RestorePointCreated = "Punto de restauracion creado!"
+RestorePointFailed = "Error al crear punto de restauracion."
+ProxyConfigured = "Proxy configurado:"
+ProxyCleared = "Configuracion de proxy eliminada."
+FilterApplied = "Filtro aplicado:"
+FilterCleared = "Filtros eliminados."
+LanguageChanged = "Idioma cambiado a:"
+HistoryEmpty = "No hay historial de actualizaciones."
+SettingsTitle = "Configuracion"
+ScheduleTitle = "Programar Actualizaciones"
+FilterTitle = "Filtros de Controladores"
+HistoryTitle = "Historial de Actualizaciones"
+Daily = "Diario"
+Weekly = "Semanal"
+Monthly = "Mensual"
+Time = "Hora:"
+ProxyLabel = "Direccion Proxy:"
+ClassFilter = "Filtrar por Clase:"
+ManufacturerFilter = "Filtrar por Fabricante:"
+Apply = "Aplicar"
+Clear = "Limpiar"
+Close = "Cerrar"
+Enable = "Habilitar"
+Disable = "Deshabilitar"
+Remove = "Eliminar Programacion"
+}
+"fr" = @{
+AppTitle = "Installateur de Pilotes Rikor"
+# BtnWU removed
+BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
+BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
+BtnScan = "Analyser les Pilotes"
+BtnBackup = "Sauvegarder"
+BtnInstall = "Installer depuis Dossier"
+BtnCancel = "Annuler"
+BtnOpenLogs = "Ouvrir Journaux"
+BtnDarkMode = "Mode Sombre"
+BtnLightMode = "Mode Clair"
+BtnSchedule = "Planifier"
+BtnRestorePoint = "Point de Restauration"
+BtnHistory = "Historique"
+BtnSettings = "Parametres"
+BtnFilters = "Filtres"
+TaskRunning = "Une tache est deja en cours. Annulez-la d'abord."
+PermissionError = "Executez ce script en tant qu'Administrateur."
+BackupCanceled = "Sauvegarde annulee."
+InstallCanceled = "Installation annulee."
+NoTaskToCancel = "Aucune tache a annuler."
+TaskCancelled = "[ANNULE] Tache annulee."
+LogFolderMissing = "Dossier des journaux manquant."
+StartingTask = "-> Demarrage de la tache:"
+TaskFinished = "=== Tache terminee:"
+SelectBackupFolder = "Selectionnez le dossier de sauvegarde"
+SelectDriverFolder = "Selectionnez le dossier avec les fichiers .inf"
+ScheduleCreated = "Tache planifiee creee!"
+ScheduleRemoved = "Tache planifiee supprimee."
+RestorePointCreated = "Point de restauration cree!"
+RestorePointFailed = "Echec de creation du point de restauration."
+ProxyConfigured = "Proxy configure:"
+ProxyCleared = "Parametres proxy effaces."
+FilterApplied = "Filtre applique:"
+FilterCleared = "Filtres effaces."
+LanguageChanged = "Langue changee en:"
+HistoryEmpty = "Aucun historique trouve."
+SettingsTitle = "Parametres"
+ScheduleTitle = "Planifier les Mises a Jour"
+FilterTitle = "Filtres des Pilotes"
+HistoryTitle = "Historique des Mises a Jour"
+Daily = "Quotidien"
+Weekly = "Hebdomadaire"
+Monthly = "Mensuel"
+Time = "Heure:"
+ProxyLabel = "Adresse Proxy:"
+ClassFilter = "Filtrer par Classe:"
+ManufacturerFilter = "Filtrer par Fabricant:"
+Apply = "Appliquer"
+Clear = "Effacer"
+Close = "Fermer"
+Enable = "Activer"
+Disable = "Desactiver"
+Remove = "Supprimer Planification"
+}
+"de" = @{
+AppTitle = "Rikor Treiber-Installationsprogramm"
+# BtnWU removed
+BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
+BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
+BtnScan = "Treiber scannen"
+BtnBackup = "Sicherung"
+BtnInstall = "Aus Ordner installieren"
+BtnCancel = "Abbrechen"
+BtnOpenLogs = "Protokolle"
+BtnDarkMode = "Dunkelmodus"
+BtnLightMode = "Hellmodus"
+BtnSchedule = "Zeitplan"
+BtnRestorePoint = "Wiederherstellungspunkt"
+BtnHistory = "Verlauf"
+BtnSettings = "Einstellungen"
+BtnFilters = "Filter"
+TaskRunning = "Eine Aufgabe laeuft bereits."
+PermissionError = "Fuehren Sie dieses Skript als administrator aus."
+BackupCanceled = "Sicherung abgebrochen."
+InstallCanceled = "Installation abgebrochen."
+NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
+TaskCancelled = "[ABGEBROCHEN] Aufgabe abgebrochen."
+LogFolderMissing = "Protokollordner fehlt."
+StartingTask = "-> Starte Aufgabe:"
+TaskFinished = "=== Aufgabe beendet:"
+SelectBackupFolder = "Sicherungsordner auswaehlen"
+SelectDriverFolder = "Ordner mit .inf-Dateien auswaehlen"
+ScheduleCreated = "Geplante Aufgabe erstellt!"
+ScheduleRemoved = "Geplante Aufgabe entfernt."
+RestorePointCreated = "Wiederherstellungspunkt erstellt!"
+RestorePointFailed = "Fehler beim Erstellen des Wiederherstellungspunkts."
+ProxyConfigured = "Proxy konfiguriert:"
+ProxyCleared = "Proxy-Einstellungen geloescht."
+FilterApplied = "Filter angewendet:"
+FilterCleared = "Filter geloescht."
+LanguageChanged = "Sprache geaendert zu:"
+HistoryEmpty = "Kein Verlauf gefunden."
+SettingsTitle = "Einstellungen"
+ScheduleTitle = "Updates planen"
+FilterTitle = "Treiberfilter"
+HistoryTitle = "Update-Verlauf"
+Daily = "Taeglich"
+Weekly = "Woechentlich"
+Monthly = "Monatlich"
+Time = "Zeit:"
+ProxyLabel = "Proxy-Adresse:"
+ClassFilter = "Nach Klasse filtern:"
+ManufacturerFilter = "Nach Hersteller filtern:"
+Apply = "Anwenden"
+Clear = "Loeschen"
+Close = "Schliessen"
+Enable = "Aktivieren"
+Disable = "Deaktivieren"
+Remove = "Zeitplan entfernen"
+}
+"pt" = @{
+AppTitle = "Instalador de Drivers Rikor"
+# BtnWU removed
+BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
+BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
+BtnScan = "Escanear Drivers"
+BtnBackup = "Backup"
+BtnInstall = "Instalar da Pasta"
+BtnCancel = "Cancelar"
+BtnOpenLogs = "Abrir Logs"
+BtnDarkMode = "Modo Escuro"
+BtnLightMode = "Modo Claro"
+BtnSchedule = "Agendar"
+BtnRestorePoint = "Ponto de Restauracao"
+BtnHistory = "Historico"
+BtnSettings = "Configuracoes"
+BtnFilters = "Filtros"
+TaskRunning = "Uma tarefa ja esta em execucao."
+PermissionError = "Execute este script como Administrador."
+BackupCanceled = "Backup cancelado."
+InstallCanceled = "Instalacao cancelada."
+NoTaskToCancel = "Nenhuma tarefa para cancelar."
+TaskCancelled = "[CANCELADO] Tarefa cancelada."
+LogFolderMissing = "Pasta de logs nao encontrada."
+StartingTask = "-> Iniciando tarefa:"
+TaskFinished = "=== Tarefa concluida:"
+SelectBackupFolder = "Selecione a pasta de backup"
+SelectDriverFolder = "Selecione a pasta com arquivos .inf"
+ScheduleCreated = "Tarefa agendada criada!"
+ScheduleRemoved = "Tarefa agendada removida."
+RestorePointCreated = "Ponto de restauracao criado!"
+RestorePointFailed = "Falha ao criar ponto de restauracao."
+ProxyConfigured = "Proxy configurado:"
+ProxyCleared = "Configuracoes de proxy limpas."
+FilterApplied = "Filtro aplicado:"
+FilterCleared = "Filtros limpos."
+LanguageChanged = "Idioma alterado para:"
+HistoryEmpty = "Nenhum historico encontrado."
+SettingsTitle = "Configuracoes"
+ScheduleTitle = "Agendar Atualizacoes"
+FilterTitle = "Filtros de Drivers"
+HistoryTitle = "Historico de Atualizacoes"
+Daily = "Diario"
+Weekly = "Semanal"
+Monthly = "Mensal"
+Time = "Hora:"
+ProxyLabel = "Endereco Proxy:"
+ClassFilter = "Filtrar por Classe:"
+ManufacturerFilter = "Filtrar por Fabricante:"
+Apply = "Aplicar"
+Clear = "Limpar"
+Close = "Fechar"
+Enable = "Habilitar"
+Disable = "Desabilitar"
+Remove = "Remover Agendamento"
+}
+"it" = @{
+AppTitle = "Installatore Driver Rikor"
+# BtnWU removed
+BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
+BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
+BtnScan = "Scansiona Driver"
+BtnBackup = "Backup"
+BtnInstall = "Installa da Cartella"
+BtnCancel = "Annulla"
+BtnOpenLogs = "Apri Log"
+BtnDarkMode = "Modalita Scura"
+BtnLightMode = "Modalita Chiara"
+BtnSchedule = "Pianifica"
+BtnRestorePoint = "Punto di Ripristino"
+BtnHistory = "Cronologia"
+BtnSettings = "Impostazioni"
+BtnFilters = "Filtri"
+TaskRunning = "Un'attivita e gia in esecuzione."
+PermissionError = "Esegui questo script come Amministratore."
+BackupCanceled = "Backup annullato."
+InstallCanceled = "Installazione annullata."
+NoTaskToCancel = "Nessuna attivita da annullare."
+TaskCancelled = "[ANNULLATO] Attivita annullata."
+LogFolderMissing = "Cartella log mancante."
+StartingTask = "-> Avvio attivita:"
+TaskFinished = "=== Attivita completata:"
+SelectBackupFolder = "Seleziona cartella di backup"
+SelectDriverFolder = "Seleziona cartella con file .inf"
+ScheduleCreated = "Attivita pianificata creata!"
+ScheduleRemoved = "Attivita pianificata rimossa."
+RestorePointCreated = "Punto di ripristino creato!"
+RestorePointFailed = "Errore nella creazione del punto di ripristino."
+ProxyConfigured = "Proxy configurato:"
+ProxyCleared = "Impostazioni proxy cancellate."
+FilterApplied = "Filtro applicato:"
+FilterCleared = "Filtri cancellati."
+LanguageChanged = "Lingua cambiata in:"
+HistoryEmpty = "Nessuna cronologia trovata."
+SettingsTitle = "Impostazioni"
+ScheduleTitle = "Pianifica Aggiornamenti"
+FilterTitle = "Filtri Driver"
+HistoryTitle = "Cronologia Aggiornamenti"
+Daily = "Giornaliero"
+Weekly = "Settimanale"
+Monthly = "Mensile"
+Time = "Ora:"
+ProxyLabel = "Indirizzo Proxy:"
+ClassFilter = "Filtra per Classe:"
+ManufacturerFilter = "Filtra per Produttore:"
+Apply = "Applica"
+Clear = "Cancella"
+Close = "Chiudi"
+Enable = "Abilita"
+Disable = "Disabilita"
+Remove = "Rimuovi Pianificazione"
 }
 }
 # Get localized string
@@ -309,8 +530,8 @@ try {
 Remove-ScheduledUpdate
 $scriptPath = $PSCommandPath
 if (-not $scriptPath) { $scriptPath = $MyInvocation.PSCommandPath }
-# NEW: Update scheduled task action to use new combined task name
-$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Silent -Task DownloadRikorDrivers"
+# CHANGED: Update scheduled task action to point to current script and new task name
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Silent -Task DownloadAndInstallDrivers"
 switch ($Frequency) {
 "Daily" { $trigger = New-ScheduledTaskTrigger -Daily -At $Time }
 "Weekly" { $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At $Time }
@@ -336,8 +557,6 @@ return $true
 # Silent Mode Operation
 # -------------------------
 if ($Silent -and $Task) {
-# Initialize empty array for additional arguments
-$innerArgs = @()
 $logFile = Join-Path $LogBase "$Task`_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
 function Write-SilentLog($msg) {
 $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
@@ -345,100 +564,185 @@ Add-Content -Path $logFile -Value "$timestamp - $msg"
 }
 Write-SilentLog "Starting silent mode: $Task"
 switch ($Task) {
-# NEW: Combined task - try Rikor server first, fallback to Microsoft Update
-"DownloadRikorDrivers" {
-Write-SilentLog "Attempting to download drivers from Rikor server..."
-$rikorServerAvailable = $false
-# TODO: Add actual Rikor server URL and download logic here
-# For now, simulate server check
+# REMOVED "WindowsUpdate" case
+"CheckDriverUpdates" {
+Write-SilentLog "Checking for driver updates and attempting to install..."
 try {
-    # Placeholder for Rikor server check
-    # $rikorUrl = "https://rikor-server.example.com/drivers"
-    # Test-Connection or Invoke-WebRequest to check availability
-    Write-SilentLog "[INFO] Rikor server is currently unavailable."
-    $rikorServerAvailable = $false
-} catch {
-    Write-SilentLog "[INFO] Cannot connect to Rikor server."
-    $rikorServerAvailable = $false
+$UpdateSession = New-Object -ComObject Microsoft.Update.Session
+$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+if ($SearchResult.Updates.Count -eq 0) {
+Write-SilentLog "No driver updates available"
+Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Completed" -Details "No updates found"
+} else {
+Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s)"
+foreach ($Update in $SearchResult.Updates) {
+Write-SilentLog "  - $($Update.Title)"
 }
+Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Completed" -Details "Found $($SearchResult.Updates.Count) updates"
+}
+} catch {
+Write-SilentLog "Error: $_"
+Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exception.Message
+}
+}
+# NEW: Add new task case for downloading and installing from ZIP
+"DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
+    Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
+    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
+    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
 
-if (-not $rikorServerAvailable) {
-    Write-SilentLog "[INFO] Falling back to Microsoft Update for driver search and installation..."
+    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
+        Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
+        Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "URL not configured"
+        return
+    }
+
+    $tempDir = Join-Path $env:TEMP "RikorDriversTempSilent_$(Get-Date -Format 'yyyyMMddHHmmss')"
     try {
-        $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-        $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-        Write-SilentLog "Searching for available driver updates (this may take a few minutes)..."
-        $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-        if ($SearchResult.Updates.Count -eq 0) {
-            Write-SilentLog "No driver updates available from Microsoft Update"
-            Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+        Write-SilentLog "Created temporary directory: $tempDir"
+
+        $zipPath = Join-Path $tempDir "drivers.zip"
+
+        Write-SilentLog "Downloading drivers archive from: $zipUrl"
+        try {
+            # Use basic parsing to avoid issues with complex pages
+            Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+            Write-SilentLog "Download completed to: $zipPath"
+        } catch {
+            Write-SilentLog "[ERROR] Failed to download ZIP: $_"
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Download failed: $_"
+            return
+        }
+
+        # Check if ZIP exists and is not empty
+        if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
+             Write-SilentLog "[ERROR] Downloaded ZIP file is missing or empty."
+             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Downloaded ZIP is empty"
+             return
+        }
+
+        $extractDir = Join-Path $tempDir "ExtractedDrivers"
+        Write-SilentLog "Extracting ZIP archive to: $extractDir"
+        try {
+            Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+            Write-SilentLog "Extraction completed."
+        } catch {
+            Write-SilentLog "[ERROR] Failed to extract ZIP: $_"
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction failed: $_"
+            return
+        }
+
+        if (-not (Test-Path $extractDir)) {
+             Write-SilentLog "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
+             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+             Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Failed" -Details "Extraction dir missing"
+             return
+        }
+
+        $infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
+        if ($infFilesInZip.Count -eq 0) {
+            Write-SilentLog "[WARNING] No .inf files found in the downloaded archive after extraction."
+            # Still proceed to InstallDrivers task, which will report its own error if needed
         } else {
-            Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available:"
-            Write-SilentLog ""
-            foreach ($Update in $SearchResult.Updates) {
-                Write-SilentLog "  - $($Update.Title)"
-                Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+            Write-SilentLog "Found $($infFilesInZip.Count) .inf file(s) in the archive."
+        }
+
+        # Prepare arguments for the InstallDrivers task logic
+        $installArgs = @($extractDir)
+
+        # --- Simulate calling the InstallDrivers logic directly within the same job ---
+        # This avoids creating another nested job and keeps logging consistent.
+        $folder = $installArgs[0]
+        Write-SilentLog "Installing drivers from extracted archive: $folder"
+        try {
+            if (-not (Test-Path $folder)) {
+                Write-SilentLog "[ERROR] Folder not found: $folder (This should not happen after extraction)"
+                Write-SilentLog "Completed"
+                return
             }
-            Write-SilentLog ""
-            Write-SilentLog "Downloading and installing driver updates..."
-            
-            # Create update collection for download and install
-            $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-            foreach ($Update in $SearchResult.Updates) {
-                if ($Update.EulaAccepted -eq $false) {
-                    $Update.AcceptEula()
-                }
-                $UpdatesToDownload.Add($Update) | Out-Null
+
+            # Find INF files recursively in the extracted folder
+            $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+
+            if ($infFiles.Count -eq 0) {
+                Write-SilentLog "[ERROR] No .inf driver files found in the extracted folder: $folder"
+                Write-SilentLog "Completed"
+                return
             }
-            
-            # Download updates
-            if ($UpdatesToDownload.Count -gt 0) {
-                Write-SilentLog "Downloading $($UpdatesToDownload.Count) update(s)..."
-                $Downloader = $UpdateSession.CreateUpdateDownloader()
-                $Downloader.Updates = $UpdatesToDownload
-                $DownloadResult = $Downloader.Download()
-                Write-SilentLog "Download completed with result code: $($DownloadResult.ResultCode)"
-                
-                # Install downloaded updates
-                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
-                foreach ($Update in $SearchResult.Updates) {
-                    if ($Update.IsDownloaded) {
-                        $UpdatesToInstall.Add($Update) | Out-Null
-                    }
-                }
-                
-                if ($UpdatesToInstall.Count -gt 0) {
-                    Write-SilentLog "Installing $($UpdatesToInstall.Count) update(s)..."
-                    $Installer = $UpdateSession.CreateUpdateInstaller()
-                    $Installer.Updates = $UpdatesToInstall
-                    $InstallResult = $Installer.Install()
-                    Write-SilentLog "Installation completed with result code: $($InstallResult.ResultCode)"
-                    Write-SilentLog "Reboot required: $($InstallResult.RebootRequired)"
-                    
-                    $successCount = 0
-                    $failCount = 0
-                    for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
-                        $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
-                        if ($resultCode -eq 2) { # 2 = Succeeded
-                            $successCount++
-                        } else {
+
+            Write-SilentLog "Found $($infFiles.Count) driver file(s) in extracted folder"
+            Write-SilentLog "Installing drivers..."
+            Write-SilentLog ""
+            $successCount = 0
+            $failCount = 0
+            $current = 0
+            foreach ($inf in $infFiles) {
+                $current++
+                Write-SilentLog "[$current/$($infFiles.Count)] $($inf.Name)"
+                try {
+                    # Use pnputil to add and install the driver
+                    $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+                    $hasError = $false
+                    $out | ForEach-Object {
+                        # Check for common failure indicators in pnputil output
+                        if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+                            Write-SilentLog "     $_" # Log the error line
+                            $hasError = $true
                             $failCount++
+                        } elseif ($_ -match "^Published the driver") {
+                             # Successfully added to driver store
+                             # Actual installation success is harder to determine without checking exit code,
+                             # but if no explicit error occurred, assume success for counting.
+                             # pnputil exit code 0 usually means added/installed ok, non-zero means error.
                         }
                     }
-                    Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
-                    Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
-                } else {
-                    Write-SilentLog "[WARNING] No updates were downloaded successfully"
-                    Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "Download failed for all updates"
+                    if (-not $hasError) {
+                         # If no specific error was logged, check the exit code
+                         if ($LASTEXITCODE -eq 0) {
+                              $successCount++
+                              Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
+                         } else {
+                              # pnputil reported an error via exit code, even if not captured in output
+                              $failCount++
+                              Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+                         }
+                    }
+                } catch {
+                    $failCount++
+                    Write-SilentLog "     -> Exception during installation: $_"
                 }
+                Start-Sleep -Milliseconds 300
             }
+            Write-SilentLog ""
+            Write-SilentLog "Installation from archive complete: $successCount successful, $failCount failed"
+            if ($successCount -gt 0) {
+                Write-SilentLog "Note: Reboot may be required for some drivers to take effect."
+            }
+        } catch {
+            Write-SilentLog "[ERROR] Installation process failed: $_"
         }
+        # --- End of simulated InstallDrivers logic ---
+
     } catch {
-        Write-SilentLog "[ERROR] Failed to download/install driver updates: $_"
-        Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Failed" -Details $_.Exception.Message
+        Write-SilentLog "[ERROR] An unexpected error occurred during download/extraction: $_"
+    } finally {
+        # Always attempt to clean up the temporary directory
+        Write-SilentLog "Cleaning up temporary directory: $tempDir"
+        Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path $tempDir) {
+            Write-SilentLog "[WARNING] Could not remove temporary directory: $tempDir"
+        } else {
+            Write-SilentLog "Temporary directory cleaned up successfully."
+        }
     }
-}
-Write-SilentLog "Completed"
+    Write-SilentLog "Completed"
+    Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Completed" -Details "Silent mode run"
 }
 "ScanDrivers" {
 Write-SilentLog "Scanning installed drivers..."
@@ -468,7 +772,7 @@ Write-SilentLog "  ... and $($drivers.Count - $sampleCount) more"
 }
 Write-SilentLog ""
 Write-SilentLog "Exporting full list to CSV..."
-$csvPath = Join-Path (Split-Path $logFile) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
+$csvPath = Join-Path (Split-Path $logPath) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
 $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 Write-SilentLog "Exported to: $csvPath"
 Write-SilentLog "Completed"
@@ -477,7 +781,7 @@ Write-SilentLog "[ERROR] Failed to scan drivers: $_"
 }
 }
 "BackupDrivers" {
-$dest = $AdditionalArgs[0]
+$dest = $innerArgs[0]
 Write-SilentLog "Backing up drivers to: $dest"
 try {
 if (!(Test-Path $dest)) {
@@ -497,7 +801,7 @@ Write-SilentLog "[ERROR] Backup failed: $_"
 Write-SilentLog "Completed"
 }
 "InstallDrivers" {
-$folder = $AdditionalArgs[0]
+$folder = $innerArgs[0]
 Write-SilentLog "Installing drivers from: $folder"
 try {
 if (-not (Test-Path $folder)) {
@@ -517,44 +821,33 @@ Write-SilentLog ""
 $successCount = 0
 $failCount = 0
 $current = 0
-# FIXED: Corrected double error counting logic
 foreach ($inf in $infFiles) {
 $current++
 Write-SilentLog "[$current/$($infFiles.Count)] $($inf.Name)"
 try {
-# Validate INF file before installation
-$infContent = Get-Content $inf.FullName -Raw -ErrorAction SilentlyContinue
-if (-not $infContent -or $infContent -notmatch '\[Version\]') {
-    Write-SilentLog "     -> SKIPPED: Invalid INF file"
-    $failCount++
-    continue
-}
-
-# Check architecture compatibility
-$is64Bit = [Environment]::Is64BitOperatingSystem
-$archPattern = if ($is64Bit) { "amd64|x64|NTamd64" } else { "x86|NTx86" }
-if ($infContent -notmatch $archPattern) {
-    Write-SilentLog "     -> SKIPPED: Incompatible architecture"
-    $failCount++
-    continue
-}
-
-# Install driver using pnputil
 $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+$hasError = $false
+$out | ForEach-Object {
+if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+Write-SilentLog "     $_" # Log the error line
+$hasError = $true
+$failCount++
+}
+}
+if (-not $hasError) {
+# If no specific error was logged, check the exit code
 if ($LASTEXITCODE -eq 0) {
-    $successCount++
-    Write-SilentLog "     -> Successfully installed"
+     $successCount++
+     Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
 } else {
-    $failCount++
-    Write-SilentLog "     -> Installation failed (exit code: $LASTEXITCODE)"
-    # Log error details
-    $out | Where-Object { $_ -match "error|fail" } | ForEach-Object {
-        Write-SilentLog "        $_"
-    }
+     # pnputil reported an error via exit code, even if not captured in output
+     $failCount++
+     Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+}
 }
 } catch {
 $failCount++
-Write-SilentLog "     -> Exception: $_"
+Write-SilentLog "     -> Exception during installation: $_"
 }
 Start-Sleep -Milliseconds 300
 }
@@ -666,10 +959,14 @@ $menuFile.DropDownItems.AddRange(@($menuOpenLogs, $menuSeparator1, $menuExit))
 # Actions Menu
 $menuActions = New-Object Windows.Forms.ToolStripMenuItem
 $menuActions.Text = "&Actions"
-# NEW: Single combined menu item for Rikor download
-$menuDownloadRikor = New-Object Windows.Forms.ToolStripMenuItem
-$menuDownloadRikor.Text = (Get-LocalizedString "BtnDownloadRikor")
-$menuDownloadRikor.ShortcutKeys = [System.Windows.Forms.Keys]::F5
+# REMOVED menuWU
+# REMOVED menuCheckUpdates
+# NEW: Add new menu item for download and install
+$menuDownloadAndInstall = New-Object Windows.Forms.ToolStripMenuItem
+$menuDownloadAndInstall.Text = (Get-LocalizedString "BtnDownloadAndInstall")
+$menuDownloadAndInstall.ShortcutKeys = [System.Windows.Forms.Keys]::F6 # Assign F6 to the combined button
+# Insert it near the top of the actions menu
+$menuActions.DropDownItems.AddRange(@($menuDownloadAndInstall)) # Adjust order as needed
 $menuScan = New-Object Windows.Forms.ToolStripMenuItem
 $menuScan.Text = (Get-LocalizedString "BtnScan")
 $menuScan.ShortcutKeys = [System.Windows.Forms.Keys]::F7
@@ -709,8 +1006,8 @@ $menuSeparator5 = New-Object Windows.Forms.ToolStripSeparator
 # Language submenu
 $menuLanguage = New-Object Windows.Forms.ToolStripMenuItem
 $menuLanguage.Text = "Language"
-$langItems = @("English (en)", "������� (ru)")
-$langCodes = @("en", "ru")
+$langItems = @("English (en)", "Español (es)", "Français (fr)", "Deutsch (de)", "Português (pt)", "Italiano (it)")
+$langCodes = @("en", "es", "fr", "de", "pt", "it")
 for ($i = 0; $i -lt $langItems.Count; $i++) {
 $langMenuItem = New-Object Windows.Forms.ToolStripMenuItem
 $langMenuItem.Text = $langItems[$i]
@@ -733,31 +1030,21 @@ $toolbarPanel = New-Object Windows.Forms.Panel
 $toolbarPanel.Dock = 'Top'
 $toolbarPanel.Height = 56
 # Note: toolbarPanel and menuStrip are added later for correct dock order
-# TableLayoutPanel for responsive buttons
-$buttonContainer = New-Object Windows.Forms.TableLayoutPanel
+# FlowLayoutPanel for centered buttons
+$buttonContainer = New-Object Windows.Forms.FlowLayoutPanel
 $buttonContainer.Dock = 'Fill'
-$buttonContainer.ColumnCount = 5
-$buttonContainer.RowCount = 1
-$buttonContainer.Padding = '12,8,12,8'
+$buttonContainer.FlowDirection = 'LeftToRight'
+$buttonContainer.WrapContents = $false
 $buttonContainer.AutoSize = $false
-# Set column styles for proportional sizing
-$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 28))) | Out-Null  # Download Rikor
-$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 20))) | Out-Null  # Scan
-$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 17))) | Out-Null  # Backup
-$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 20))) | Out-Null  # Install
-$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 15))) | Out-Null  # Cancel
+$buttonContainer.Padding = '0,8,0,8'
 $toolbarPanel.Controls.Add($buttonContainer)
-# Function to update button sizes when form resizes
+# Function to center buttons when form resizes
 function Update-ButtonContainerPadding {
-# Update button widths based on container size
-$containerWidth = $buttonContainer.ClientSize.Width - 24  # Subtract padding
-if ($containerWidth -gt 0) {
-    $btnDownloadRikor.Width = [Math]::Max(200, [int]($containerWidth * 0.28))
-    $btnScan.Width = [Math]::Max(150, [int]($containerWidth * 0.20))
-    $btnBackup.Width = [Math]::Max(120, [int]($containerWidth * 0.17))
-    $btnInstall.Width = [Math]::Max(150, [int]($containerWidth * 0.20))
-    $btnCancel.Width = [Math]::Max(100, [int]($containerWidth * 0.15))
-}
+# NEW: Include width of new combined button (only one button remains)
+$totalButtonWidth = 160 + 155 + 120 + 140 + 110 + (4 * 12)  # buttons + gaps (Removed width for btnWU and old btnCheckUpdates)
+$availableWidth = $toolbarPanel.ClientSize.Width
+$leftPadding = [Math]::Max(0, [int](($availableWidth - $totalButtonWidth) / 2))
+$buttonContainer.Padding = "$leftPadding,8,0,8"
 }
 # Modern Button Style
 function New-RoundedRegion {
@@ -798,29 +1085,22 @@ $btn.TextAlign = 'MiddleCenter'
 $btn.Region = New-RoundedRegion -Width $Width -Height 38 -Radius 6
 return $btn
 }
-# Create toolbar buttons with responsive sizing
-# NEW: Single combined button for Rikor download with MS Update fallback
-$btnDownloadRikor = New-ModernButton -Text (Get-LocalizedString "BtnDownloadRikor") -Width 280 -Primary $true
-$btnDownloadRikor.Dock = 'Fill'
-$btnDownloadRikor.Margin = '0,0,6,0'
-$btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 200 -Primary $false
-$btnScan.Dock = 'Fill'
-$btnScan.Margin = '6,0,6,0'
-$btnBackup = New-ModernButton -Text (Get-LocalizedString "BtnBackup") -Width 150
-$btnBackup.Dock = 'Fill'
-$btnBackup.Margin = '6,0,6,0'
-$btnInstall = New-ModernButton -Text (Get-LocalizedString "BtnInstall") -Width 180
-$btnInstall.Dock = 'Fill'
-$btnInstall.Margin = '6,0,6,0'
-$btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 130
-$btnCancel.Dock = 'Fill'
-$btnCancel.Margin = '6,0,0,0'
-# Add buttons to responsive container
-$buttonContainer.Controls.Add($btnDownloadRikor, 0, 0)
-$buttonContainer.Controls.Add($btnScan, 1, 0)
-$buttonContainer.Controls.Add($btnBackup, 2, 0)
-$buttonContainer.Controls.Add($btnInstall, 3, 0)
-$buttonContainer.Controls.Add($btnCancel, 4, 0)
+# Create toolbar buttons with margins for spacing
+# REMOVED $btnWU
+# REMOVED $btnCheckUpdates
+# NEW: Create button for download and install (only one button remains)
+$btnDownloadAndInstall = New-ModernButton -Text (Get-LocalizedString "BtnDownloadAndInstall") -Width 160 -Primary $true
+$btnDownloadAndInstall.Margin = '0,0,12,0'
+$btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 155 -Primary $true
+$btnScan.Margin = '0,0,12,0'
+$btnBackup = New-ModernButton -Text (Get-LocalizedString "BtnBackup") -Width 120
+$btnBackup.Margin = '0,0,12,0'
+$btnInstall = New-ModernButton -Text (Get-LocalizedString "BtnInstall") -Width 140
+$btnInstall.Margin = '0,0,12,0'
+$btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 110
+$btnCancel.Margin = '0,0,0,0'
+# Add buttons to centered container (Only the combined button remains)
+$buttonContainer.Controls.AddRange(@($btnDownloadAndInstall, $btnScan, $btnBackup, $btnInstall, $btnCancel))
 # -------------------------
 # Toolbar Separator (created here, added later for correct dock order)
 # -------------------------
@@ -841,7 +1121,7 @@ $statusLabel.TextAlign = 'MiddleLeft'
 $statusLabel.Font = New-Object Drawing.Font("Segoe UI", 9)
 $statusBar.Controls.Add($statusLabel)
 $versionLabel = New-Object Windows.Forms.Label
-$versionLabel.Text = "KILO v2.0  "
+$versionLabel.Text = "v3.0  "
 $versionLabel.Dock = 'Right'
 $versionLabel.Width = 60
 $versionLabel.TextAlign = 'MiddleRight'
@@ -903,7 +1183,7 @@ $headerLabel.TextAlign = 'MiddleLeft'
 $contentPanel.Controls.Add($headerLabel)
 # Language combobox for compatibility
 $cmbLang = New-Object Windows.Forms.ComboBox
-$cmbLang.Items.AddRange(@("en", "ru"))
+$cmbLang.Items.AddRange(@("en", "es", "fr", "de", "pt", "it"))
 $cmbLang.SelectedItem = $global:CurrentLanguage
 # DataGrid for drivers result (hidden initially)
 $driversGrid = New-Object Windows.Forms.DataGridView
@@ -941,107 +1221,172 @@ function L($m) {
 $t = (Get-Date).ToString("s")
 Add-Content -Path $logPath -Value ("$t - $m")
 }
-# FIXED: Check admin rights in background job
-$isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-if (-not $isAdmin) {
-L "[ERROR] This task requires administrator privileges"
-L "[ERROR] Please run the script as Administrator"
-L "Completed"
-return
-}
 try {
 # Execute task based on task name
 switch ($taskName) {
-# NEW: Combined task - try Rikor server first, fallback to Microsoft Update
-"DownloadRikorDrivers" {
-L "Attempting to download drivers from Rikor server..."
-$rikorServerAvailable = $false
-# TODO: Add actual Rikor server URL and download logic here
-# For now, simulate server check
-try {
-    # Placeholder for Rikor server check
-    # $rikorUrl = "https://rikor-server.example.com/drivers"
-    # Test-Connection or Invoke-WebRequest to check availability
-    L "[INFO] Rikor server is currently unavailable."
-    $rikorServerAvailable = $false
-} catch {
-    L "[INFO] Cannot connect to Rikor server."
-    $rikorServerAvailable = $false
-}
+# REMOVED "WindowsUpdate" case
+# REMOVED "CheckDriverUpdates" case
+"DownloadAndInstallDrivers" { # NEW: Combined task name
+    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
+    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
+    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
 
-if (-not $rikorServerAvailable) {
-    L "[INFO] Falling back to Microsoft Update for driver search and installation..."
+    # Validate the URL
+    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
+        L "[ERROR] Public ZIP download URL is not configured. Please edit the script."
+        L "Replace 'https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w' with the actual link."
+        L "Completed"
+        return
+    }
+
+    # Create temp directory
+    $tempDir = Join-Path $env:TEMP "RikorDriversTemp_$(Get-Date -Format 'yyyyMMddHHmmss')"
     try {
-        $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-        $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-        L "Searching for available driver updates (this may take a few minutes)..."
-        $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-        if ($SearchResult.Updates.Count -eq 0) {
-            L "No driver updates available from Microsoft Update"
+        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+        L "Created temporary directory: $tempDir"
+
+        # Define zip file path
+        $zipPath = Join-Path $tempDir "drivers.zip"
+
+        # Download ZIP
+        L "Downloading drivers archive from: $zipUrl"
+        try {
+            # Use basic parsing to avoid issues with complex pages
+            Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+            L "Download completed to: $zipPath"
+        } catch {
+            L "[ERROR] Failed to download ZIP: $_"
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            L "Completed"
+            return
+        }
+
+        # Check if ZIP exists and is not empty
+        if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
+            L "[ERROR] Downloaded ZIP file is missing or empty."
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            L "Completed"
+            return
+        }
+
+        # Extract ZIP
+        $extractDir = Join-Path $tempDir "ExtractedDrivers"
+        L "Extracting ZIP archive to: $extractDir"
+        try {
+            Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+            L "Extraction completed."
+        } catch {
+            L "[ERROR] Failed to extract ZIP: $_"
+            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+            L "Completed"
+            return
+        }
+
+        # Verify extracted content
+        if (-not (Test-Path $extractDir)) {
+             L "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
+             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+             L "Completed"
+             return
+        }
+
+        $infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
+        if ($infFilesInZip.Count -eq 0) {
+            L "[WARNING] No .inf files found in the downloaded archive after extraction."
+            # Still proceed to InstallDrivers task, which will report its own error if needed
         } else {
-            L "Found $($SearchResult.Updates.Count) driver update(s) available:"
-            L ""
-            foreach ($Update in $SearchResult.Updates) {
-                L "  - $($Update.Title)"
-                L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+            L "Found $($infFilesInZip.Count) .inf file(s) in the archive."
+        }
+
+        # Prepare arguments for the InstallDrivers task logic
+        $installArgs = @($extractDir)
+
+        # --- Simulate calling the InstallDrivers logic directly within the same job ---
+        # This avoids creating another nested job and keeps logging consistent.
+        $folder = $installArgs[0]
+        L "Installing drivers from extracted archive: $folder"
+        try {
+            if (-not (Test-Path $folder)) {
+                L "[ERROR] Folder not found: $folder (This should not happen after extraction)"
+                L "Completed"
+                return
             }
-            L ""
-            L "Downloading and installing driver updates..."
-            
-            # Create update collection for download and install
-            $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-            foreach ($Update in $SearchResult.Updates) {
-                if ($Update.EulaAccepted -eq $false) {
-                    $Update.AcceptEula()
-                }
-                $UpdatesToDownload.Add($Update) | Out-Null
+
+            # Find INF files recursively in the extracted folder
+            $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+
+            if ($infFiles.Count -eq 0) {
+                L "[ERROR] No .inf driver files found in the extracted folder: $folder"
+                L "Completed"
+                return
             }
-            
-            # Download updates
-            if ($UpdatesToDownload.Count -gt 0) {
-                L "Downloading $($UpdatesToDownload.Count) update(s)..."
-                $Downloader = $UpdateSession.CreateUpdateDownloader()
-                $Downloader.Updates = $UpdatesToDownload
-                $DownloadResult = $Downloader.Download()
-                L "Download completed with result code: $($DownloadResult.ResultCode)"
-                
-                # Install downloaded updates
-                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
-                foreach ($Update in $SearchResult.Updates) {
-                    if ($Update.IsDownloaded) {
-                        $UpdatesToInstall.Add($Update) | Out-Null
-                    }
-                }
-                
-                if ($UpdatesToInstall.Count -gt 0) {
-                    L "Installing $($UpdatesToInstall.Count) update(s)..."
-                    $Installer = $UpdateSession.CreateUpdateInstaller()
-                    $Installer.Updates = $UpdatesToInstall
-                    $InstallResult = $Installer.Install()
-                    L "Installation completed with result code: $($InstallResult.ResultCode)"
-                    L "Reboot required: $($InstallResult.RebootRequired)"
-                    
-                    $successCount = 0
-                    $failCount = 0
-                    for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
-                        $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
-                        if ($resultCode -eq 2) { # 2 = Succeeded
-                            $successCount++
-                        } else {
+
+            L "Found $($infFiles.Count) driver file(s) in extracted folder"
+            L "Installing drivers..."
+            L ""
+            $successCount = 0
+            $failCount = 0
+            $current = 0
+            foreach ($inf in $infFiles) {
+                $current++
+                L "[$current/$($infFiles.Count)] $($inf.Name)"
+                try {
+                    # Use pnputil to add and install the driver
+                    $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+                    $hasError = $false
+                    $out | ForEach-Object {
+                        # Check for common failure indicators in pnputil output
+                        if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+                            L "     $_" # Log the error line
+                            $hasError = $true
                             $failCount++
+                        } elseif ($_ -match "^Published the driver") {
+                             # Successfully added to driver store
+                             # Actual installation success is harder to determine without checking exit code,
+                             # but if no explicit error occurred, assume success for counting.
+                             # pnputil exit code 0 usually means added/installed ok, non-zero means error.
                         }
                     }
-                    L "Successfully installed: $successCount, Failed: $failCount"
-                } else {
-                    L "[WARNING] No updates were downloaded successfully"
+                    if (-not $hasError) {
+                         # If no specific error was logged, check the exit code
+                         if ($LASTEXITCODE -eq 0) {
+                              $successCount++
+                              L "     -> Added and installed successfully." # Optional verbose log
+                         } else {
+                              # pnputil reported an error via exit code, even if not captured in output
+                              $failCount++
+                              L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+                         }
+                    }
+                } catch {
+                    $failCount++
+                    L "     -> Exception during installation: $_"
                 }
+                Start-Sleep -Milliseconds 300
             }
+            L ""
+            L "Installation from archive complete: $successCount successful, $failCount failed"
+            if ($successCount -gt 0) {
+                L "Note: Reboot may be required for some drivers to take effect."
+            }
+        } catch {
+            L "[ERROR] Installation process failed: $_"
         }
+        # --- End of simulated InstallDrivers logic ---
+
     } catch {
-        L "[ERROR] Failed to download/install driver updates: $_"
+        L "[ERROR] An unexpected error occurred during download/extraction: $_"
+    } finally {
+        # Always attempt to clean up the temporary directory
+        L "Cleaning up temporary directory: $tempDir"
+        Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path $tempDir) {
+            L "[WARNING] Could not remove temporary directory: $tempDir"
+        } else {
+            L "Temporary directory cleaned up successfully."
+        }
     }
-}
-L "Completed"
+    L "Completed"
 }
 "ScanDrivers" {
 L "Scanning installed drivers..."
@@ -1071,7 +1416,7 @@ L "  ... and $($drivers.Count - $sampleCount) more"
 }
 L ""
 L "Exporting full list to CSV..."
-$csvPath = Join-Path (Split-Path $logFile) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
+$csvPath = Join-Path (Split-Path $logPath) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
 $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
 L "Exported to: $csvPath"
 L "Completed"
@@ -1120,44 +1465,33 @@ L ""
 $successCount = 0
 $failCount = 0
 $current = 0
-# FIXED: Corrected double error counting and added INF validation
 foreach ($inf in $infFiles) {
 $current++
 L "[$current/$($infFiles.Count)] $($inf.Name)"
 try {
-# Validate INF file before installation
-$infContent = Get-Content $inf.FullName -Raw -ErrorAction SilentlyContinue
-if (-not $infContent -or $infContent -notmatch '\[Version\]') {
-    L "     -> SKIPPED: Invalid INF file"
-    $failCount++
-    continue
-}
-
-# Check architecture compatibility
-$is64Bit = [Environment]::Is64BitOperatingSystem
-$archPattern = if ($is64Bit) { "amd64|x64|NTamd64" } else { "x86|NTx86" }
-if ($infContent -notmatch $archPattern) {
-    L "     -> SKIPPED: Incompatible architecture"
-    $failCount++
-    continue
-}
-
-# Install driver using pnputil
 $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+$hasError = $false
+$out | ForEach-Object {
+if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
+L "     $_" # Log the error line
+$hasError = $true
+$failCount++
+}
+}
+if (-not $hasError) {
+# If no specific error was logged, check the exit code
 if ($LASTEXITCODE -eq 0) {
-    $successCount++
-    L "     -> Successfully installed"
+     $successCount++
+     L "     -> Added and installed successfully." # Optional verbose log
 } else {
-    $failCount++
-    L "     -> Installation failed (exit code: $LASTEXITCODE)"
-    # Log error details
-    $out | Where-Object { $_ -match "error|fail" } | ForEach-Object {
-        L "        $_"
-    }
+     # pnputil reported an error via exit code, even if not captured in output
+     $failCount++
+     L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+}
 }
 } catch {
 $failCount++
-L "     -> Exception: $_"
+L "     -> Exception during installation: $_"
 }
 Start-Sleep -Milliseconds 300
 }
@@ -1349,14 +1683,20 @@ Export-Settings
 function Update-UILanguage {
 $form.Text = Get-LocalizedString "AppTitle"
 # Toolbar buttons
-$btnDownloadRikor.Text = Get-LocalizedString "BtnDownloadRikor"
+# REMOVED $btnWU.Text update
+# REMOVED $btnCheckUpdates.Text update
+# NEW: Update new button text (CORRECTED: Removed extra closing parenthesis)
+$btnDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall"
 $btnScan.Text = Get-LocalizedString "BtnScan"
 $btnBackup.Text = Get-LocalizedString "BtnBackup"
 $btnInstall.Text = Get-LocalizedString "BtnInstall"
 $btnCancel.Text = Get-LocalizedString "BtnCancel"
 # Menu items
 $menuOpenLogs.Text = Get-LocalizedString "BtnOpenLogs"
-$menuDownloadRikor.Text = Get-LocalizedString "BtnDownloadRikor"
+# REMOVED $menuWU.Text update
+# REMOVED $menuCheckUpdates.Text update
+# NEW: Update new menu item text (CORRECTED: Removed extra closing parenthesis)
+$menuDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall"
 $menuScan.Text = Get-LocalizedString "BtnScan"
 $menuBackup.Text = Get-LocalizedString "BtnBackup"
 $menuInstall.Text = Get-LocalizedString "BtnInstall"
@@ -1773,12 +2113,14 @@ $settingsForm.ShowDialog($form) | Out-Null
 # -------------------------
 # Action Functions (shared by buttons and menus)
 # -------------------------
-# NEW: Combined function for Rikor download with MS Update fallback
-function Invoke-DownloadRikorDrivers {
-$status.Clear()
-$progress.Value = 0
-$statusLabel.Text = "  Downloading drivers from Rikor server..."
-Start-BackgroundTask -Name "DownloadRikorDrivers" -TaskArgs @()
+# REMOVED Invoke-WindowsUpdate
+# REMOVED Invoke-CheckDriverUpdates
+# NEW: Define action function for new combined task
+function Invoke-DownloadAndInstallDrivers {
+    $status.Clear()
+    $progress.Value = 0
+    $statusLabel.Text = "  Downloading and installing drivers from Rikor..."
+    Start-BackgroundTask -Name "DownloadAndInstallDrivers" -TaskArgs @()
 }
 function Invoke-ScanDrivers {
 $status.Clear()
@@ -1858,8 +2200,10 @@ $progress.Value = 100
 # -------------------------
 # Button handlers
 # -------------------------
-# NEW: Single combined button handler
-$btnDownloadRikor.Add_Click({ Invoke-DownloadRikorDrivers })
+# REMOVED $btnWU.Add_Click
+# REMOVED $btnCheckUpdates.Add_Click
+# NEW: Add click handler for new combined button
+$btnDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
 $btnScan.Add_Click({ Invoke-ScanDrivers })
 $btnBackup.Add_Click({ Invoke-BackupDrivers })
 $btnInstall.Add_Click({ Invoke-InstallDrivers })
@@ -1867,8 +2211,10 @@ $btnCancel.Add_Click({ Invoke-CancelTask })
 # -------------------------
 # Menu handlers
 # -------------------------
-# NEW: Single combined menu handler
-$menuDownloadRikor.Add_Click({ Invoke-DownloadRikorDrivers })
+# REMOVED $menuWU.Add_Click
+# REMOVED $menuCheckUpdates.Add_Click
+# NEW: Add click handler for new combined menu item
+$menuDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
 $menuScan.Add_Click({ Invoke-ScanDrivers })
 $menuBackup.Add_Click({ Invoke-BackupDrivers })
 $menuInstall.Add_Click({ Invoke-InstallDrivers })
