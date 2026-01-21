@@ -1593,15 +1593,42 @@ switch ($taskName) {
 # REMOVED "WindowsUpdate" case
 # REMOVED "CheckDriverUpdates" case
 "DownloadAndInstallDrivers" { # NEW: Combined task name
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
-    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
-    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
+    # FORCE TLS 1.2 for Nextcloud compatibility
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    
+    # Get computer model to determine which driver pack to download
+    $computerModel = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
+    L "Detected computer model: $computerModel"
+    
+    # Define Nextcloud URLs based on computer model (for now, just two sample models)
+    # Replace these with actual Nextcloud share links
+    $nextcloudUrls = @{
+        "RIKOR L3P" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
+        "ARZ103.2" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
+        "RIKOR L5P" = "https://nc.rikor.com/index.php/s/YdEZY8NjMB8kXRA/download"
+        # Add more models as needed
+    }
+    
+    # Determine the appropriate URL based on model
+    $zipUrl = $null
+    if ($nextcloudUrls.ContainsKey($computerModel)) {
+        $zipUrl = $nextcloudUrls[$computerModel]
+        L "Using Nextcloud URL for model '$computerModel': $zipUrl"
+    } else {
+        L "Model '$computerModel' not in predefined list, using default Nextcloud URL"
+        # Default URL for models not specifically handled
+        $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
+    }
 
     # Check if Rikor server is available first
     $rikorServerAvailable = $false
     try {
-        # Test connection to the URL
-        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 10 -UseBasicParsing -ErrorAction Stop
+        # Test connection to the URL with UserAgent to prevent blocking by Nextcloud
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
+        $response = $webClient.Head($zipUrl)  # This is simplified - we'll actually test differently
+        # Actually test using Invoke-WebRequest with proper headers
+        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 15 -UseBasicParsing -Headers @{"User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
         if ($response.StatusCode -eq 200) {
             $rikorServerAvailable = $true
         }
@@ -1810,8 +1837,22 @@ switch ($taskName) {
         # Download ZIP
         L "Downloading drivers archive from: $zipUrl"
         try {
-            # Use basic parsing to avoid issues with complex pages
-            Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+            # Force TLS 1.2 for Nextcloud compatibility
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            
+            # Try to download using BITS (better for large files and unstable connections)
+            try {
+                # Check if BitsTransfer module is available
+                Import-Module BitsTransfer -ErrorAction Stop
+                L "Using BITS for download..."
+                Start-BitsTransfer -Source $zipUrl -Destination $zipPath -DisplayName "Downloading Driver Archive" -ErrorAction Stop
+                L "Download completed using BITS: $zipPath"
+            } catch {
+                L "[INFO] BITS transfer failed or not available, falling back to Invoke-WebRequest: $_"
+                # Fallback to Invoke-WebRequest with proper headers
+                Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing -Headers @{"User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+                L "Download completed using Invoke-WebRequest: $zipPath"
+            }
             L "Download completed to: $zipPath"
         } catch {
             L "[ERROR] Failed to download ZIP: $_"
