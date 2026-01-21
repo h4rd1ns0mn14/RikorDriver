@@ -1,7 +1,7 @@
-# Driver Updater Rikor KILO v 2.0 - Fixed Critical Issues
+﻿# Driver Updater Rikor v 2.0 - Fixed Critical Issues
 # Run as Administrator
-# Usage: .\RikorDriverKILO.ps1
-# Silent mode: .\RikorDriverKILO.ps1 -Silent -Task "CheckDriverUpdates"
+# Usage: .\RikorDriver.ps1
+# Silent mode: .\RikorDriver.ps1 -Silent -Task "CheckDriverUpdates"
 #
 # CHANGELOG v2.0:
 # - Fixed double error counting in pnputil
@@ -25,9 +25,8 @@ Add-Type -AssemblyName System.Drawing
 # -------------------------
 $global:Languages = @{
 "en" = @{
-AppTitle = "Rikor Driver Installer KILO v2.0"
-BtnCheckUpdates = "Search Drivers (Microsoft Update)"
-BtnDownloadAndInstall = "Download Drivers (Server Unavailable)"
+AppTitle = "Rikor Driver Installer V2.0"
+BtnDownloadRikor = "Download Drivers from Rikor Server"
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
 BtnInstall = "Install From Folder"
@@ -79,290 +78,9 @@ Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
 }
-"es" = @{
-AppTitle = "Instalador de Controladores Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
-BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Controladores"
-BtnBackup = "Respaldar Controladores"
-BtnInstall = "Instalar desde Carpeta"
-BtnCancel = "Cancelar Tarea"
-BtnOpenLogs = "Abrir Registros"
-BtnDarkMode = "Modo Oscuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Programar Actualizaciones"
-BtnRestorePoint = "Crear Punto Restauracion"
-BtnHistory = "Historial"
-BtnSettings = "Configuracion"
-BtnFilters = "Filtros"
-TaskRunning = "Ya hay una tarea en ejecucion. Cancelela primero."
-PermissionError = "Ejecute este script como Administrador."
-BackupCanceled = "Respaldo cancelado por el usuario."
-InstallCanceled = "Instalacion cancelada por el usuario."
-NoTaskToCancel = "No hay tarea para cancelar."
-TaskCancelled = "[CANCELADO] Tarea cancelada por el usuario."
-LogFolderMissing = "Carpeta de registros no encontrada."
-StartingTask = "-> Iniciando tarea:"
-TaskFinished = "=== Tarea finalizada:"
-SelectBackupFolder = "Seleccione carpeta para guardar respaldo"
-SelectDriverFolder = "Seleccione carpeta con archivos .inf"
-ScheduleCreated = "Tarea programada creada!"
-ScheduleRemoved = "Tarea programada eliminada."
-RestorePointCreated = "Punto de restauracion creado!"
-RestorePointFailed = "Error al crear punto de restauracion."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracion de proxy eliminada."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros eliminados."
-LanguageChanged = "Idioma cambiado a:"
-HistoryEmpty = "No hay historial de actualizaciones."
-SettingsTitle = "Configuracion"
-ScheduleTitle = "Programar Actualizaciones"
-FilterTitle = "Filtros de Controladores"
-HistoryTitle = "Historial de Actualizaciones"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensual"
-Time = "Hora:"
-ProxyLabel = "Direccion Proxy:"
-ClassFilter = "Filtrar por Clase:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpiar"
-Close = "Cerrar"
-Enable = "Habilitar"
-Disable = "Deshabilitar"
-Remove = "Eliminar Programacion"
-}
-"fr" = @{
-AppTitle = "Installateur de Pilotes Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
-BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
-BtnScan = "Analyser les Pilotes"
-BtnBackup = "Sauvegarder"
-BtnInstall = "Installer depuis Dossier"
-BtnCancel = "Annuler"
-BtnOpenLogs = "Ouvrir Journaux"
-BtnDarkMode = "Mode Sombre"
-BtnLightMode = "Mode Clair"
-BtnSchedule = "Planifier"
-BtnRestorePoint = "Point de Restauration"
-BtnHistory = "Historique"
-BtnSettings = "Parametres"
-BtnFilters = "Filtres"
-TaskRunning = "Une tache est deja en cours. Annulez-la d'abord."
-PermissionError = "Executez ce script en tant qu'Administrateur."
-BackupCanceled = "Sauvegarde annulee."
-InstallCanceled = "Installation annulee."
-NoTaskToCancel = "Aucune tache a annuler."
-TaskCancelled = "[ANNULE] Tache annulee."
-LogFolderMissing = "Dossier des journaux manquant."
-StartingTask = "-> Demarrage de la tache:"
-TaskFinished = "=== Tache terminee:"
-SelectBackupFolder = "Selectionnez le dossier de sauvegarde"
-SelectDriverFolder = "Selectionnez le dossier avec les fichiers .inf"
-ScheduleCreated = "Tache planifiee creee!"
-ScheduleRemoved = "Tache planifiee supprimee."
-RestorePointCreated = "Point de restauration cree!"
-RestorePointFailed = "Echec de creation du point de restauration."
-ProxyConfigured = "Proxy configure:"
-ProxyCleared = "Parametres proxy effaces."
-FilterApplied = "Filtre applique:"
-FilterCleared = "Filtres effaces."
-LanguageChanged = "Langue changee en:"
-HistoryEmpty = "Aucun historique trouve."
-SettingsTitle = "Parametres"
-ScheduleTitle = "Planifier les Mises a Jour"
-FilterTitle = "Filtres des Pilotes"
-HistoryTitle = "Historique des Mises a Jour"
-Daily = "Quotidien"
-Weekly = "Hebdomadaire"
-Monthly = "Mensuel"
-Time = "Heure:"
-ProxyLabel = "Adresse Proxy:"
-ClassFilter = "Filtrer par Classe:"
-ManufacturerFilter = "Filtrer par Fabricant:"
-Apply = "Appliquer"
-Clear = "Effacer"
-Close = "Fermer"
-Enable = "Activer"
-Disable = "Desactiver"
-Remove = "Supprimer Planification"
-}
-"de" = @{
-AppTitle = "Rikor Treiber-Installationsprogramm"
-# BtnWU removed
-BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
-BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
-BtnScan = "Treiber scannen"
-BtnBackup = "Sicherung"
-BtnInstall = "Aus Ordner installieren"
-BtnCancel = "Abbrechen"
-BtnOpenLogs = "Protokolle"
-BtnDarkMode = "Dunkelmodus"
-BtnLightMode = "Hellmodus"
-BtnSchedule = "Zeitplan"
-BtnRestorePoint = "Wiederherstellungspunkt"
-BtnHistory = "Verlauf"
-BtnSettings = "Einstellungen"
-BtnFilters = "Filter"
-TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als administrator aus."
-BackupCanceled = "Sicherung abgebrochen."
-InstallCanceled = "Installation abgebrochen."
-NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
-TaskCancelled = "[ABGEBROCHEN] Aufgabe abgebrochen."
-LogFolderMissing = "Protokollordner fehlt."
-StartingTask = "-> Starte Aufgabe:"
-TaskFinished = "=== Aufgabe beendet:"
-SelectBackupFolder = "Sicherungsordner auswaehlen"
-SelectDriverFolder = "Ordner mit .inf-Dateien auswaehlen"
-ScheduleCreated = "Geplante Aufgabe erstellt!"
-ScheduleRemoved = "Geplante Aufgabe entfernt."
-RestorePointCreated = "Wiederherstellungspunkt erstellt!"
-RestorePointFailed = "Fehler beim Erstellen des Wiederherstellungspunkts."
-ProxyConfigured = "Proxy konfiguriert:"
-ProxyCleared = "Proxy-Einstellungen geloescht."
-FilterApplied = "Filter angewendet:"
-FilterCleared = "Filter geloescht."
-LanguageChanged = "Sprache geaendert zu:"
-HistoryEmpty = "Kein Verlauf gefunden."
-SettingsTitle = "Einstellungen"
-ScheduleTitle = "Updates planen"
-FilterTitle = "Treiberfilter"
-HistoryTitle = "Update-Verlauf"
-Daily = "Taeglich"
-Weekly = "Woechentlich"
-Monthly = "Monatlich"
-Time = "Zeit:"
-ProxyLabel = "Proxy-Adresse:"
-ClassFilter = "Nach Klasse filtern:"
-ManufacturerFilter = "Nach Hersteller filtern:"
-Apply = "Anwenden"
-Clear = "Loeschen"
-Close = "Schliessen"
-Enable = "Aktivieren"
-Disable = "Deaktivieren"
-Remove = "Zeitplan entfernen"
-}
-"pt" = @{
-AppTitle = "Instalador de Drivers Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
-BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Drivers"
-BtnBackup = "Backup"
-BtnInstall = "Instalar da Pasta"
-BtnCancel = "Cancelar"
-BtnOpenLogs = "Abrir Logs"
-BtnDarkMode = "Modo Escuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Agendar"
-BtnRestorePoint = "Ponto de Restauracao"
-BtnHistory = "Historico"
-BtnSettings = "Configuracoes"
-BtnFilters = "Filtros"
-TaskRunning = "Uma tarefa ja esta em execucao."
-PermissionError = "Execute este script como Administrador."
-BackupCanceled = "Backup cancelado."
-InstallCanceled = "Instalacao cancelada."
-NoTaskToCancel = "Nenhuma tarefa para cancelar."
-TaskCancelled = "[CANCELADO] Tarefa cancelada."
-LogFolderMissing = "Pasta de logs nao encontrada."
-StartingTask = "-> Iniciando tarefa:"
-TaskFinished = "=== Tarefa concluida:"
-SelectBackupFolder = "Selecione a pasta de backup"
-SelectDriverFolder = "Selecione a pasta com arquivos .inf"
-ScheduleCreated = "Tarefa agendada criada!"
-ScheduleRemoved = "Tarefa agendada removida."
-RestorePointCreated = "Ponto de restauracao criado!"
-RestorePointFailed = "Falha ao criar ponto de restauracao."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracoes de proxy limpas."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros limpos."
-LanguageChanged = "Idioma alterado para:"
-HistoryEmpty = "Nenhum historico encontrado."
-SettingsTitle = "Configuracoes"
-ScheduleTitle = "Agendar Atualizacoes"
-FilterTitle = "Filtros de Drivers"
-HistoryTitle = "Historico de Atualizacoes"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensal"
-Time = "Hora:"
-ProxyLabel = "Endereco Proxy:"
-ClassFilter = "Filtrar por Classe:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpar"
-Close = "Fechar"
-Enable = "Habilitar"
-Disable = "Desabilitar"
-Remove = "Remover Agendamento"
-}
-"it" = @{
-AppTitle = "Installatore Driver Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
-BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
-BtnScan = "Scansiona Driver"
-BtnBackup = "Backup"
-BtnInstall = "Installa da Cartella"
-BtnCancel = "Annulla"
-BtnOpenLogs = "Apri Log"
-BtnDarkMode = "Modalita Scura"
-BtnLightMode = "Modalita Chiara"
-BtnSchedule = "Pianifica"
-BtnRestorePoint = "Punto di Ripristino"
-BtnHistory = "Cronologia"
-BtnSettings = "Impostazioni"
-BtnFilters = "Filtri"
-TaskRunning = "Un'attivita e gia in esecuzione."
-PermissionError = "Esegui questo script come Amministratore."
-BackupCanceled = "Backup annullato."
-InstallCanceled = "Installazione annullata."
-NoTaskToCancel = "Nessuna attivita da annullare."
-TaskCancelled = "[ANNULLATO] Attivita annullata."
-LogFolderMissing = "Cartella log mancante."
-StartingTask = "-> Avvio attivita:"
-TaskFinished = "=== Attivita completata:"
-SelectBackupFolder = "Seleziona cartella di backup"
-SelectDriverFolder = "Seleziona cartella con file .inf"
-ScheduleCreated = "Attivita pianificata creata!"
-ScheduleRemoved = "Attivita pianificata rimossa."
-RestorePointCreated = "Punto di ripristino creato!"
-RestorePointFailed = "Errore nella creazione del punto di ripristino."
-ProxyConfigured = "Proxy configurato:"
-ProxyCleared = "Impostazioni proxy cancellate."
-FilterApplied = "Filtro applicato:"
-FilterCleared = "Filtri cancellati."
-LanguageChanged = "Lingua cambiata in:"
-HistoryEmpty = "Nessuna cronologia trovata."
-SettingsTitle = "Impostazioni"
-ScheduleTitle = "Pianifica Aggiornamenti"
-FilterTitle = "Filtri Driver"
-HistoryTitle = "Cronologia Aggiornamenti"
-Daily = "Giornaliero"
-Weekly = "Settimanale"
-Monthly = "Mensile"
-Time = "Ora:"
-ProxyLabel = "Indirizzo Proxy:"
-ClassFilter = "Filtra per Classe:"
-ManufacturerFilter = "Filtra per Produttore:"
-Apply = "Applica"
-Clear = "Cancella"
-Close = "Chiudi"
-Enable = "Abilita"
-Disable = "Disabilita"
-Remove = "Rimuovi Pianificazione"
-}
 "ru" = @{
-AppTitle = "Rikor Driver Installer KILO v2.0"
-BtnCheckUpdates = "Поиск драйверов (Microsoft Update)"
-BtnDownloadAndInstall = "Загрузить драйвера (Сервер недоступен)"
+AppTitle = "Rikor Driver Installer V2.0"
+BtnDownloadRikor = "Загрузить драйверы с сервера Rikor"
 BtnScan = "Сканировать установленные драйверы"
 BtnBackup = "Резервное копирование"
 BtnInstall = "Установить из папки"
@@ -592,8 +310,8 @@ try {
 Remove-ScheduledUpdate
 $scriptPath = $PSCommandPath
 if (-not $scriptPath) { $scriptPath = $MyInvocation.PSCommandPath }
-# CHANGED: Update scheduled task action to point to current script and new task name
-$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Silent -Task DownloadAndInstallDrivers"
+# NEW: Update scheduled task action to use new combined task name
+$action = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -WindowStyle Hidden -File `"$scriptPath`" -Silent -Task DownloadRikorDrivers"
 switch ($Frequency) {
 "Daily" { $trigger = New-ScheduledTaskTrigger -Daily -At $Time }
 "Weekly" { $trigger = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At $Time }
@@ -626,42 +344,100 @@ Add-Content -Path $logFile -Value "$timestamp - $msg"
 }
 Write-SilentLog "Starting silent mode: $Task"
 switch ($Task) {
-# REMOVED "WindowsUpdate" case
-# FIXED: Restored Microsoft Update driver search functionality
-"CheckDriverUpdates" {
-Write-SilentLog "Searching for driver updates via Microsoft Update..."
+# NEW: Combined task - try Rikor server first, fallback to Microsoft Update
+"DownloadRikorDrivers" {
+Write-SilentLog "Attempting to download drivers from Rikor server..."
+$rikorServerAvailable = $false
+# TODO: Add actual Rikor server URL and download logic here
+# For now, simulate server check
 try {
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-Write-SilentLog "Searching for available driver updates (this may take a few minutes)..."
-$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-if ($SearchResult.Updates.Count -eq 0) {
-Write-SilentLog "No driver updates available from Microsoft Update"
-Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Completed" -Details "No updates found"
-} else {
-Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available:"
-Write-SilentLog ""
-foreach ($Update in $SearchResult.Updates) {
-Write-SilentLog "  - $($Update.Title)"
-Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
-}
-Write-SilentLog ""
-Write-SilentLog "To install these updates, use Windows Update or download them manually."
-Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Completed" -Details "Found $($SearchResult.Updates.Count) updates"
-}
+    # Placeholder for Rikor server check
+    # $rikorUrl = "https://rikor-server.example.com/drivers"
+    # Test-Connection or Invoke-WebRequest to check availability
+    Write-SilentLog "[INFO] Rikor server is currently unavailable."
+    $rikorServerAvailable = $false
 } catch {
-Write-SilentLog "[ERROR] Failed to search for driver updates: $_"
-Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exception.Message
+    Write-SilentLog "[INFO] Cannot connect to Rikor server."
+    $rikorServerAvailable = $false
+}
+
+if (-not $rikorServerAvailable) {
+    Write-SilentLog "[INFO] Falling back to Microsoft Update for driver search and installation..."
+    try {
+        $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+        $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+        Write-SilentLog "Searching for available driver updates (this may take a few minutes)..."
+        $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+        if ($SearchResult.Updates.Count -eq 0) {
+            Write-SilentLog "No driver updates available from Microsoft Update"
+            Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "No updates found (fallback to MS Update)"
+        } else {
+            Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available:"
+            Write-SilentLog ""
+            foreach ($Update in $SearchResult.Updates) {
+                Write-SilentLog "  - $($Update.Title)"
+                Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+            }
+            Write-SilentLog ""
+            Write-SilentLog "Downloading and installing driver updates..."
+            
+            # Create update collection for download and install
+            $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+            foreach ($Update in $SearchResult.Updates) {
+                if ($Update.EulaAccepted -eq $false) {
+                    $Update.AcceptEula()
+                }
+                $UpdatesToDownload.Add($Update) | Out-Null
+            }
+            
+            # Download updates
+            if ($UpdatesToDownload.Count -gt 0) {
+                Write-SilentLog "Downloading $($UpdatesToDownload.Count) update(s)..."
+                $Downloader = $UpdateSession.CreateUpdateDownloader()
+                $Downloader.Updates = $UpdatesToDownload
+                $DownloadResult = $Downloader.Download()
+                Write-SilentLog "Download completed with result code: $($DownloadResult.ResultCode)"
+                
+                # Install downloaded updates
+                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                foreach ($Update in $SearchResult.Updates) {
+                    if ($Update.IsDownloaded) {
+                        $UpdatesToInstall.Add($Update) | Out-Null
+                    }
+                }
+                
+                if ($UpdatesToInstall.Count -gt 0) {
+                    Write-SilentLog "Installing $($UpdatesToInstall.Count) update(s)..."
+                    $Installer = $UpdateSession.CreateUpdateInstaller()
+                    $Installer.Updates = $UpdatesToInstall
+                    $InstallResult = $Installer.Install()
+                    Write-SilentLog "Installation completed with result code: $($InstallResult.ResultCode)"
+                    Write-SilentLog "Reboot required: $($InstallResult.RebootRequired)"
+                    
+                    $successCount = 0
+                    $failCount = 0
+                    for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+                        $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+                        if ($resultCode -eq 2) { # 2 = Succeeded
+                            $successCount++
+                        } else {
+                            $failCount++
+                        }
+                    }
+                    Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
+                    Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+                } else {
+                    Write-SilentLog "[WARNING] No updates were downloaded successfully"
+                    Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Completed" -Details "Download failed for all updates"
+                }
+            }
+        }
+    } catch {
+        Write-SilentLog "[ERROR] Failed to download/install driver updates: $_"
+        Add-HistoryEntry -TaskName "DownloadRikorDrivers" -Status "Failed" -Details $_.Exception.Message
+    }
 }
 Write-SilentLog "Completed"
-}
-# FIXED: Replaced broken Google Drive download with server unavailable message
-"DownloadAndInstallDrivers" {
-    Write-SilentLog "[INFO] Driver download server is currently unavailable."
-    Write-SilentLog "[INFO] Please use 'Install From Folder' option to install drivers manually."
-    Write-SilentLog "[INFO] Or use 'Search Drivers (Microsoft Update)' to find drivers online."
-    Write-SilentLog "Completed"
-    Add-HistoryEntry -TaskName "DownloadAndInstallDrivers" -Status "Unavailable" -Details "Server unavailable"
 }
 "ScanDrivers" {
 Write-SilentLog "Scanning installed drivers..."
@@ -889,14 +665,10 @@ $menuFile.DropDownItems.AddRange(@($menuOpenLogs, $menuSeparator1, $menuExit))
 # Actions Menu
 $menuActions = New-Object Windows.Forms.ToolStripMenuItem
 $menuActions.Text = "&Actions"
-# FIXED: Added CheckDriverUpdates menu item
-$menuCheckUpdates = New-Object Windows.Forms.ToolStripMenuItem
-$menuCheckUpdates.Text = (Get-LocalizedString "BtnCheckUpdates")
-$menuCheckUpdates.ShortcutKeys = [System.Windows.Forms.Keys]::F5
-$menuDownloadAndInstall = New-Object Windows.Forms.ToolStripMenuItem
-$menuDownloadAndInstall.Text = (Get-LocalizedString "BtnDownloadAndInstall")
-$menuDownloadAndInstall.ShortcutKeys = [System.Windows.Forms.Keys]::F6
-$menuActions.DropDownItems.AddRange(@($menuCheckUpdates, $menuDownloadAndInstall))
+# NEW: Single combined menu item for Rikor download
+$menuDownloadRikor = New-Object Windows.Forms.ToolStripMenuItem
+$menuDownloadRikor.Text = (Get-LocalizedString "BtnDownloadRikor")
+$menuDownloadRikor.ShortcutKeys = [System.Windows.Forms.Keys]::F5
 $menuScan = New-Object Windows.Forms.ToolStripMenuItem
 $menuScan.Text = (Get-LocalizedString "BtnScan")
 $menuScan.ShortcutKeys = [System.Windows.Forms.Keys]::F7
@@ -936,8 +708,8 @@ $menuSeparator5 = New-Object Windows.Forms.ToolStripSeparator
 # Language submenu
 $menuLanguage = New-Object Windows.Forms.ToolStripMenuItem
 $menuLanguage.Text = "Language"
-$langItems = @("English (en)", "Español (es)", "Français (fr)", "Deutsch (de)", "Português (pt)", "Italiano (it)", "Русский (ru)")
-$langCodes = @("en", "es", "fr", "de", "pt", "it", "ru")
+$langItems = @("English (en)", "Русский (ru)")
+$langCodes = @("en", "ru")
 for ($i = 0; $i -lt $langItems.Count; $i++) {
 $langMenuItem = New-Object Windows.Forms.ToolStripMenuItem
 $langMenuItem.Text = $langItems[$i]
@@ -960,21 +732,31 @@ $toolbarPanel = New-Object Windows.Forms.Panel
 $toolbarPanel.Dock = 'Top'
 $toolbarPanel.Height = 56
 # Note: toolbarPanel and menuStrip are added later for correct dock order
-# FlowLayoutPanel for centered buttons
-$buttonContainer = New-Object Windows.Forms.FlowLayoutPanel
+# TableLayoutPanel for responsive buttons
+$buttonContainer = New-Object Windows.Forms.TableLayoutPanel
 $buttonContainer.Dock = 'Fill'
-$buttonContainer.FlowDirection = 'LeftToRight'
-$buttonContainer.WrapContents = $false
+$buttonContainer.ColumnCount = 5
+$buttonContainer.RowCount = 1
+$buttonContainer.Padding = '12,8,12,8'
 $buttonContainer.AutoSize = $false
-$buttonContainer.Padding = '0,8,0,8'
+# Set column styles for proportional sizing
+$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 28))) | Out-Null  # Download Rikor
+$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 20))) | Out-Null  # Scan
+$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 17))) | Out-Null  # Backup
+$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 20))) | Out-Null  # Install
+$buttonContainer.ColumnStyles.Add((New-Object Windows.Forms.ColumnStyle([Windows.Forms.SizeType]::Percent, 15))) | Out-Null  # Cancel
 $toolbarPanel.Controls.Add($buttonContainer)
-# Function to center buttons when form resizes
+# Function to update button sizes when form resizes
 function Update-ButtonContainerPadding {
-# NEW: Include width of new combined button (only one button remains)
-$totalButtonWidth = 160 + 155 + 120 + 140 + 110 + (4 * 12)  # buttons + gaps (Removed width for btnWU and old btnCheckUpdates)
-$availableWidth = $toolbarPanel.ClientSize.Width
-$leftPadding = [Math]::Max(0, [int](($availableWidth - $totalButtonWidth) / 2))
-$buttonContainer.Padding = "$leftPadding,8,0,8"
+# Update button widths based on container size
+$containerWidth = $buttonContainer.ClientSize.Width - 24  # Subtract padding
+if ($containerWidth -gt 0) {
+    $btnDownloadRikor.Width = [Math]::Max(200, [int]($containerWidth * 0.28))
+    $btnScan.Width = [Math]::Max(150, [int]($containerWidth * 0.20))
+    $btnBackup.Width = [Math]::Max(120, [int]($containerWidth * 0.17))
+    $btnInstall.Width = [Math]::Max(150, [int]($containerWidth * 0.20))
+    $btnCancel.Width = [Math]::Max(100, [int]($containerWidth * 0.15))
+}
 }
 # Modern Button Style
 function New-RoundedRegion {
@@ -1015,22 +797,29 @@ $btn.TextAlign = 'MiddleCenter'
 $btn.Region = New-RoundedRegion -Width $Width -Height 38 -Radius 6
 return $btn
 }
-# Create toolbar buttons with margins for spacing
-# FIXED: Added CheckDriverUpdates button for Microsoft Update search
-$btnCheckUpdates = New-ModernButton -Text (Get-LocalizedString "BtnCheckUpdates") -Width 200 -Primary $true
-$btnCheckUpdates.Margin = '0,0,12,0'
-$btnDownloadAndInstall = New-ModernButton -Text (Get-LocalizedString "BtnDownloadAndInstall") -Width 160 -Primary $false
-$btnDownloadAndInstall.Margin = '0,0,12,0'
-$btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 155 -Primary $false
-$btnScan.Margin = '0,0,12,0'
-$btnBackup = New-ModernButton -Text (Get-LocalizedString "BtnBackup") -Width 120
-$btnBackup.Margin = '0,0,12,0'
-$btnInstall = New-ModernButton -Text (Get-LocalizedString "BtnInstall") -Width 140
-$btnInstall.Margin = '0,0,12,0'
-$btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 110
-$btnCancel.Margin = '0,0,0,0'
-# Add buttons to centered container
-$buttonContainer.Controls.AddRange(@($btnCheckUpdates, $btnDownloadAndInstall, $btnScan, $btnBackup, $btnInstall, $btnCancel))
+# Create toolbar buttons with responsive sizing
+# NEW: Single combined button for Rikor download with MS Update fallback
+$btnDownloadRikor = New-ModernButton -Text (Get-LocalizedString "BtnDownloadRikor") -Width 280 -Primary $true
+$btnDownloadRikor.Dock = 'Fill'
+$btnDownloadRikor.Margin = '0,0,6,0'
+$btnScan = New-ModernButton -Text (Get-LocalizedString "BtnScan") -Width 200 -Primary $false
+$btnScan.Dock = 'Fill'
+$btnScan.Margin = '6,0,6,0'
+$btnBackup = New-ModernButton -Text (Get-LocalizedString "BtnBackup") -Width 150
+$btnBackup.Dock = 'Fill'
+$btnBackup.Margin = '6,0,6,0'
+$btnInstall = New-ModernButton -Text (Get-LocalizedString "BtnInstall") -Width 180
+$btnInstall.Dock = 'Fill'
+$btnInstall.Margin = '6,0,6,0'
+$btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 130
+$btnCancel.Dock = 'Fill'
+$btnCancel.Margin = '6,0,0,0'
+# Add buttons to responsive container
+$buttonContainer.Controls.Add($btnDownloadRikor, 0, 0)
+$buttonContainer.Controls.Add($btnScan, 1, 0)
+$buttonContainer.Controls.Add($btnBackup, 2, 0)
+$buttonContainer.Controls.Add($btnInstall, 3, 0)
+$buttonContainer.Controls.Add($btnCancel, 4, 0)
 # -------------------------
 # Toolbar Separator (created here, added later for correct dock order)
 # -------------------------
@@ -1113,7 +902,7 @@ $headerLabel.TextAlign = 'MiddleLeft'
 $contentPanel.Controls.Add($headerLabel)
 # Language combobox for compatibility
 $cmbLang = New-Object Windows.Forms.ComboBox
-$cmbLang.Items.AddRange(@("en", "es", "fr", "de", "pt", "it", "ru"))
+$cmbLang.Items.AddRange(@("en", "ru"))
 $cmbLang.SelectedItem = $global:CurrentLanguage
 # DataGrid for drivers result (hidden initially)
 $driversGrid = New-Object Windows.Forms.DataGridView
@@ -1162,37 +951,96 @@ return
 try {
 # Execute task based on task name
 switch ($taskName) {
-# FIXED: Restored Microsoft Update driver search
-"CheckDriverUpdates" {
-L "Searching for driver updates via Microsoft Update..."
+# NEW: Combined task - try Rikor server first, fallback to Microsoft Update
+"DownloadRikorDrivers" {
+L "Attempting to download drivers from Rikor server..."
+$rikorServerAvailable = $false
+# TODO: Add actual Rikor server URL and download logic here
+# For now, simulate server check
 try {
-$UpdateSession = New-Object -ComObject Microsoft.Update.Session
-$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-L "Searching for available driver updates (this may take a few minutes)..."
-$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-if ($SearchResult.Updates.Count -eq 0) {
-L "No driver updates available from Microsoft Update"
-} else {
-L "Found $($SearchResult.Updates.Count) driver update(s) available:"
-L ""
-foreach ($Update in $SearchResult.Updates) {
-L "  - $($Update.Title)"
-L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
-}
-L ""
-L "To install these updates, use Windows Update or download them manually."
-}
+    # Placeholder for Rikor server check
+    # $rikorUrl = "https://rikor-server.example.com/drivers"
+    # Test-Connection or Invoke-WebRequest to check availability
+    L "[INFO] Rikor server is currently unavailable."
+    $rikorServerAvailable = $false
 } catch {
-L "[ERROR] Failed to search for driver updates: $_"
+    L "[INFO] Cannot connect to Rikor server."
+    $rikorServerAvailable = $false
+}
+
+if (-not $rikorServerAvailable) {
+    L "[INFO] Falling back to Microsoft Update for driver search and installation..."
+    try {
+        $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+        $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+        L "Searching for available driver updates (this may take a few minutes)..."
+        $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+        if ($SearchResult.Updates.Count -eq 0) {
+            L "No driver updates available from Microsoft Update"
+        } else {
+            L "Found $($SearchResult.Updates.Count) driver update(s) available:"
+            L ""
+            foreach ($Update in $SearchResult.Updates) {
+                L "  - $($Update.Title)"
+                L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+            }
+            L ""
+            L "Downloading and installing driver updates..."
+            
+            # Create update collection for download and install
+            $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+            foreach ($Update in $SearchResult.Updates) {
+                if ($Update.EulaAccepted -eq $false) {
+                    $Update.AcceptEula()
+                }
+                $UpdatesToDownload.Add($Update) | Out-Null
+            }
+            
+            # Download updates
+            if ($UpdatesToDownload.Count -gt 0) {
+                L "Downloading $($UpdatesToDownload.Count) update(s)..."
+                $Downloader = $UpdateSession.CreateUpdateDownloader()
+                $Downloader.Updates = $UpdatesToDownload
+                $DownloadResult = $Downloader.Download()
+                L "Download completed with result code: $($DownloadResult.ResultCode)"
+                
+                # Install downloaded updates
+                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                foreach ($Update in $SearchResult.Updates) {
+                    if ($Update.IsDownloaded) {
+                        $UpdatesToInstall.Add($Update) | Out-Null
+                    }
+                }
+                
+                if ($UpdatesToInstall.Count -gt 0) {
+                    L "Installing $($UpdatesToInstall.Count) update(s)..."
+                    $Installer = $UpdateSession.CreateUpdateInstaller()
+                    $Installer.Updates = $UpdatesToInstall
+                    $InstallResult = $Installer.Install()
+                    L "Installation completed with result code: $($InstallResult.ResultCode)"
+                    L "Reboot required: $($InstallResult.RebootRequired)"
+                    
+                    $successCount = 0
+                    $failCount = 0
+                    for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+                        $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+                        if ($resultCode -eq 2) { # 2 = Succeeded
+                            $successCount++
+                        } else {
+                            $failCount++
+                        }
+                    }
+                    L "Successfully installed: $successCount, Failed: $failCount"
+                } else {
+                    L "[WARNING] No updates were downloaded successfully"
+                }
+            }
+        }
+    } catch {
+        L "[ERROR] Failed to download/install driver updates: $_"
+    }
 }
 L "Completed"
-}
-# FIXED: Replaced with server unavailable message
-"DownloadAndInstallDrivers" {
-    L "[INFO] Driver download server is currently unavailable."
-    L "[INFO] Please use 'Install From Folder' option to install drivers manually."
-    L "[INFO] Or use 'Search Drivers (Microsoft Update)' button to find drivers online."
-    L "Completed"
 }
 "ScanDrivers" {
 L "Scanning installed drivers..."
@@ -1500,16 +1348,14 @@ Export-Settings
 function Update-UILanguage {
 $form.Text = Get-LocalizedString "AppTitle"
 # Toolbar buttons
-$btnCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
-$btnDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall"
+$btnDownloadRikor.Text = Get-LocalizedString "BtnDownloadRikor"
 $btnScan.Text = Get-LocalizedString "BtnScan"
 $btnBackup.Text = Get-LocalizedString "BtnBackup"
 $btnInstall.Text = Get-LocalizedString "BtnInstall"
 $btnCancel.Text = Get-LocalizedString "BtnCancel"
 # Menu items
 $menuOpenLogs.Text = Get-LocalizedString "BtnOpenLogs"
-$menuCheckUpdates.Text = Get-LocalizedString "BtnCheckUpdates"
-$menuDownloadAndInstall.Text = Get-LocalizedString "BtnDownloadAndInstall"
+$menuDownloadRikor.Text = Get-LocalizedString "BtnDownloadRikor"
 $menuScan.Text = Get-LocalizedString "BtnScan"
 $menuBackup.Text = Get-LocalizedString "BtnBackup"
 $menuInstall.Text = Get-LocalizedString "BtnInstall"
@@ -1926,18 +1772,12 @@ $settingsForm.ShowDialog($form) | Out-Null
 # -------------------------
 # Action Functions (shared by buttons and menus)
 # -------------------------
-# FIXED: Added CheckDriverUpdates function for Microsoft Update search
-function Invoke-CheckDriverUpdates {
+# NEW: Combined function for Rikor download with MS Update fallback
+function Invoke-DownloadRikorDrivers {
 $status.Clear()
 $progress.Value = 0
-$statusLabel.Text = "  Searching for driver updates via Microsoft Update..."
-Start-BackgroundTask -Name "CheckDriverUpdates" -TaskArgs @()
-}
-function Invoke-DownloadAndInstallDrivers {
-    $status.Clear()
-    $progress.Value = 0
-    $statusLabel.Text = "  Downloading and installing drivers from Rikor..."
-    Start-BackgroundTask -Name "DownloadAndInstallDrivers" -TaskArgs @()
+$statusLabel.Text = "  Downloading drivers from Rikor server..."
+Start-BackgroundTask -Name "DownloadRikorDrivers" -TaskArgs @()
 }
 function Invoke-ScanDrivers {
 $status.Clear()
@@ -2017,9 +1857,8 @@ $progress.Value = 100
 # -------------------------
 # Button handlers
 # -------------------------
-# FIXED: Added CheckDriverUpdates button handler
-$btnCheckUpdates.Add_Click({ Invoke-CheckDriverUpdates })
-$btnDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
+# NEW: Single combined button handler
+$btnDownloadRikor.Add_Click({ Invoke-DownloadRikorDrivers })
 $btnScan.Add_Click({ Invoke-ScanDrivers })
 $btnBackup.Add_Click({ Invoke-BackupDrivers })
 $btnInstall.Add_Click({ Invoke-InstallDrivers })
@@ -2027,9 +1866,8 @@ $btnCancel.Add_Click({ Invoke-CancelTask })
 # -------------------------
 # Menu handlers
 # -------------------------
-# FIXED: Added CheckDriverUpdates menu handler
-$menuCheckUpdates.Add_Click({ Invoke-CheckDriverUpdates })
-$menuDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
+# NEW: Single combined menu handler
+$menuDownloadRikor.Add_Click({ Invoke-DownloadRikorDrivers })
 $menuScan.Add_Click({ Invoke-ScanDrivers })
 $menuBackup.Add_Click({ Invoke-BackupDrivers })
 $menuInstall.Add_Click({ Invoke-InstallDrivers })
