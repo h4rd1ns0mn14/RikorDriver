@@ -1049,7 +1049,7 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
                          } elseif ($LASTEXITCODE -eq 259) {
                               # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
                               $successCount++ # Count as success since no error occurred, just nothing to do
-                              Write-SilentLog "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
+                              Write-SilentLog "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
@@ -1643,7 +1643,7 @@ switch ($taskName) {
     $zipUrl = $null
     if ($nextcloudUrls.ContainsKey($computerModel)) {
         $zipUrl = $nextcloudUrls[$computerModel]
-        L "Using Nextcloud URL for model '$computerModel': $zipUrl"
+        L "Using Rikor Server for download"
     } else {
         L "Model '$computerModel' not in predefined list, using default Nextcloud URL"
         # Default URL for models not specifically handled
@@ -2043,7 +2043,7 @@ switch ($taskName) {
                          } elseif ($LASTEXITCODE -eq 259) {
                               # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
                               $successCount++ # Count as success since no error occurred, just nothing to do
-                              L "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
+                              L "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
@@ -2064,7 +2064,7 @@ switch ($taskName) {
                          } elseif ($LASTEXITCODE -eq 259) {
                               # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
                               $successCount++ # Count as success since no error occurred, just nothing to do
-                              L "     -> Already installed or no applicable device found (pnputil exit code: 259)." # Log special case
+                              L "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
                          } else {
                               # pnputil reported an error via exit code, even if not captured in output
                               $failCount++
@@ -2257,6 +2257,15 @@ $contentStr = $content -join "`n"
 $p = 0
 # NEW: Download and install progress heuristic
 if ($contentStr -match "Downloading drivers archive") { $p = 5 }
+# NEW: Enhanced progress detection for download with percentage tracking
+if ($contentStr -match "(\d+)% Complete") {
+    $matches = [regex]::Matches($contentStr, "(\d+)% Complete")
+    if ($matches.Count -gt 0) {
+        $downloadPercent = [int]$matches[$matches.Count-1].Groups[1].Value
+        # Map download progress (0-100%) to UI progress range (5-15% of total progress bar)
+        $p = 5 + [int](($downloadPercent / 100) * 10)  # 10% of total progress for download phase
+    }
+}
 if ($contentStr -match "Download completed") { $p = 15 }
 if ($contentStr -match "Extracting ZIP archive") { $p = 20 }
 if ($contentStr -match "Extraction completed") { $p = 30 }
