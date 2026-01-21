@@ -840,7 +840,19 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         Write-SilentLog "Downloading drivers archive from: $zipUrl"
         try {
             # Use basic parsing to avoid issues with complex pages
-            Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing
+            # Use .NET WebClient for reliable download from Nextcloud (handles dynamic links better)
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            
+            $webClient = New-Object System.Net.WebClient
+            $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+            
+            try {
+                $webClient.DownloadFile($zipUrl, $zipPath)
+                Write-SilentLog "Download completed using .NET WebClient: $zipPath"
+            } catch {
+                Write-SilentLog "[ERROR] Download failed with .NET WebClient: $_"
+                throw
+            }
             Write-SilentLog "Download completed to: $zipPath"
         } catch {
             Write-SilentLog "[ERROR] Failed to download ZIP: $_"
@@ -1858,18 +1870,19 @@ switch ($taskName) {
             # Force TLS 1.2 for Nextcloud compatibility
             [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
             
-            # Try to download using BITS (better for large files and unstable connections)
+            # Use .NET WebClient for reliable download from Nextcloud (handles dynamic links better)
             try {
-                # Check if BitsTransfer module is available
-                Import-Module BitsTransfer -ErrorAction Stop
-                L "Using BITS for download..."
-                Start-BitsTransfer -Source $zipUrl -Destination $zipPath -DisplayName "Downloading Driver Archive" -ErrorAction Stop
-                L "Download completed using BITS: $zipPath"
+                L "Using .NET WebClient for download..."
+                [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+                
+                $webClient = New-Object System.Net.WebClient
+                $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+                
+                $webClient.DownloadFile($zipUrl, $zipPath)
+                L "Download completed using .NET WebClient: $zipPath"
             } catch {
-                L "[INFO] BITS transfer failed or not available, falling back to Invoke-WebRequest: $_"
-                # Fallback to Invoke-WebRequest with proper headers
-                Invoke-WebRequest -Uri $zipUrl -OutFile $zipPath -UseBasicParsing -Headers @{"User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-                L "Download completed using Invoke-WebRequest: $zipPath"
+                L "[ERROR] Download failed with .NET WebClient: $_"
+                throw
             }
             L "Download completed to: $zipPath"
         } catch {
