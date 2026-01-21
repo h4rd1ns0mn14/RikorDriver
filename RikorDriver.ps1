@@ -598,7 +598,18 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
     $rikorServerAvailable = $false
     try {
         # Test connection to the URL
-        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 10 -UseBasicParsing -ErrorAction Stop
+        # Use proper WebRequest with HEAD method to check availability (instead of Invoke-WebRequest -Method Head)
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $request = [System.Net.WebRequest]::Create($zipUrl)
+        $request.Method = "HEAD"
+        $request.Timeout = 10000  # 10 seconds timeout
+        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        
+        $response = $request.GetResponse()
+        if ($response.StatusCode -eq 200) {
+            $rikorServerAvailable = $true
+        }
+        $response.Close()
         if ($response.StatusCode -eq 200) {
             $rikorServerAvailable = $true
         }
@@ -1582,10 +1593,13 @@ $filterMfr = $global:FilterSettings.Manufacturer
 # Start job with task logic defined directly in the job
 $job = Start-Job -Name $Name -ScriptBlock {
 param($taskName, $logPath, $innerArgs, $filterClass, $filterMfr)
+# Force TLS 1.2 for Nextcloud compatibility
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 # Logging function
 function L($m) {
-$t = (Get-Date).ToString("s")
-Add-Content -Path $logPath -Value ("$t - $m")
+    $t = (Get-Date).ToString("s")
+    Add-Content -Path $logPath -Value ("$t - $m")
 }
 try {
 # Execute task based on task name
@@ -1623,15 +1637,19 @@ switch ($taskName) {
     # Check if Rikor server is available first
     $rikorServerAvailable = $false
     try {
-        # Test connection to the URL with UserAgent to prevent blocking by Nextcloud
-        $webClient = New-Object System.Net.WebClient
-        $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)")
-        $response = $webClient.Head($zipUrl)  # This is simplified - we'll actually test differently
-        # Actually test using Invoke-WebRequest with proper headers
-        $response = Invoke-WebRequest -Uri $zipUrl -Method Head -TimeoutSec 15 -UseBasicParsing -Headers @{"User-Agent"="Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
+        # Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        
+        $request = [System.Net.WebRequest]::Create($zipUrl)
+        $request.Method = "HEAD"
+        $request.Timeout = 15000  # 15 seconds timeout
+        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        
+        $response = $request.GetResponse()
         if ($response.StatusCode -eq 200) {
             $rikorServerAvailable = $true
         }
+        $response.Close()
     } catch {
         L "[INFO] Rikor server is not accessible: $_"
     }
