@@ -20,7 +20,7 @@ $global:Languages = @{
 AppTitle = "Rikor Driver Installer"
 # BtnWU removed
 BtnCheckUpdates = "Search and Install Rikor Drivers" # Updated text
-BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
+BtnDownloadAndInstall = "Download and Install Rikor Drivers" # NEW: Localization for new button
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
 BtnInstall = "Install From Folder"
