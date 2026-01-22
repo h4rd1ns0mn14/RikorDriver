@@ -1645,31 +1645,32 @@ switch ($taskName) {
     if ($nextcloudUrls.ContainsKey($computerModel)) {
         $zipUrl = $nextcloudUrls[$computerModel]
         L "Using Rikor Server for download"
+        
+        # Check if Rikor server is available
+        $rikorServerAvailable = $false
+        try {
+            # Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            
+            $request = [System.Net.WebRequest]::Create($zipUrl)
+            $request.Method = "HEAD"
+            $request.Timeout = 15000  # 15 seconds timeout
+            $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            
+            $response = $request.GetResponse()
+            if ($response.StatusCode -eq 200) {
+                $rikorServerAvailable = $true
+            }
+            $response.Close()
+        } catch {
+            L "[INFO] Rikor server is not accessible: $_"
+        }
     } else {
-        L "Model '$computerModel' not in predefined list, using default Nextcloud URL"
-        # Default URL for models not specifically handled
-        $zipUrl = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
+        L "Model '$computerModel' not in predefined list, checking Microsoft Update"
+        # Skip Nextcloud download and go directly to Microsoft Update
+        $rikorServerAvailable = $false
     }
 
-    # Check if Rikor server is available first
-    $rikorServerAvailable = $false
-    try {
-        # Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        
-        $request = [System.Net.WebRequest]::Create($zipUrl)
-        $request.Method = "HEAD"
-        $request.Timeout = 15000  # 15 seconds timeout
-        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        
-        $response = $request.GetResponse()
-        if ($response.StatusCode -eq 200) {
-            $rikorServerAvailable = $true
-        }
-        $response.Close()
-    } catch {
-        L "[INFO] Rikor server is not accessible: $_"
-    }
 
     if (-not $rikorServerAvailable) {
         L "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
