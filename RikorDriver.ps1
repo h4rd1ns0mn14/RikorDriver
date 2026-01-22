@@ -19,8 +19,8 @@ $global:Languages = @{
 "en" = @{
 AppTitle = "Rikor Driver Installer"
 # BtnWU removed
-BtnCheckUpdates = "Search & Install Rikor Drivers" # Updated text
-BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
+BtnCheckUpdates = "Search and Install Rikor Drivers" # Updated text
+BtnDownloadAndInstall = "Download and Install Rikor Drivers" # NEW: Localization for new button
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
 BtnInstall = "Install From Folder"
@@ -72,287 +72,8 @@ Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
 }
-"es" = @{
-AppTitle = "Instalador de Controladores Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
-BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Controladores"
-BtnBackup = "Respaldar Controladores"
-BtnInstall = "Instalar desde Carpeta"
-BtnCancel = "Cancelar Tarea"
-BtnOpenLogs = "Abrir Registros"
-BtnDarkMode = "Modo Oscuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Programar Actualizaciones"
-BtnRestorePoint = "Crear Punto Restauracion"
-BtnHistory = "Historial"
-BtnSettings = "Configuracion"
-BtnFilters = "Filtros"
-TaskRunning = "Ya hay una tarea en ejecucion. Cancelela primero."
-PermissionError = "Ejecute este script como Administrador."
-BackupCanceled = "Respaldo cancelado por el usuario."
-InstallCanceled = "Instalacion cancelada por el usuario."
-NoTaskToCancel = "No hay tarea para cancelar."
-TaskCancelled = "[CANCELADO] Tarea cancelada por el usuario."
-LogFolderMissing = "Carpeta de registros no encontrada."
-StartingTask = "-> Iniciando tarea:"
-TaskFinished = "=== Tarea finalizada:"
-SelectBackupFolder = "Seleccione carpeta para guardar respaldo"
-SelectDriverFolder = "Seleccione carpeta con archivos .inf"
-ScheduleCreated = "Tarea programada creada!"
-ScheduleRemoved = "Tarea programada eliminada."
-RestorePointCreated = "Punto de restauracion creado!"
-RestorePointFailed = "Error al crear punto de restauracion."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracion de proxy eliminada."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros eliminados."
-LanguageChanged = "Idioma cambiado a:"
-HistoryEmpty = "No hay historial de actualizaciones."
-SettingsTitle = "Configuracion"
-ScheduleTitle = "Programar Actualizaciones"
-FilterTitle = "Filtros de Controladores"
-HistoryTitle = "Historial de Actualizaciones"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensual"
-Time = "Hora:"
-ProxyLabel = "Direccion Proxy:"
-ClassFilter = "Filtrar por Clase:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpiar"
-Close = "Cerrar"
-Enable = "Habilitar"
-Disable = "Deshabilitar"
-Remove = "Eliminar Programacion"
 }
-"fr" = @{
-AppTitle = "Installateur de Pilotes Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
-BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
-BtnScan = "Analyser les Pilotes"
-BtnBackup = "Sauvegarder"
-BtnInstall = "Installer depuis Dossier"
-BtnCancel = "Annuler"
-BtnOpenLogs = "Ouvrir Journaux"
-BtnDarkMode = "Mode Sombre"
-BtnLightMode = "Mode Clair"
-BtnSchedule = "Planifier"
-BtnRestorePoint = "Point de Restauration"
-BtnHistory = "Historique"
-BtnSettings = "Parametres"
-BtnFilters = "Filtres"
-TaskRunning = "Une tache est deja en cours. Annulez-la d'abord."
-PermissionError = "Executez ce script en tant qu'Administrateur."
-BackupCanceled = "Sauvegarde annulee."
-InstallCanceled = "Installation annulee."
-NoTaskToCancel = "Aucune tache a annuler."
-TaskCancelled = "[ANNULE] Tache annulee."
-LogFolderMissing = "Dossier des journaux manquant."
-StartingTask = "-> Demarrage de la tache:"
-TaskFinished = "=== Tache terminee:"
-SelectBackupFolder = "Selectionnez le dossier de sauvegarde"
-SelectDriverFolder = "Selectionnez le dossier avec les fichiers .inf"
-ScheduleCreated = "Tache planifiee creee!"
-ScheduleRemoved = "Tache planifiee supprimee."
-RestorePointCreated = "Point de restauration cree!"
-RestorePointFailed = "Echec de creation du point de restauration."
-ProxyConfigured = "Proxy configure:"
-ProxyCleared = "Parametres proxy effaces."
-FilterApplied = "Filtre applique:"
-FilterCleared = "Filtres effaces."
-LanguageChanged = "Langue changee en:"
-HistoryEmpty = "Aucun historique trouve."
-SettingsTitle = "Parametres"
-ScheduleTitle = "Planifier les Mises a Jour"
-FilterTitle = "Filtres des Pilotes"
-HistoryTitle = "Historique des Mises a Jour"
-Daily = "Quotidien"
-Weekly = "Hebdomadaire"
-Monthly = "Mensuel"
-Time = "Heure:"
-ProxyLabel = "Adresse Proxy:"
-ClassFilter = "Filtrer par Classe:"
-ManufacturerFilter = "Filtrer par Fabricant:"
-Apply = "Appliquer"
-Clear = "Effacer"
-Close = "Fermer"
-Enable = "Activer"
-Disable = "Desactiver"
-Remove = "Supprimer Planification"
-}
-"de" = @{
-AppTitle = "Rikor Treiber-Installationsprogramm"
-# BtnWU removed
-BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
-BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
-BtnScan = "Treiber scannen"
-BtnBackup = "Sicherung"
-BtnInstall = "Aus Ordner installieren"
-BtnCancel = "Abbrechen"
-BtnOpenLogs = "Protokolle"
-BtnDarkMode = "Dunkelmodus"
-BtnLightMode = "Hellmodus"
-BtnSchedule = "Zeitplan"
-BtnRestorePoint = "Wiederherstellungspunkt"
-BtnHistory = "Verlauf"
-BtnSettings = "Einstellungen"
-BtnFilters = "Filter"
-TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als administrator aus."
-BackupCanceled = "Sicherung abgebrochen."
-InstallCanceled = "Installation abgebrochen."
-NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
-TaskCancelled = "[ABGEBROCHEN] Aufgabe abgebrochen."
-LogFolderMissing = "Protokollordner fehlt."
-StartingTask = "-> Starte Aufgabe:"
-TaskFinished = "=== Aufgabe beendet:"
-SelectBackupFolder = "Sicherungsordner auswaehlen"
-SelectDriverFolder = "Ordner mit .inf-Dateien auswaehlen"
-ScheduleCreated = "Geplante Aufgabe erstellt!"
-ScheduleRemoved = "Geplante Aufgabe entfernt."
-RestorePointCreated = "Wiederherstellungspunkt erstellt!"
-RestorePointFailed = "Fehler beim Erstellen des Wiederherstellungspunkts."
-ProxyConfigured = "Proxy konfiguriert:"
-ProxyCleared = "Proxy-Einstellungen geloescht."
-FilterApplied = "Filter angewendet:"
-FilterCleared = "Filter geloescht."
-LanguageChanged = "Sprache geaendert zu:"
-HistoryEmpty = "Kein Verlauf gefunden."
-SettingsTitle = "Einstellungen"
-ScheduleTitle = "Updates planen"
-FilterTitle = "Treiberfilter"
-HistoryTitle = "Update-Verlauf"
-Daily = "Taeglich"
-Weekly = "Woechentlich"
-Monthly = "Monatlich"
-Time = "Zeit:"
-ProxyLabel = "Proxy-Adresse:"
-ClassFilter = "Nach Klasse filtern:"
-ManufacturerFilter = "Nach Hersteller filtern:"
-Apply = "Anwenden"
-Clear = "Loeschen"
-Close = "Schliessen"
-Enable = "Aktivieren"
-Disable = "Deaktivieren"
-Remove = "Zeitplan entfernen"
-}
-"pt" = @{
-AppTitle = "Instalador de Drivers Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
-BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Drivers"
-BtnBackup = "Backup"
-BtnInstall = "Instalar da Pasta"
-BtnCancel = "Cancelar"
-BtnOpenLogs = "Abrir Logs"
-BtnDarkMode = "Modo Escuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Agendar"
-BtnRestorePoint = "Ponto de Restauracao"
-BtnHistory = "Historico"
-BtnSettings = "Configuracoes"
-BtnFilters = "Filtros"
-TaskRunning = "Uma tarefa ja esta em execucao."
-PermissionError = "Execute este script como Administrador."
-BackupCanceled = "Backup cancelado."
-InstallCanceled = "Instalacao cancelada."
-NoTaskToCancel = "Nenhuma tarefa para cancelar."
-TaskCancelled = "[CANCELADO] Tarefa cancelada."
-LogFolderMissing = "Pasta de logs nao encontrada."
-StartingTask = "-> Iniciando tarefa:"
-TaskFinished = "=== Tarefa concluida:"
-SelectBackupFolder = "Selecione a pasta de backup"
-SelectDriverFolder = "Selecione a pasta com arquivos .inf"
-ScheduleCreated = "Tarefa agendada criada!"
-ScheduleRemoved = "Tarefa agendada removida."
-RestorePointCreated = "Ponto de restauracao criado!"
-RestorePointFailed = "Falha ao criar ponto de restauracao."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracoes de proxy limpas."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros limpos."
-LanguageChanged = "Idioma alterado para:"
-HistoryEmpty = "Nenhum historico encontrado."
-SettingsTitle = "Configuracoes"
-ScheduleTitle = "Agendar Atualizacoes"
-FilterTitle = "Filtros de Drivers"
-HistoryTitle = "Historico de Atualizacoes"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensal"
-Time = "Hora:"
-ProxyLabel = "Endereco Proxy:"
-ClassFilter = "Filtrar por Classe:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpar"
-Close = "Fechar"
-Enable = "Habilitar"
-Disable = "Desabilitar"
-Remove = "Remover Agendamento"
-}
-"it" = @{
-AppTitle = "Installatore Driver Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
-BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
-BtnScan = "Scansiona Driver"
-BtnBackup = "Backup"
-BtnInstall = "Installa da Cartella"
-BtnCancel = "Annulla"
-BtnOpenLogs = "Apri Log"
-BtnDarkMode = "Modalita Scura"
-BtnLightMode = "Modalita Chiara"
-BtnSchedule = "Pianifica"
-BtnRestorePoint = "Punto di Ripristino"
-BtnHistory = "Cronologia"
-BtnSettings = "Impostazioni"
-BtnFilters = "Filtri"
-TaskRunning = "Un'attivita e gia in esecuzione."
-PermissionError = "Esegui questo script come Amministratore."
-BackupCanceled = "Backup annullato."
-InstallCanceled = "Installazione annullata."
-NoTaskToCancel = "Nessuna attivita da annullare."
-TaskCancelled = "[ANNULLATO] Attivita annullata."
-LogFolderMissing = "Cartella log mancante."
-StartingTask = "-> Avvio attivita:"
-TaskFinished = "=== Attivita completata:"
-SelectBackupFolder = "Seleziona cartella di backup"
-SelectDriverFolder = "Seleziona cartella con file .inf"
-ScheduleCreated = "Attivita pianificata creata!"
-ScheduleRemoved = "Attivita pianificata rimossa."
-RestorePointCreated = "Punto di ripristino creato!"
-RestorePointFailed = "Errore nella creazione del punto di ripristino."
-ProxyConfigured = "Proxy configurato:"
-ProxyCleared = "Impostazioni proxy cancellate."
-FilterApplied = "Filtro applicato:"
-FilterCleared = "Filtri cancellati."
-LanguageChanged = "Lingua cambiata in:"
-HistoryEmpty = "Nessuna cronologia trovata."
-SettingsTitle = "Impostazioni"
-ScheduleTitle = "Pianifica Aggiornamenti"
-FilterTitle = "Filtri Driver"
-HistoryTitle = "Cronologia Aggiornamenti"
-Daily = "Giornaliero"
-Weekly = "Settimanale"
-Monthly = "Mensile"
-Time = "Ora:"
-ProxyLabel = "Indirizzo Proxy:"
-ClassFilter = "Filtra per Classe:"
-ManufacturerFilter = "Filtra per Produttore:"
-Apply = "Applica"
-Clear = "Cancella"
-Close = "Chiudi"
-Enable = "Abilita"
-Disable = "Disabilita"
-Remove = "Rimuovi Pianificazione"
-}
-}
+
 # Get localized string
 function Get-LocalizedString([string]$key) {
 $lang = $global:CurrentLanguage
@@ -449,7 +170,7 @@ $history = @($parsed)
 }
 } catch { $history = @() }
 }
-$entry = [PSCustomObject]@{
+$entry = [PSCustomObject] @{
 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 Task = $TaskName
 Status = $Status
@@ -467,7 +188,7 @@ $content = Get-Content -Path $HistoryFile -Raw
 if ($content) {
 return $content | ConvertFrom-Json
 }
-} catch {}
+} catch {} 
 }
 return @()
 }
@@ -557,7 +278,7 @@ return $true
 # Silent Mode Operation
 # -------------------------
 if ($Silent -and $Task) {
-$logFile = Join-Path $LogBase "$Task`_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
+$logFile = Join-Path $LogBase "$($Task)_$(Get-Date -Format 'yyyyMMdd_HHmmss').log"
 function Write-SilentLog($msg) {
 $timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
 Add-Content -Path $logFile -Value "$timestamp - $msg"
@@ -582,535 +303,483 @@ Write-SilentLog "  - $($Update.Title)"
 Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Completed" -Details "Found $($SearchResult.Updates.Count) updates"
 }
 } catch {
-Write-SilentLog "Error: $_"
+Write-SilentLog "Error: $_ "
 Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exception.Message
 }
 }
 # NEW: Add new task case for downloading and installing from ZIP
 "DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
-    Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
-    
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
-    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
-    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
+Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
 
-    # Check if Rikor server is available first
-    $rikorServerAvailable = $false
-    try {
-        # Test connection to the URL
-        # Use proper WebRequest with HEAD method to check availability (instead of Invoke-WebRequest -Method Head)
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $request = [System.Net.WebRequest]::Create($zipUrl)
-        $request.Method = "HEAD"
-        $request.Timeout = 10000  # 10 seconds timeout
-        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-        
-        $response = $request.GetResponse()
-        if ($response.StatusCode -eq 200) {
-            $rikorServerAvailable = $true
-        }
-        $response.Close()
-        if ($response.StatusCode -eq 200) {
-            $rikorServerAvailable = $true
-        }
-    } catch {
-        Write-SilentLog "[INFO] Rikor server is not accessible: $_"
-    }
+# Get computer model to determine which driver pack to download
+$computerModel = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
+Write-SilentLog "Detected computer model: $computerModel"
 
-    if (-not $rikorServerAvailable) {
-        Write-SilentLog "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
-        
-        try {
-            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-            Write-SilentLog "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
-            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-            
-            if ($SearchResult.Updates.Count -eq 0) {
-                Write-SilentLog "No driver updates available from Microsoft Update"
-                # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                $history = @()
-                if (Test-Path $historyFile) {
-                    try {
-                        $content = Get-Content -Path $historyFile -Raw
-                        if ($content) {
-                            $parsed = $content | ConvertFrom-Json
-                            if ($parsed -is [array]) {
-                                $history = $parsed
-                            } else {
-                                $history = @($parsed)
-                            }
-                        }
-                    } catch { $history = @() }
-                }
-                $entry = [PSCustomObject]@{
-                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                    Task = "DownloadAndInstallDrivers"
-                    Status = "Completed"
-                    Details = "No updates found (fallback to MS Update)"
-                }
-                $history = @($entry) + $history
-                # Keep last 100 entries
-                if ($history.Count -gt 100) { $history = $history[0..99] }
-                $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-            } else {
-                Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
-                Write-SilentLog ""
-                foreach ($Update in $SearchResult.Updates) {
-                    Write-SilentLog "  - $($Update.Title)"
-                    Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
-                }
-                Write-SilentLog ""
-                Write-SilentLog "Downloading and installing driver updates from Microsoft Update..."
+# Load Nextcloud URLs from online JSON file
+$modelsFileUrl = "https://nc.rikor.com/index.php/s/BfBKYyW9HdoFfz9/download"  # URL to the online models.json file
+$nextcloudUrls = @{}
 
-                # Create update collection for download and install
-                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-                foreach ($Update in $SearchResult.Updates) {
-                    if ($Update.EulaAccepted -eq $false) {
-                        $Update.AcceptEula()
-                    }
-                    $UpdatesToDownload.Add($Update) | Out-Null
-                }
+try {
+# Attempt to download the models file
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webClient = New-Object System.Net.WebClient
+$webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
 
-                # Download updates
-                if ($UpdatesToDownload.Count -gt 0) {
-                    Write-SilentLog "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
-                    $Downloader = $UpdateSession.CreateUpdateDownloader()
-                    $Downloader.Updates = $UpdatesToDownload
-                    $DownloadResult = $Downloader.Download()
-                    Write-SilentLog "Download completed with result code: $($DownloadResult.ResultCode)"
+$modelsJsonString = $webClient.DownloadString($modelsFileUrl)
+$tempObj = $modelsJsonString | ConvertFrom-Json
+foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
+} catch {
+Write-SilentLog "Error downloading or parsing models from online file: $_ "
+Write-SilentLog "Attempting to load from local models.json file as fallback"
 
-                    # Install downloaded updates
-                    $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
-                    foreach ($Update in $SearchResult.Updates) {
-                        if ($Update.IsDownloaded) {
-                            $UpdatesToInstall.Add($Update) | Out-Null
-                        }
-                    }
+# Fallback to local file if online retrieval fails
+$modelsFilePath = Join-Path $PSScriptRoot "models.json"
+if (Test-Path $modelsFilePath) {
+try {
+$tempObj = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json
+foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
+} catch {
+Write-SilentLog "Error loading models from local fallback file: $_ "
+}
+}
+}
 
-                    if ($UpdatesToInstall.Count -gt 0) {
-                        Write-SilentLog "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
-                        $Installer = $UpdateSession.CreateUpdateInstaller()
-                        $Installer.Updates = $UpdatesToInstall
-                        $InstallResult = $Installer.Install()
-                        Write-SilentLog "Installation completed with result code: $($InstallResult.ResultCode)"
-                        Write-SilentLog "Reboot required: $($InstallResult.RebootRequired)"
+# Determine the appropriate URL based on model
+$zipUrl = $null
+if ($nextcloudUrls.ContainsKey($computerModel)) {
+$zipUrl = $nextcloudUrls[$computerModel]
+Write-SilentLog "Using Rikor Server for download"
 
-                        $successCount = 0
-                        $failCount = 0
-                        for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
-                            $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
-                            if ($resultCode -eq 2) { # 2 = Succeeded
-                                $successCount++
-                            } else {
-                                $failCount++
-                            }
-                        }
-                        Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
-                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                        $history = @()
-                        if (Test-Path $historyFile) {
-                            try {
-                                $content = Get-Content -Path $historyFile -Raw
-                                if ($content) {
-                                    $parsed = $content | ConvertFrom-Json
-                                    if ($parsed -is [array]) {
-                                        $history = $parsed
-                                    } else {
-                                        $history = @($parsed)
-                                    }
-                                }
-                            } catch { $history = @() }
-                        }
-                        $entry = [PSCustomObject]@{
-                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                            Task = "DownloadAndInstallDrivers"
-                            Status = "Completed"
-                            Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
-                        }
-                        $history = @($entry) + $history
-                        # Keep last 100 entries
-                        if ($history.Count -gt 100) { $history = $history[0..99] }
-                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-                    } else {
-                        Write-SilentLog "[WARNING] No updates were downloaded successfully from Microsoft Update"
-                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                        $history = @()
-                        if (Test-Path $historyFile) {
-                            try {
-                                $content = Get-Content -Path $historyFile -Raw
-                                if ($content) {
-                                    $parsed = $content | ConvertFrom-Json
-                                    if ($parsed -is [array]) {
-                                        $history = $parsed
-                                    } else {
-                                        $history = @($parsed)
-                                    }
-                                }
-                            } catch { $history = @() }
-                        }
-                        $entry = [PSCustomObject]@{
-                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                            Task = "DownloadAndInstallDrivers"
-                            Status = "Completed"
-                            Details = "Download failed for all updates from MS Update"
-                        }
-                        $history = @($entry) + $history
-                        # Keep last 100 entries
-                        if ($history.Count -gt 100) { $history = $history[0..99] }
-                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-                    }
-                }
-            }
-        } catch {
-            Write-SilentLog "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
-            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-            $history = @()
-            if (Test-Path $historyFile) {
-                try {
-                    $content = Get-Content -Path $historyFile -Raw
-                    if ($content) {
-                        $parsed = $content | ConvertFrom-Json
-                        if ($parsed -is [array]) {
-                            $history = $parsed
-                        } else {
-                            $history = @($parsed)
-                        }
-                    }
-                } catch { $history = @() }
-            }
-            $entry = [PSCustomObject]@{
-                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                Task = "DownloadAndInstallDrivers"
-                Status = "Failed"
-                Details = $_.Exception.Message
-            }
-            $history = @($entry) + $history
-            # Keep last 100 entries
-            if ($history.Count -gt 100) { $history = $history[0..99] }
-            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-        }
-        Write-SilentLog "Completed"
-        return
-    }
+# Check if Rikor server is available
+$rikorServerAvailable = $false
+try {
+# Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-    # Validate the URL
-    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
-        Write-SilentLog "[ERROR] Public ZIP download URL is not configured correctly in silent mode."
-        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-        $history = @()
-        if (Test-Path $historyFile) {
-            try {
-                $content = Get-Content -Path $historyFile -Raw
-                if ($content) {
-                    $parsed = $content | ConvertFrom-Json
-                    if ($parsed -is [array]) {
-                        $history = $parsed
-                    } else {
-                        $history = @($parsed)
-                    }
-                }
-            } catch { $history = @() }
-        }
-        $entry = [PSCustomObject]@{
-            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-            Task = "DownloadAndInstallDrivers"
-            Status = "Failed"
-            Details = "URL not configured"
-        }
-        $history = @($entry) + $history
-        # Keep last 100 entries
-        if ($history.Count -gt 100) { $history = $history[0..99] }
-        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-        return
-    }
+$request = [System.Net.WebRequest]::Create($zipUrl)
+$request.Method = "HEAD"
+$request.Timeout = 15000  # 15 seconds timeout
+$request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
 
-    $tempDir = Join-Path $env:TEMP "RikorDriversTempSilent_$(Get-Date -Format 'yyyyMMddHHmmss')"
-    try {
-        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-        Write-SilentLog "Created temporary directory: $tempDir"
+$response = $request.GetResponse()
+if ($response.StatusCode -eq 200) {
+$rikorServerAvailable = $true
+}
+$response.Close()
+} catch {
+Write-SilentLog "[INFO] Rikor server is not accessible: $_ "
+}
+} else {
+Write-SilentLog "Model '$computerModel' not in predefined list, checking Microsoft Update"
+# Skip Nextcloud download and go directly to Microsoft Update
+$rikorServerAvailable = $false
+}
 
-        $zipPath = Join-Path $tempDir "drivers.zip"
+if (-not $rikorServerAvailable) {
+Write-SilentLog "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
 
-        Write-SilentLog "Starting download of drivers archive..."
-        try {
-            # Use basic parsing to avoid issues with complex pages
-            # Use .NET WebClient for reliable download from Nextcloud (handles dynamic links better)
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            
-            $webClient = New-Object System.Net.WebClient
-            $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-            
-            try {
-                $webClient.DownloadFile($zipUrl, $zipPath)
-                Write-SilentLog "Download completed using .NET WebClient: $zipPath"
-            } catch {
-                Write-SilentLog "[ERROR] Download failed with .NET WebClient: $_"
-                throw
-            }
-            Write-SilentLog "Download completed to: $zipPath"
-        } catch {
-            Write-SilentLog "[ERROR] Failed to download ZIP: $_"
-            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-            $history = @()
-            if (Test-Path $historyFile) {
-                try {
-                    $content = Get-Content -Path $historyFile -Raw
-                    if ($content) {
-                        $parsed = $content | ConvertFrom-Json
-                        if ($parsed -is [array]) {
-                            $history = $parsed
-                        } else {
-                            $history = @($parsed)
-                        }
-                    }
-                } catch { $history = @() }
-            }
-            $entry = [PSCustomObject]@{
-                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                Task = "DownloadAndInstallDrivers"
-                Status = "Failed"
-                Details = "Download failed: $_"
-            }
-            $history = @($entry) + $history
-            # Keep last 100 entries
-            if ($history.Count -gt 100) { $history = $history[0..99] }
-            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-            return
-        }
+try {
+$UpdateSession = New-Object -ComObject Microsoft.Update.Session
+$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+Write-SilentLog "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
+$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
 
-        # Check if ZIP exists and is not empty
-        if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
-             Write-SilentLog "[ERROR] Downloaded ZIP file is missing or empty."
-             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-             # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-             $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-             $history = @()
-             if (Test-Path $historyFile) {
-                 try {
-                     $content = Get-Content -Path $historyFile -Raw
-                     if ($content) {
-                         $parsed = $content | ConvertFrom-Json
-                         if ($parsed -is [array]) {
-                             $history = $parsed
-                         } else {
-                             $history = @($parsed)
-                         }
-                     }
-                 } catch { $history = @() }
-             }
-             $entry = [PSCustomObject]@{
-                 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                 Task = "DownloadAndInstallDrivers"
-                 Status = "Failed"
-                 Details = "Downloaded ZIP is empty"
-             }
-             $history = @($entry) + $history
-             # Keep last 100 entries
-             if ($history.Count -gt 100) { $history = $history[0..99] }
-             $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-             return
-        }
+if ($SearchResult.Updates.Count -eq 0) {
+Write-SilentLog "No driver updates available from Microsoft Update"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "No updates found (fallback to MS Update)"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+} else {
+Write-SilentLog "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
+Write-SilentLog ""
+foreach ($Update in $SearchResult.Updates) {
+Write-SilentLog "  - $($Update.Title)"
+Write-SilentLog "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+}
+Write-SilentLog ""
+Write-SilentLog "Downloading and installing driver updates from Microsoft Update..."
 
-        $extractDir = Join-Path $tempDir "ExtractedDrivers"
-        Write-SilentLog "Extracting ZIP archive to: $extractDir"
-        try {
-            Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
-            Write-SilentLog "Extraction completed."
-        } catch {
-            Write-SilentLog "[ERROR] Failed to extract ZIP: $_"
-            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-            $history = @()
-            if (Test-Path $historyFile) {
-                try {
-                    $content = Get-Content -Path $historyFile -Raw
-                    if ($content) {
-                        $parsed = $content | ConvertFrom-Json
-                        if ($parsed -is [array]) {
-                            $history = $parsed
-                        } else {
-                            $history = @($parsed)
-                        }
-                    }
-                } catch { $history = @() }
-            }
-            $entry = [PSCustomObject]@{
-                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                Task = "DownloadAndInstallDrivers"
-                Status = "Failed"
-                Details = "Extraction failed: $_"
-            }
-            $history = @($entry) + $history
-            # Keep last 100 entries
-            if ($history.Count -gt 100) { $history = $history[0..99] }
-            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-            return
-        }
+# Create update collection for download and install
+$UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+foreach ($Update in $SearchResult.Updates) {
+if ($Update.EulaAccepted -eq $false) {
+$Update.AcceptEula()
+}
+$UpdatesToDownload.Add($Update) | Out-Null
+}
 
-        if (-not (Test-Path $extractDir)) {
-             Write-SilentLog "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
-             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-             # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-             $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-             $history = @()
-             if (Test-Path $historyFile) {
-                 try {
-                     $content = Get-Content -Path $historyFile -Raw
-                     if ($content) {
-                         $parsed = $content | ConvertFrom-Json
-                         if ($parsed -is [array]) {
-                             $history = $parsed
-                         } else {
-                             $history = @($parsed)
-                         }
-                     }
-                 } catch { $history = @() }
-             }
-             $entry = [PSCustomObject]@{
-                 Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                 Task = "DownloadAndInstallDrivers"
-                 Status = "Failed"
-                 Details = "Extraction dir missing"
-             }
-             $history = @($entry) + $history
-             # Keep last 100 entries
-             if ($history.Count -gt 100) { $history = $history[0..99] }
-             $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-             return
-        }
+# Download updates
+if ($UpdatesToDownload.Count -gt 0) {
+Write-SilentLog "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
+$Downloader = $UpdateSession.CreateUpdateDownloader()
+$Downloader.Updates = $UpdatesToDownload
+$DownloadResult = $Downloader.Download()
+Write-SilentLog "Download completed with result code: $($DownloadResult.ResultCode)"
 
-        $infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
-        if ($infFilesInZip.Count -eq 0) {
-            Write-SilentLog "[WARNING] No .inf files found in the downloaded archive after extraction."
-            # Still proceed to InstallDrivers task, which will report its own error if needed
-        } else {
-            Write-SilentLog "Found $($infFilesInZip.Count) .inf file(s) in the archive."
-        }
+# Install downloaded updates
+$UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+foreach ($Update in $SearchResult.Updates) {
+if ($Update.IsDownloaded) {
+$UpdatesToInstall.Add($Update) | Out-Null
+}
+}
 
-        # Prepare arguments for the InstallDrivers task logic
-        $installArgs = @($extractDir)
+if ($UpdatesToInstall.Count -gt 0) {
+Write-SilentLog "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
+$Installer = $UpdateSession.CreateUpdateInstaller()
+$Installer.Updates = $UpdatesToInstall
+$InstallResult = $Installer.Install()
+Write-SilentLog "Installation completed with result code: $($InstallResult.ResultCode)"
+Write-SilentLog "Reboot required: $($InstallResult.RebootRequired)"
 
-        # --- Simulate calling the InstallDrivers logic directly within the same job ---
-        # This avoids creating another nested job and keeps logging consistent.
-        $folder = $installArgs[0]
-        Write-SilentLog "Installing drivers from extracted archive: $folder"
-        try {
-            if (-not (Test-Path $folder)) {
-                Write-SilentLog "[ERROR] Folder not found: $folder (This should not happen after extraction)"
-                Write-SilentLog "Completed"
-                return
-            }
+$successCount = 0
+$failCount = 0
+for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+$resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+if ($resultCode -eq 2) { # 2 = Succeeded
+$successCount++
+} else {
+$failCount++
+}
+}
+Write-SilentLog "Successfully installed: $successCount, Failed: $failCount"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+} else {
+Write-SilentLog "[WARNING] No updates were downloaded successfully from Microsoft Update"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "Download failed for all updates from MS Update"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+}
+}
+} catch {
+Write-SilentLog "[ERROR] Failed to download/install driver updates from Microsoft Update: $_ "
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Failed"
+Details = $_.Exception.Message
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+}
+Write-SilentLog "Completed"
+return
+}
 
-            # Find INF files recursively in the extracted folder
-            $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+# Validate the URL
+if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
+Write-SilentLog "[ERROR] Public ZIP download URL is not configured. Please edit the script."
+Write-SilentLog "Replace 'https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w' with the actual link."
+Write-SilentLog "Completed"
+return
+}
 
-            if ($infFiles.Count -eq 0) {
-                Write-SilentLog "[ERROR] No .inf driver files found in the extracted folder: $folder"
-                Write-SilentLog "Completed"
-                return
-            }
+# Create temp directory
+$tempDir = Join-Path $env:TEMP "RikorDriversTemp_$(Get-Date -Format 'yyyyMMddHHmmss')"
+try {
+New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+Write-SilentLog "Created temporary directory: $tempDir"
 
-            Write-SilentLog "Found $($infFiles.Count) driver file(s) in extracted folder"
-            Write-SilentLog "Installing drivers..."
-            Write-SilentLog ""
-            $successCount = 0
-            $failCount = 0
-            $current = 0
-            foreach ($inf in $infFiles) {
-                $current++
-                Write-SilentLog "[$current/$($infFiles.Count)] $($inf.Name)"
-                try {
-                    # Use pnputil to add and install the driver
-                    $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
-                    $hasError = $false
-                    $out | ForEach-Object {
-                        # Check for common failure indicators in pnputil output
-                        if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)" -and -not $hasError) {
-                            Write-SilentLog "     $_" # Log the error line
-                            $hasError = $true
-                            $failCount++
-                        }
-                    }
-                    # After processing all output, check the exit code to determine success/failure
-                    if (-not $hasError) {
-                         # If no specific error was logged in the output, check the exit code
-                         if ($LASTEXITCODE -eq 0) {
-                              $successCount++
-                              Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
-                         } elseif ($LASTEXITCODE -eq 259) {
-                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
-                              $successCount++ # Count as success since no error occurred, just nothing to do
-                              Write-SilentLog "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
-                         } else {
-                              # pnputil reported an error via exit code, even if not captured in output
-                              $failCount++
-                              Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
-                         }
-                    }
-                } catch {
-                    $failCount++
-                    Write-SilentLog "     -> Exception during installation: $_"
-                }
-                Start-Sleep -Milliseconds 300
-            }
-            Write-SilentLog ""
-            Write-SilentLog "Installation from archive complete: $successCount successful, $failCount failed"
-            if ($successCount -gt 0) {
-                Write-SilentLog "Note: Reboot may be required for some drivers to take effect."
-            }
-        } catch {
-            Write-SilentLog "[ERROR] Installation process failed: $_"
-        }
-        # --- End of simulated InstallDrivers logic ---
+# Define zip file path
+$zipPath = Join-Path $tempDir "drivers.zip"
 
-    } catch {
-        Write-SilentLog "[ERROR] An unexpected error occurred during download/extraction: $_"
-    } finally {
-        # Always attempt to clean up the temporary directory
-        Write-SilentLog "Cleaning up temporary directory: $tempDir"
-        Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-        if (Test-Path $tempDir) {
-            Write-SilentLog "[WARNING] Could not remove temporary directory: $tempDir"
-        } else {
-            Write-SilentLog "Temporary directory cleaned up successfully."
-        }
-    }
-    Write-SilentLog "Completed"
-    # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-    $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-    $history = @()
-    if (Test-Path $historyFile) {
-        try {
-            $content = Get-Content -Path $historyFile -Raw
-            if ($content) {
-                $parsed = $content | ConvertFrom-Json
-                if ($parsed -is [array]) {
-                    $history = $parsed
-                } else {
-                    $history = @($parsed)
-                }
-            }
-        } catch { $history = @() }
-    }
-    $entry = [PSCustomObject]@{
-        Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-        Task = "DownloadAndInstallDrivers"
-        Status = "Completed"
-        Details = "Silent mode run"
-    }
-    $history = @($entry) + $history
-    # Keep last 100 entries
-    if ($history.Count -gt 100) { $history = $history[0..99] }
-    $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+# Download ZIP
+Write-SilentLog "Starting download of drivers archive..."
+try {
+# Force TLS 1.2 for Nextcloud compatibility
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Use custom download function with progress for reliable download from Nextcloud
+Write-SilentLog "Starting download with progress tracking..."
+try {
+# Define helper function for download with progress
+function Download-WithProgress {
+param(
+[string]$Url,
+[string]$Path,
+[string]$Activity = "Downloading"
+)
+
+# Create WebClient with events for progress tracking
+$webClient = New-Object System.Net.WebClient
+$webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+
+# Create temporary file for download
+$tempPath = $Path + ".tmp"
+
+# Register progress event handler
+$webClient.add_DownloadProgressChanged({
+param($sender, $event)
+
+# If server returned file size (TotalBytesToReceive > 0)
+if ($event.TotalBytesToReceive -gt 0) {
+$percent = [math]::Round(($event.BytesReceived / $event.TotalBytesToReceive) * 100, 2)
+$receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+$totalMB = [math]::Round($event.TotalBytesToReceive / 1MB, 2)
+
+Write-Progress -Activity $Activity -Status "$percent% Complete ($receivedMB/$totalMB MB)" -PercentComplete $percent
+}
+else {
+# If file size is unknown (typical for Nextcloud dynamic links), show downloaded amount only
+$receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+Write-Progress -Activity $Activity -Status "Downloaded: $receivedMB MB (Size unknown...)" -PercentComplete 0
+}
+})
+
+try {
+$webClient.DownloadFile($Url, $tempPath)
+
+# Move temp file to final location when complete
+Move-Item -Path $tempPath -Destination $Path -Force
+Write-SilentLog "Download completed: $Path"
+} finally {
+# Clean up temp file if it still exists
+if (Test-Path $tempPath) {
+Remove-Item $tempPath -ErrorAction SilentlyContinue
+}
+# Clear progress bar
+Write-Progress -Activity $Activity -Completed
+}
+}
+
+Download-WithProgress -Url $zipUrl -Path $zipPath -Activity "Downloading Drivers Archive"
+Write-SilentLog "Download completed successfully: $zipPath"
+} catch {
+Write-SilentLog "[ERROR] Download failed with progress tracking: $_ "
+# Fallback to basic download
+try {
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webClient = New-Object System.Net.WebClient
+$webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+$webClient.DownloadFile($zipUrl, $zipPath)
+Write-SilentLog "Fallback download completed: $zipPath"
+} catch {
+Write-SilentLog "[ERROR] Fallback download also failed: $_ "
+throw
+}
+}
+Write-SilentLog "Download completed to: $zipPath"
+} catch {
+Write-SilentLog "[ERROR] Failed to download ZIP: $_ "
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+Write-SilentLog "Completed"
+return
+}
+
+# Check if ZIP exists and is not empty
+if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
+Write-SilentLog "[ERROR] Downloaded ZIP file is missing or empty."
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+Write-SilentLog "Completed"
+return
+}
+
+# Extract ZIP
+$extractDir = Join-Path $tempDir "ExtractedDrivers"
+Write-SilentLog "Extracting ZIP archive to: $extractDir"
+try {
+Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+Write-SilentLog "Extraction completed."
+} catch {
+Write-SilentLog "[ERROR] Failed to extract ZIP: $_ "
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+Write-SilentLog "Completed"
+return
+}
+
+# Verify extracted content
+if (-not (Test-Path $extractDir)) {
+Write-SilentLog "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+Write-SilentLog "Completed"
+return
+}
+
+$infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
+if ($infFilesInZip.Count -eq 0) {
+Write-SilentLog "[WARNING] No .inf files found in the downloaded archive after extraction."
+# Still proceed to InstallDrivers task, which will report its own error if needed
+} else {
+Write-SilentLog "Found $($infFilesInZip.Count) .inf file(s) in the archive."
+}
+
+# Prepare arguments for the InstallDrivers task logic
+$installArgs = @($extractDir)
+
+# --- Simulate calling the InstallDrivers logic directly within the same job ---
+# This avoids creating another nested job and keeps logging consistent.
+$folder = $installArgs[0]
+Write-SilentLog "Installing drivers from extracted archive: $folder"
+try {
+if (-not (Test-Path $folder)) {
+Write-SilentLog "[ERROR] Folder not found: $folder (This should not happen after extraction)"
+Write-SilentLog "Completed"
+return
+}
+
+# Find INF files recursively in the extracted folder
+$infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+
+if ($infFiles.Count -eq 0) {
+Write-SilentLog "[ERROR] No .inf driver files found in the extracted folder: $folder"
+Write-SilentLog "Completed"
+return
+}
+
+Write-SilentLog "Found $($infFiles.Count) driver file(s) in extracted folder"
+Write-SilentLog "Installing drivers..."
+Write-SilentLog ""
+$successCount = 0
+$failCount = 0
+$current = 0
+foreach ($inf in $infFiles) {
+$current++
+Write-SilentLog "[$current/$($infFiles.Count)] $($inf.Name)"
+try {
+# Use pnputil to add and install the driver
+$out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+$hasErrorInOutput = $false
+$out | ForEach-Object {
+if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)") {
+Write-SilentLog "     $_ " # Log the error line
+$hasErrorInOutput = $true
+}
+}
+
+if ($hasErrorInOutput) {
+$failCount++
+Write-SilentLog "     -> Installation failed (error found in pnputil output)."
+} elseif ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 259) {
+# 0 = success, 259 = no more items (already installed or not applicable)
+$successCount++
+if ($LASTEXITCODE -eq 259) {
+Write-SilentLog "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)."
+} else {
+Write-SilentLog "     -> Added and installed successfully."
+}
+} else {
+# Non-zero exit code that isn't 259
+$failCount++
+Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)."
+}
+} catch {
+$failCount++
+Write-SilentLog "     -> Exception during installation: $_ "
+}
+Start-Sleep -Milliseconds 300
+}
+Write-SilentLog ""
+Write-SilentLog "Installation from archive complete: $successCount successful, $failCount failed"
+if ($successCount -gt 0) {
+Write-SilentLog "Note: Reboot may be required for some drivers to take effect."
+}
+} catch {
+Write-SilentLog "[ERROR] Installation process failed: $_ "
+}
+# --- End of simulated InstallDrivers logic ---
+
+} catch {
+Write-SilentLog "[ERROR] An unexpected error occurred during download/extraction: $_ "
+} finally {
+# Always attempt to clean up the temporary directory
+Write-SilentLog "Cleaning up temporary directory: $tempDir"
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+if (Test-Path $tempDir) {
+Write-SilentLog "[WARNING] Could not remove temporary directory: $tempDir"
+} else {
+Write-SilentLog "Temporary directory cleaned up successfully."
+}
+}
+Write-SilentLog "Completed"
 }
 "ScanDrivers" {
 Write-SilentLog "Scanning installed drivers..."
@@ -1145,7 +814,7 @@ $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation
 Write-SilentLog "Exported to: $csvPath"
 Write-SilentLog "Completed"
 } catch {
-Write-SilentLog "[ERROR] Failed to scan drivers: $_"
+Write-SilentLog "[ERROR] Failed to scan drivers: $_ "
 }
 }
 "BackupDrivers" {
@@ -1155,7 +824,8 @@ try {
 if (!(Test-Path $dest)) {
 New-Item -ItemType Directory -Path $dest -Force | Out-Null
 }
-Write-SilentLog "Exporting drivers (this may take several minutes)..."
+Write-SilentLog "Exporting drivers (this may take several minutes)...
+"
 & dism.exe /online /export-driver /destination:$dest 2>&1 | Out-Null
 $exportedCount = (Get-ChildItem -Path $dest -Recurse -Directory -ErrorAction SilentlyContinue).Count
 if ($exportedCount -gt 0) {
@@ -1164,7 +834,7 @@ Write-SilentLog "Backup completed: $exportedCount driver package(s) exported"
 Write-SilentLog "Backup completed. Check destination folder for exported drivers."
 }
 } catch {
-Write-SilentLog "[ERROR] Backup failed: $_"
+Write-SilentLog "[ERROR] Backup failed: $_ "
 }
 Write-SilentLog "Completed"
 }
@@ -1197,7 +867,7 @@ $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
 $hasError = $false
 $out | ForEach-Object {
 if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
-Write-SilentLog "     $_" # Log the error line
+Write-SilentLog "     $_ " # Log the error line
 $hasError = $true
 $failCount++
 }
@@ -1205,17 +875,17 @@ $failCount++
 if (-not $hasError) {
 # If no specific error was logged, check the exit code
 if ($LASTEXITCODE -eq 0) {
-     $successCount++
-     Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
+$successCount++
+Write-SilentLog "     -> Added and installed successfully." # Optional verbose log
 } else {
-     # pnputil reported an error via exit code, even if not captured in output
-     $failCount++
-     Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+# pnputil reported an error via exit code, even if not captured in output
+$failCount++
+Write-SilentLog "     -> Installation failed (pnputil exit code: $LASTEXITCODE)."
 }
 }
 } catch {
 $failCount++
-Write-SilentLog "     -> Exception during installation: $_"
+Write-SilentLog "     -> Exception during installation: $_ "
 }
 Start-Sleep -Milliseconds 300
 }
@@ -1225,7 +895,7 @@ if ($successCount -gt 0) {
 Write-SilentLog "Note: Reboot may be required for some drivers."
 }
 } catch {
-Write-SilentLog "[ERROR] Installation failed: $_"
+Write-SilentLog "[ERROR] Installation failed: $_ "
 }
 Write-SilentLog "Completed"
 }
@@ -1235,23 +905,23 @@ Write-SilentLog "Unknown task: $Task"
 $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
 $history = @()
 if (Test-Path $historyFile) {
-    try {
-        $content = Get-Content -Path $historyFile -Raw
-        if ($content) {
-            $parsed = $content | ConvertFrom-Json
-            if ($parsed -is [array]) {
-                $history = $parsed
-            } else {
-                $history = @($parsed)
-            }
-        }
-    } catch { $history = @() }
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
 }
-$entry = [PSCustomObject]@{
-    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Task = $Task
-    Status = "Failed"
-    Details = "Unknown task"
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = $Task
+Status = "Failed"
+Details = "Unknown task"
 }
 $history = @($entry) + $history
 # Keep last 100 entries
@@ -1348,7 +1018,7 @@ $menuSeparator1 = New-Object Windows.Forms.ToolStripSeparator
 $menuExit = New-Object Windows.Forms.ToolStripMenuItem
 $menuExit.Text = "Exit"
 $menuExit.ShortcutKeys = [System.Windows.Forms.Keys]::Alt -bor [System.Windows.Forms.Keys]::F4
-$menuFile.DropDownItems.AddRange(@($menuOpenLogs, $menuSeparator1, $menuExit))
+$menuFile.DropDownItems.AddRange( @($menuOpenLogs, $menuSeparator1, $menuExit))
 # Actions Menu
 $menuActions = New-Object Windows.Forms.ToolStripMenuItem
 $menuActions.Text = "&Actions"
@@ -1359,7 +1029,7 @@ $menuDownloadAndInstall = New-Object Windows.Forms.ToolStripMenuItem
 $menuDownloadAndInstall.Text = (Get-LocalizedString "BtnDownloadAndInstall")
 $menuDownloadAndInstall.ShortcutKeys = [System.Windows.Forms.Keys]::F6 # Assign F6 to the combined button
 # Insert it near the top of the actions menu
-$menuActions.DropDownItems.AddRange(@($menuDownloadAndInstall)) # Adjust order as needed
+$menuActions.DropDownItems.AddRange( @($menuDownloadAndInstall)) # Adjust order as needed
 $menuScan = New-Object Windows.Forms.ToolStripMenuItem
 $menuScan.Text = (Get-LocalizedString "BtnScan")
 $menuScan.ShortcutKeys = [System.Windows.Forms.Keys]::F7
@@ -1374,7 +1044,7 @@ $menuSeparator3 = New-Object Windows.Forms.ToolStripSeparator
 $menuCancel = New-Object Windows.Forms.ToolStripMenuItem
 $menuCancel.Text = (Get-LocalizedString "BtnCancel")
 $menuCancel.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::Q
-$menuActions.DropDownItems.AddRange(@($menuScan, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel))
+$menuActions.DropDownItems.AddRange( @($menuScan, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel))
 # Tools Menu
 $menuTools = New-Object Windows.Forms.ToolStripMenuItem
 $menuTools.Text = "&Tools"
@@ -1388,7 +1058,7 @@ $menuSeparator4 = New-Object Windows.Forms.ToolStripSeparator
 $menuHistory = New-Object Windows.Forms.ToolStripMenuItem
 $menuHistory.Text = (Get-LocalizedString "BtnHistory")
 $menuHistory.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::H
-$menuTools.DropDownItems.AddRange(@($menuRestorePoint, $menuSchedule, $menuFilters, $menuSeparator4, $menuHistory))
+$menuTools.DropDownItems.AddRange( @($menuRestorePoint, $menuSchedule, $menuFilters, $menuSeparator4, $menuHistory))
 # View Menu
 $menuView = New-Object Windows.Forms.ToolStripMenuItem
 $menuView.Text = "&View"
@@ -1410,12 +1080,12 @@ $langMenuItem.Checked = $true
 }
 $menuLanguage.DropDownItems.Add($langMenuItem) | Out-Null
 }
-$menuView.DropDownItems.AddRange(@($menuToggleTheme, $menuSeparator5, $menuLanguage))
+$menuView.DropDownItems.AddRange( @($menuToggleTheme, $menuSeparator5, $menuLanguage))
 # Settings Menu
 $menuSettingsTop = New-Object Windows.Forms.ToolStripMenuItem
 $menuSettingsTop.Text = "&Settings"
 $menuSettingsTop.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::Oemcomma
-$menuStrip.Items.AddRange(@($menuFile, $menuActions, $menuTools, $menuView, $menuSettingsTop))
+$menuStrip.Items.AddRange( @($menuFile, $menuActions, $menuTools, $menuView, $menuSettingsTop))
 # -------------------------
 # Toolbar Panel
 # -------------------------
@@ -1493,7 +1163,7 @@ $btnInstall.Margin = '0,0,12,0'
 $btnCancel = New-ModernButton -Text (Get-LocalizedString "BtnCancel") -Width 110
 $btnCancel.Margin = '0,0,0,0'
 # Add buttons to centered container (Only the combined button remains)
-$buttonContainer.Controls.AddRange(@($btnDownloadAndInstall, $btnScan, $btnBackup, $btnInstall, $btnCancel))
+$buttonContainer.Controls.AddRange( @($btnDownloadAndInstall, $btnScan, $btnBackup, $btnInstall, $btnCancel))
 # -------------------------
 # Toolbar Separator (created here, added later for correct dock order)
 # -------------------------
@@ -1576,7 +1246,7 @@ $headerLabel.TextAlign = 'MiddleLeft'
 $contentPanel.Controls.Add($headerLabel)
 # Language combobox for compatibility
 $cmbLang = New-Object Windows.Forms.ComboBox
-$cmbLang.Items.AddRange(@("en", "es", "fr", "de", "pt", "it"))
+$cmbLang.Items.AddRange( @("en", "es", "fr", "de", "pt", "it") )
 $cmbLang.SelectedItem = $global:CurrentLanguage
 # DataGrid for drivers result (hidden initially)
 $driversGrid = New-Object Windows.Forms.DataGridView
@@ -1630,478 +1300,476 @@ switch ($taskName) {
     $computerModel = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
     L "Detected computer model: $computerModel"
     
-    # Define Nextcloud URLs based on computer model (for now, just two sample models)
-    # Replace these with actual Nextcloud share links
-    $nextcloudUrls = @{
-        "RIKOR L3P" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
-        "ARZ103.2" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
-        "RIKOR L5P" = "https://nc.rikor.com/index.php/s/YdEZY8NjMB8kXRA/download"
-        "RIKOR L3C RL-AC01" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
-	# Add more models as needed
-    }
+    # Load Nextcloud URLs from online JSON file
+    $modelsFileUrl = "https://nc.rikor.com/index.php/s/BfBKYyW9HdoFfz9/download"  # URL to the online models.json file
+    $nextcloudUrls = @{}
     
-    # Determine the appropriate URL based on model
-    $zipUrl = $null
-    if ($nextcloudUrls.ContainsKey($computerModel)) {
-        $zipUrl = $nextcloudUrls[$computerModel]
-        L "Using Rikor Server for download"
+try {
+        # Attempt to download the models file
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
         
-        # Check if Rikor server is available
-        $rikorServerAvailable = $false
-        try {
-            # Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            
-            $request = [System.Net.WebRequest]::Create($zipUrl)
-            $request.Method = "HEAD"
-            $request.Timeout = 15000  # 15 seconds timeout
-            $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-            
-            $response = $request.GetResponse()
-            if ($response.StatusCode -eq 200) {
-                $rikorServerAvailable = $true
-            }
-            $response.Close()
-        } catch {
-            L "[INFO] Rikor server is not accessible: $_"
-        }
-    } else {
-        L "Model '$computerModel' not in predefined list, checking Microsoft Update"
-        # Skip Nextcloud download and go directly to Microsoft Update
-        $rikorServerAvailable = $false
-    }
-
-
-    if (-not $rikorServerAvailable) {
-        L "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
-        
-        try {
-            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-            L "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
-            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-            
-            if ($SearchResult.Updates.Count -eq 0) {
-                L "No driver updates available from Microsoft Update"
-                # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                $history = @()
-                if (Test-Path $historyFile) {
-                    try {
-                        $content = Get-Content -Path $historyFile -Raw
-                        if ($content) {
-                            $parsed = $content | ConvertFrom-Json
-                            if ($parsed -is [array]) {
-                                $history = $parsed
-                            } else {
-                                $history = @($parsed)
-                            }
-                        }
-                    } catch { $history = @() }
-                }
-                $entry = [PSCustomObject]@{
-                    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                    Task = "DownloadAndInstallDrivers"
-                    Status = "Completed"
-                    Details = "No updates found (fallback to MS Update)"
-                }
-                $history = @($entry) + $history
-                # Keep last 100 entries
-                if ($history.Count -gt 100) { $history = $history[0..99] }
-                $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-            } else {
-                L "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
-                L ""
-                foreach ($Update in $SearchResult.Updates) {
-                    L "  - $($Update.Title)"
-                    L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
-                }
-                L ""
-                L "Downloading and installing driver updates from Microsoft Update..."
-
-                # Create update collection for download and install
-                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-                foreach ($Update in $SearchResult.Updates) {
-                    if ($Update.EulaAccepted -eq $false) {
-                        $Update.AcceptEula()
-                    }
-                    $UpdatesToDownload.Add($Update) | Out-Null
-                }
-
-                # Download updates
-                if ($UpdatesToDownload.Count -gt 0) {
-                    L "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
-                    $Downloader = $UpdateSession.CreateUpdateDownloader()
-                    $Downloader.Updates = $UpdatesToDownload
-                    $DownloadResult = $Downloader.Download()
-                    L "Download completed with result code: $($DownloadResult.ResultCode)"
-
-                    # Install downloaded updates
-                    $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
-                    foreach ($Update in $SearchResult.Updates) {
-                        if ($Update.IsDownloaded) {
-                            $UpdatesToInstall.Add($Update) | Out-Null
-                        }
-                    }
-
-                    if ($UpdatesToInstall.Count -gt 0) {
-                        L "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
-                        $Installer = $UpdateSession.CreateUpdateInstaller()
-                        $Installer.Updates = $UpdatesToInstall
-                        $InstallResult = $Installer.Install()
-                        L "Installation completed with result code: $($InstallResult.ResultCode)"
-                        L "Reboot required: $($InstallResult.RebootRequired)"
-
-                        $successCount = 0
-                        $failCount = 0
-                        for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
-                            $resultCode = $InstallResult.GetUpdateResult($i).ResultCode
-                            if ($resultCode -eq 2) { # 2 = Succeeded
-                                $successCount++
-                            } else {
-                                $failCount++
-                            }
-                        }
-                        L "Successfully installed: $successCount, Failed: $failCount"
-                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                        $history = @()
-                        if (Test-Path $historyFile) {
-                            try {
-                                $content = Get-Content -Path $historyFile -Raw
-                                if ($content) {
-                                    $parsed = $content | ConvertFrom-Json
-                                    if ($parsed -is [array]) {
-                                        $history = $parsed
-                                    } else {
-                                        $history = @($parsed)
-                                    }
-                                }
-                            } catch { $history = @() }
-                        }
-                        $entry = [PSCustomObject]@{
-                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                            Task = "DownloadAndInstallDrivers"
-                            Status = "Completed"
-                            Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
-                        }
-                        $history = @($entry) + $history
-                        # Keep last 100 entries
-                        if ($history.Count -gt 100) { $history = $history[0..99] }
-                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-                    } else {
-                        L "[WARNING] No updates were downloaded successfully from Microsoft Update"
-                        # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-                        $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-                        $history = @()
-                        if (Test-Path $historyFile) {
-                            try {
-                                $content = Get-Content -Path $historyFile -Raw
-                                if ($content) {
-                                    $parsed = $content | ConvertFrom-Json
-                                    if ($parsed -is [array]) {
-                                        $history = $parsed
-                                    } else {
-                                        $history = @($parsed)
-                                    }
-                                }
-                            } catch { $history = @() }
-                        }
-                        $entry = [PSCustomObject]@{
-                            Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                            Task = "DownloadAndInstallDrivers"
-                            Status = "Completed"
-                            Details = "Download failed for all updates from MS Update"
-                        }
-                        $history = @($entry) + $history
-                        # Keep last 100 entries
-                        if ($history.Count -gt 100) { $history = $history[0..99] }
-                        $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-                    }
-                }
-            }
-        } catch {
-            L "[ERROR] Failed to download/install driver updates from Microsoft Update: $_"
-            # Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
-            $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
-            $history = @()
-            if (Test-Path $historyFile) {
-                try {
-                    $content = Get-Content -Path $historyFile -Raw
-                    if ($content) {
-                        $parsed = $content | ConvertFrom-Json
-                        if ($parsed -is [array]) {
-                            $history = $parsed
-                        } else {
-                            $history = @($parsed)
-                        }
-                    }
-                } catch { $history = @() }
-            }
-            $entry = [PSCustomObject]@{
-                Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-                Task = "DownloadAndInstallDrivers"
-                Status = "Failed"
-                Details = $_.Exception.Message
-            }
-            $history = @($entry) + $history
-            # Keep last 100 entries
-            if ($history.Count -gt 100) { $history = $history[0..99] }
-            $history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
-        }
-        L "Completed"
-        return
-    }
-
-    # Validate the URL
-    if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
-        L "[ERROR] Public ZIP download URL is not configured. Please edit the script."
-        L "Replace 'https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w' with the actual link."
-        L "Completed"
-        return
-    }
-
-    # Create temp directory
-    $tempDir = Join-Path $env:TEMP "RikorDriversTemp_$(Get-Date -Format 'yyyyMMddHHmmss')"
-    try {
-        New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
-        L "Created temporary directory: $tempDir"
-
-        # Define zip file path
-        $zipPath = Join-Path $tempDir "drivers.zip"
-
-        # Download ZIP
-        L "Starting download of drivers archive..."
-        try {
-            # Force TLS 1.2 for Nextcloud compatibility
-            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-            
-            # Use custom download function with progress for reliable download from Nextcloud
-            L "Starting download with progress tracking..."
-            try {
-                # Define helper function for download with progress
-                function Download-WithProgress {
-                    param(
-                        [string]$Url,
-                        [string]$Path,
-                        [string]$Activity = "Downloading"
-                    )
-                    
-                    # Create WebClient with events for progress tracking
-                    $webClient = New-Object System.Net.WebClient
-                    $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                    
-                    # Create temporary file for download
-                    $tempPath = $Path + ".tmp"
-                    
-                    # Register progress event handler
-                    $webClient.add_DownloadProgressChanged({
-                        param($sender, $event)
-                        
-                        # If server returned file size (TotalBytesToReceive > 0)
-                        if ($event.TotalBytesToReceive -gt 0) {
-                            $percent = [math]::Round(($event.BytesReceived / $event.TotalBytesToReceive) * 100, 2)
-                            $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
-                            $totalMB = [math]::Round($event.TotalBytesToReceive / 1MB, 2)
-                            
-                            Write-Progress -Activity $Activity -Status "$percent% Complete ($receivedMB/$totalMB MB)" -PercentComplete $percent
-                        }
-                        else {
-                            # If file size is unknown (typical for Nextcloud dynamic links), show downloaded amount only
-                            $receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
-                            Write-Progress -Activity $Activity -Status "Downloaded: $receivedMB MB (Size unknown...)" -PercentComplete 0
-                        }
-                    })
-                    
-                    try {
-                        $webClient.DownloadFile($Url, $tempPath)
-                        
-                        # Move temp file to final location when complete
-                        Move-Item -Path $tempPath -Destination $Path -Force
-                        L "Download completed: $Path"
-                    } finally {
-                        # Clean up temp file if it still exists
-                        if (Test-Path $tempPath) {
-                            Remove-Item $tempPath -ErrorAction SilentlyContinue
-                        }
-                        # Clear progress bar
-                        Write-Progress -Activity $Activity -Completed
-                    }
-                }
-                
-                Download-WithProgress -Url $zipUrl -Path $zipPath -Activity "Downloading Drivers Archive"
-                L "Download completed successfully: $zipPath"
-            } catch {
-                L "[ERROR] Download failed with progress tracking: $_"
-                # Fallback to basic download
-                try {
-                    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-                    $webClient = New-Object System.Net.WebClient
-                    $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                    $webClient.DownloadFile($zipUrl, $zipPath)
-                    L "Fallback download completed: $zipPath"
-                } catch {
-                    L "[ERROR] Fallback download also failed: $_"
-                    throw
-                }
-            }
-            L "Download completed to: $zipPath"
-        } catch {
-            L "[ERROR] Failed to download ZIP: $_"
-            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            L "Completed"
-            return
-        }
-
-        # Check if ZIP exists and is not empty
-        if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
-            L "[ERROR] Downloaded ZIP file is missing or empty."
-            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            L "Completed"
-            return
-        }
-
-        # Extract ZIP
-        $extractDir = Join-Path $tempDir "ExtractedDrivers"
-        L "Extracting ZIP archive to: $extractDir"
-        try {
-            Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
-            L "Extraction completed."
-        } catch {
-            L "[ERROR] Failed to extract ZIP: $_"
-            Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-            L "Completed"
-            return
-        }
-
-        # Verify extracted content
-        if (-not (Test-Path $extractDir)) {
-             L "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
-             Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-             L "Completed"
-             return
-        }
-
-        $infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
-        if ($infFilesInZip.Count -eq 0) {
-            L "[WARNING] No .inf files found in the downloaded archive after extraction."
-            # Still proceed to InstallDrivers task, which will report its own error if needed
-        } else {
-            L "Found $($infFilesInZip.Count) .inf file(s) in the archive."
-        }
-
-        # Prepare arguments for the InstallDrivers task logic
-        $installArgs = @($extractDir)
-
-        # --- Simulate calling the InstallDrivers logic directly within the same job ---
-        # This avoids creating another nested job and keeps logging consistent.
-        $folder = $installArgs[0]
-        L "Installing drivers from extracted archive: $folder"
-        try {
-            if (-not (Test-Path $folder)) {
-                L "[ERROR] Folder not found: $folder (This should not happen after extraction)"
-                L "Completed"
-                return
-            }
-
-            # Find INF files recursively in the extracted folder
-            $infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
-
-            if ($infFiles.Count -eq 0) {
-                L "[ERROR] No .inf driver files found in the extracted folder: $folder"
-                L "Completed"
-                return
-            }
-
-            L "Found $($infFiles.Count) driver file(s) in extracted folder"
-            L "Installing drivers..."
-            L ""
-            $successCount = 0
-            $failCount = 0
-            $current = 0
-            foreach ($inf in $infFiles) {
-                $current++
-                L "[$current/$($infFiles.Count)] $($inf.Name)"
-                try {
-                    # Use pnputil to add and install the driver
-                    $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
-                    $hasError = $false
-                    # Check for common failure indicators in pnputil output
-                    $hasError = $false
-                    $out | ForEach-Object {
-                        if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)" -and -not $hasError) {
-                            L "     $_" # Log the error line
-                            $hasError = $true
-                            $failCount++
-                        }
-                    }
-                    
-                    # After processing all output, check the exit code to determine success/failure
-                    if (-not $hasError) {
-                         # If no specific error was logged in the output, check the exit code
-                         if ($LASTEXITCODE -eq 0) {
-                              $successCount++
-                              L "     -> Added and installed successfully." # Optional verbose log
-                         } elseif ($LASTEXITCODE -eq 259) {
-                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
-                              $successCount++ # Count as success since no error occurred, just nothing to do
-                              L "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
-                         } else {
-                              # pnputil reported an error via exit code, even if not captured in output
-                              $failCount++
-                              L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
-                              $hasError = $true
-                         }
-                    }
-                    
-                    if (-not $hasError) {
-                         $successCount++
-                         L "     -> Added and installed successfully."
-                    }
-                    if (-not $hasError) {
-                         # If no specific error was logged, check the exit code
-                         if ($LASTEXITCODE -eq 0) {
-                              $successCount++
-                              L "     -> Added and installed successfully." # Optional verbose log
-                         } elseif ($LASTEXITCODE -eq 259) {
-                              # Exit code 259 (ERROR_NO_MORE_ITEMS) typically means drivers are already installed or no applicable devices found
-                              $successCount++ # Count as success since no error occurred, just nothing to do
-                              L "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)." # More informative message
-                         } else {
-                              # pnputil reported an error via exit code, even if not captured in output
-                              $failCount++
-                              L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
-                         }
-                    }
-                } catch {
-                    $failCount++
-                    L "     -> Exception during installation: $_"
-                }
-                Start-Sleep -Milliseconds 300
-            }
-            L ""
-            L "Installation from archive complete: $successCount successful, $failCount failed"
-            if ($successCount -gt 0) {
-                L "Note: Reboot may be required for some drivers to take effect."
-            }
-        } catch {
-            L "[ERROR] Installation process failed: $_"
-        }
-        # --- End of simulated InstallDrivers logic ---
-
+        $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
+        $tempObj = $modelsJsonString | ConvertFrom-Json
+        $nextcloudUrls = @{}
+        foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
+        L "Loaded models mapping from online file"
     } catch {
-        L "[ERROR] An unexpected error occurred during download/extraction: $_"
-    } finally {
-        # Always attempt to clean up the temporary directory
-        L "Cleaning up temporary directory: $tempDir"
-        Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
-        if (Test-Path $tempDir) {
-            L "[WARNING] Could not remove temporary directory: $tempDir"
-        } else {
-            L "Temporary directory cleaned up successfully."
-        }
-    }
-    L "Completed"
+        L "Error downloading or parsing models from online file: $_ "
+        L "Attempting to load from local models.json file as fallback"
+        
+        # Fallback to local file if online retrieval fails
+        $modelsFilePath = Join-Path $PSScriptRoot "models.json"
+        if (Test-Path $modelsFilePath) {
+try {
+$tempObj = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json
+$nextcloudUrls = @{}
+foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
+L "Loaded models mapping from local fallback file"
+} catch {
+L "Error loading models from local fallback file: $_ "
+}
+}
+}
+
+# Determine the appropriate URL based on model
+$zipUrl = $null
+if ($nextcloudUrls.ContainsKey($computerModel)) {
+$zipUrl = $nextcloudUrls[$computerModel]
+L "Using Rikor Server for download"
+
+# Check if Rikor server is available
+$rikorServerAvailable = $false
+try {
+# Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$request = [System.Net.WebRequest]::Create($zipUrl)
+$request.Method = "HEAD"
+$request.Timeout = 15000  # 15 seconds timeout
+$request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+
+$response = $request.GetResponse()
+if ($response.StatusCode -eq 200) {
+$rikorServerAvailable = $true
+}
+$response.Close()
+} catch {
+L "[INFO] Rikor server is not accessible: $_ "
+}
+} else {
+L "Model '$computerModel' not in predefined list, checking Microsoft Update"
+# Skip Nextcloud download and go directly to Microsoft Update
+$rikorServerAvailable = $false
+}
+
+
+if (-not $rikorServerAvailable) {
+L "[INFO] Rikor server is not available. Checking for driver updates from Microsoft Update..."
+
+try {
+$UpdateSession = New-Object -ComObject Microsoft.Update.Session
+$UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+L "Searching for available driver updates from Microsoft Update (this may take a few minutes)..."
+$SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+
+if ($SearchResult.Updates.Count -eq 0) {
+L "No driver updates available from Microsoft Update"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "No updates found (fallback to MS Update)"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+} else {
+L "Found $($SearchResult.Updates.Count) driver update(s) available from Microsoft Update:"
+L ""
+foreach ($Update in $SearchResult.Updates) {
+L "  - $($Update.Title)"
+L "    Size: $([math]::Round($Update.MaxDownloadSize / 1MB, 2)) MB"
+}
+L ""
+L "Downloading and installing driver updates from Microsoft Update..."
+
+# Create update collection for download and install
+$UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+foreach ($Update in $SearchResult.Updates) {
+if ($Update.EulaAccepted -eq $false) {
+$Update.AcceptEula()
+}
+$UpdatesToDownload.Add($Update) | Out-Null
+}
+
+# Download updates
+if ($UpdatesToDownload.Count -gt 0) {
+L "Downloading $($UpdatesToDownload.Count) update(s) from Microsoft Update..."
+$Downloader = $UpdateSession.CreateUpdateDownloader()
+$Downloader.Updates = $UpdatesToDownload
+$DownloadResult = $Downloader.Download()
+L "Download completed with result code: $($DownloadResult.ResultCode)"
+
+# Install downloaded updates
+$UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+foreach ($Update in $SearchResult.Updates) {
+if ($Update.IsDownloaded) {
+$UpdatesToInstall.Add($Update) | Out-Null
+}
+}
+
+if ($UpdatesToInstall.Count -gt 0) {
+L "Installing $($UpdatesToInstall.Count) update(s) from Microsoft Update..."
+$Installer = $UpdateSession.CreateUpdateInstaller()
+$Installer.Updates = $UpdatesToInstall
+$InstallResult = $Installer.Install()
+L "Installation completed with result code: $($InstallResult.ResultCode)"
+L "Reboot required: $($InstallResult.RebootRequired)"
+
+$successCount = 0
+$failCount = 0
+for ($i = 0; $i -lt $UpdatesToInstall.Count; $i++) {
+$resultCode = $InstallResult.GetUpdateResult($i).ResultCode
+if ($resultCode -eq 2) { # 2 = Succeeded
+$successCount++
+} else {
+$failCount++
+}
+}
+L "Successfully installed: $successCount, Failed: $failCount"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "Installed $successCount/$($UpdatesToInstall.Count) updates via MS Update"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+} else {
+L "[WARNING] No updates were downloaded successfully from Microsoft Update"
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Completed"
+Details = "Download failed for all updates from MS Update"
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+}
+}
+} catch {
+L "[ERROR] Failed to download/install driver updates from Microsoft Update: $_ "
+# Direct history entry addition (instead of Add-HistoryEntry function which is not available in background job)
+$historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
+$history = @()
+if (Test-Path $historyFile) {
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
+}
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = "DownloadAndInstallDrivers"
+Status = "Failed"
+Details = $_.Exception.Message
+}
+$history = @($entry) + $history
+# Keep last 100 entries
+if ($history.Count -gt 100) { $history = $history[0..99] }
+$history | ConvertTo-Json -Depth 3 | Set-Content -Path $historyFile -Encoding UTF8
+}
+L "Completed"
+return
+}
+
+# Validate the URL
+if (-not $zipUrl -or $zipUrl -eq "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w") {
+L "[ERROR] Public ZIP download URL is not configured. Please edit the script."
+L "Replace 'https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w' with the actual link."
+L "Completed"
+return
+}
+
+# Create temp directory
+$tempDir = Join-Path $env:TEMP "RikorDriversTemp_$(Get-Date -Format 'yyyyMMddHHmmss')"
+try {
+New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+L "Created temporary directory: $tempDir"
+
+# Define zip file path
+$zipPath = Join-Path $tempDir "drivers.zip"
+
+# Download ZIP
+L "Starting download of drivers archive..."
+try {
+# Force TLS 1.2 for Nextcloud compatibility
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+# Use custom download function with progress for reliable download from Nextcloud
+L "Starting download with progress tracking..."
+try {
+# Define helper function for download with progress
+function Download-WithProgress {
+param(
+[string]$Url,
+[string]$Path,
+[string]$Activity = "Downloading"
+)
+
+# Create WebClient with events for progress tracking
+$webClient = New-Object System.Net.WebClient
+$webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+
+# Create temporary file for download
+$tempPath = $Path + ".tmp"
+
+# Register progress event handler
+$webClient.add_DownloadProgressChanged({
+param($sender, $event)
+
+# If server returned file size (TotalBytesToReceive > 0)
+if ($event.TotalBytesToReceive -gt 0) {
+$percent = [math]::Round(($event.BytesReceived / $event.TotalBytesToReceive) * 100, 2)
+$receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+$totalMB = [math]::Round($event.TotalBytesToReceive / 1MB, 2)
+
+Write-Progress -Activity $Activity -Status "$percent% Complete ($receivedMB/$totalMB MB)" -PercentComplete $percent
+}
+else {
+# If file size is unknown (typical for Nextcloud dynamic links), show downloaded amount only
+$receivedMB = [math]::Round($event.BytesReceived / 1MB, 2)
+Write-Progress -Activity $Activity -Status "Downloaded: $receivedMB MB (Size unknown...)" -PercentComplete 0
+}
+})
+
+try {
+$webClient.DownloadFile($Url, $tempPath)
+
+# Move temp file to final location when complete
+Move-Item -Path $tempPath -Destination $Path -Force
+Write-SilentLog "Download completed: $Path"
+} finally {
+# Clean up temp file if it still exists
+if (Test-Path $tempPath) {
+Remove-Item $tempPath -ErrorAction SilentlyContinue
+}
+# Clear progress bar
+Write-Progress -Activity $Activity -Completed
+}
+}
+
+Download-WithProgress -Url $zipUrl -Path $zipPath -Activity "Downloading Drivers Archive"
+L "Download completed successfully: $zipPath"
+} catch {
+L "[ERROR] Download failed with progress tracking: $_ "
+# Fallback to basic download
+try {
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$webClient = New-Object System.Net.WebClient
+$webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+$webClient.DownloadFile($zipUrl, $zipPath)
+L "Fallback download completed: $zipPath"
+} catch {
+L "[ERROR] Fallback download also failed: $_ "
+throw
+}
+}
+L "Download completed to: $zipPath"
+} catch {
+L "[ERROR] Failed to download ZIP: $_ "
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+L "Completed"
+return
+}
+
+# Check if ZIP exists and is not empty
+if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
+L "[ERROR] Downloaded ZIP file is missing or empty."
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+L "Completed"
+return
+}
+
+# Extract ZIP
+$extractDir = Join-Path $tempDir "ExtractedDrivers"
+L "Extracting ZIP archive to: $extractDir"
+try {
+Expand-Archive -Path $zipPath -DestinationPath $extractDir -Force
+L "Extraction completed."
+} catch {
+L "[ERROR] Failed to extract ZIP: $_ "
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+L "Completed"
+return
+}
+
+# Verify extracted content
+if (-not (Test-Path $extractDir)) {
+L "[ERROR] Extraction directory '$extractDir' does not exist after extraction."
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+L "Completed"
+return
+}
+
+$infFilesInZip = Get-ChildItem -Path $extractDir -Recurse -Include "*.inf" -ErrorAction SilentlyContinue
+if ($infFilesInZip.Count -eq 0) {
+L "[WARNING] No .inf files found in the downloaded archive after extraction."
+# Still proceed to InstallDrivers task, which will report its own error if needed
+} else {
+L "Found $($infFilesInZip.Count) .inf file(s) in the archive."
+}
+
+# Prepare arguments for the InstallDrivers task logic
+$installArgs = @($extractDir)
+
+# --- Simulate calling the InstallDrivers logic directly within the same job ---
+# This avoids creating another nested job and keeps logging consistent.
+$folder = $installArgs[0]
+L "Installing drivers from extracted archive: $folder"
+try {
+if (-not (Test-Path $folder)) {
+L "[ERROR] Folder not found: $folder (This should not happen after extraction)"
+L "Completed"
+return
+}
+
+# Find INF files recursively in the extracted folder
+$infFiles = Get-ChildItem -Path $folder -Recurse -Include *.inf -ErrorAction SilentlyContinue
+
+if ($infFiles.Count -eq 0) {
+L "[ERROR] No .inf driver files found in the extracted folder: $folder"
+L "Completed"
+return
+}
+
+L "Found $($infFiles.Count) driver file(s) in extracted folder"
+L "Installing drivers..."
+L ""
+$successCount = 0
+$failCount = 0
+$current = 0
+foreach ($inf in $infFiles) {
+$current++
+L "[$current/$($infFiles.Count)] $($inf.Name)"
+try {
+# Use pnputil to add and install the driver
+$out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
+$hasErrorInOutput = $false
+$out | ForEach-Object {
+if ($_ -match "(error|failed|fail|cannot find suitable|not compatible|not applicable)") {
+L "     $_ " # Log the error line
+$hasErrorInOutput = $true
+}
+}
+
+if ($hasErrorInOutput) {
+$failCount++
+L "     -> Installation failed (error found in pnputil output)."
+} elseif ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 259) {
+# 0 = success, 259 = no more items (already installed or not applicable)
+$successCount++
+if ($LASTEXITCODE -eq 259) {
+L "     -> Driver is already up to date or no applicable device found (pnputil exit code: 259)."
+} else {
+L "     -> Added and installed successfully."
+}
+} else {
+# Non-zero exit code that isn't 259
+$failCount++
+L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)."
+}
+} catch {
+$failCount++
+L "     -> Exception during installation: $_ "
+}
+Start-Sleep -Milliseconds 300
+}
+L ""
+L "Installation from archive complete: $successCount successful, $failCount failed"
+if ($successCount -gt 0) {
+L "Note: Reboot may be required for some drivers to take effect."
+}
+} catch {
+L "[ERROR] Installation process failed: $_ "
+}
+# --- End of simulated InstallDrivers logic ---
+
+} catch {
+L "[ERROR] An unexpected error occurred during download/extraction: $_ "
+} finally {
+# Always attempt to clean up the temporary directory
+L "Cleaning up temporary directory: $tempDir"
+Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
+if (Test-Path $tempDir) {
+L "[WARNING] Could not remove temporary directory: $tempDir"
+} else {
+L "Temporary directory cleaned up successfully."
+}
+}
+L "Completed"
 }
 "ScanDrivers" {
 L "Scanning installed drivers..."
@@ -2136,7 +1804,7 @@ $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation
 L "Exported to: $csvPath"
 L "Completed"
 } catch {
-L "[ERROR] Failed to scan drivers: $_"
+L "[ERROR] Failed to scan drivers: $_ "
 }
 }
 "BackupDrivers" {
@@ -2146,7 +1814,8 @@ try {
 if (!(Test-Path $dest)) {
 New-Item -ItemType Directory -Path $dest -Force | Out-Null
 }
-L "Exporting drivers (this may take several minutes)..."
+L "Exporting drivers (this may take several minutes)...
+"
 & dism.exe /online /export-driver /destination:$dest 2>&1 | Out-Null
 $exportedCount = (Get-ChildItem -Path $dest -Recurse -Directory -ErrorAction SilentlyContinue).Count
 if ($exportedCount -gt 0) {
@@ -2155,7 +1824,7 @@ L "Backup completed: $exportedCount driver package(s) exported"
 L "Backup completed. Check destination folder for exported drivers."
 }
 } catch {
-L "[ERROR] Backup failed: $_"
+L "[ERROR] Backup failed: $_ "
 }
 L "Completed"
 }
@@ -2188,7 +1857,7 @@ $out = & pnputil.exe /add-driver $inf.FullName /install /force 2>&1
 $hasError = $false
 $out | ForEach-Object {
 if ($_ -match "(error|failed|fail|cannot find suitable)" -and -not $hasError) {
-L "     $_" # Log the error line
+L "     $_ " # Log the error line
 $hasError = $true
 $failCount++
 }
@@ -2196,17 +1865,17 @@ $failCount++
 if (-not $hasError) {
 # If no specific error was logged, check the exit code
 if ($LASTEXITCODE -eq 0) {
-     $successCount++
-     L "     -> Added and installed successfully." # Optional verbose log
+$successCount++
+L "     -> Added and installed successfully." # Optional verbose log
 } else {
-     # pnputil reported an error via exit code, even if not captured in output
-     $failCount++
-     L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)." # Log exit code
+# pnputil reported an error via exit code, even if not captured in output
+$failCount++
+L "     -> Installation failed (pnputil exit code: $LASTEXITCODE)."
 }
 }
 } catch {
 $failCount++
-L "     -> Exception during installation: $_"
+L "     -> Exception during installation: $_ "
 }
 Start-Sleep -Milliseconds 300
 }
@@ -2216,7 +1885,7 @@ if ($successCount -gt 0) {
 L "Note: Reboot may be required for some drivers."
 }
 } catch {
-L "[ERROR] Installation failed: $_"
+L "[ERROR] Installation failed: $_ "
 }
 L "Completed"
 }
@@ -2225,7 +1894,7 @@ L "ERROR: Unknown task name: $taskName"
 }
 }
 } catch {
-L "ERROR in job: $_"
+L "ERROR in job: $_ "
 if ($_.ScriptStackTrace) {
 L "Stack trace: $($_.ScriptStackTrace)"
 }
@@ -2323,23 +1992,23 @@ $taskName = $global:CurrentJob.Name
 $historyFile = Join-Path $env:USERPROFILE "Documents\Rikor_DriverInstaller\UpdateHistory.json"
 $history = @()
 if (Test-Path $historyFile) {
-    try {
-        $content = Get-Content -Path $historyFile -Raw
-        if ($content) {
-            $parsed = $content | ConvertFrom-Json
-            if ($parsed -is [array]) {
-                $history = $parsed
-            } else {
-                $history = @($parsed)
-            }
-        }
-    } catch { $history = @() }
+try {
+$content = Get-Content -Path $historyFile -Raw
+if ($content) {
+$parsed = $content | ConvertFrom-Json
+if ($parsed -is [array]) {
+$history = $parsed
+} else {
+$history = @($parsed)
 }
-$entry = [PSCustomObject]@{
-    Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
-    Task = $taskName
-    Status = $jobState
-    Details = "Task completed"
+}
+} catch { $history = @() }
+}
+$entry = [PSCustomObject] @{
+Timestamp = (Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+Task = $taskName
+Status = $jobState
+Details = "Task completed"
 }
 $history = @($entry) + $history
 # Keep last 100 entries
@@ -2554,7 +2223,7 @@ $cmbFreq.Size = '180,28'
 $cmbFreq.DropDownStyle = 'DropDownList'
 $cmbFreq.BackColor = $colors.Background
 $cmbFreq.ForeColor = $colors.Text
-$cmbFreq.Items.AddRange(@((Get-LocalizedString "Daily"), (Get-LocalizedString "Weekly"), (Get-LocalizedString "Monthly")))
+$cmbFreq.Items.AddRange( @((Get-LocalizedString "Daily"), (Get-LocalizedString "Weekly"), (Get-LocalizedString "Monthly")))
 $cmbFreq.SelectedIndex = 0
 $contentPanel.Controls.Add($cmbFreq)
 $lblTime = New-Object Windows.Forms.Label
@@ -2919,7 +2588,7 @@ Add-StatusUI $form $status (Get-LocalizedString "TaskCancelled")
 Add-StatusUI $form $status (Get-LocalizedString "NoTaskToCancel")
 }
 } catch {
-Add-StatusUI $form $status "Cancel error: $_"
+Add-StatusUI $form $status "Cancel error: $_ "
 }
 }
 function Invoke-OpenLogs {
