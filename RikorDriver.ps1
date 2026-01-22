@@ -19,7 +19,7 @@ $global:Languages = @{
 "en" = @{
 AppTitle = "Rikor Driver Installer"
 # BtnWU removed
-BtnCheckUpdates = "Search & Install Rikor Drivers" # Updated text
+BtnCheckUpdates = "Search and Install Rikor Drivers" # Updated text
 BtnDownloadAndInstall = "Download & Install Rikor Drivers" # NEW: Localization for new button
 BtnScan = "Scan Installed Drivers"
 BtnBackup = "Backup Drivers"
@@ -71,287 +71,6 @@ Close = "Close"
 Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
-}
-"es" = @{
-AppTitle = "Instalador de Controladores Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Buscar e Instalar Controladores Rikor" # Updated text
-BtnDownloadAndInstall = "Descargar e Instalar Controladores Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Controladores"
-BtnBackup = "Respaldar Controladores"
-BtnInstall = "Instalar desde Carpeta"
-BtnCancel = "Cancelar Tarea"
-BtnOpenLogs = "Abrir Registros"
-BtnDarkMode = "Modo Oscuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Programar Actualizaciones"
-BtnRestorePoint = "Crear Punto Restauracion"
-BtnHistory = "Historial"
-BtnSettings = "Configuracion"
-BtnFilters = "Filtros"
-TaskRunning = "Ya hay una tarea en ejecucion. Cancelela primero."
-PermissionError = "Ejecute este script como Administrador."
-BackupCanceled = "Respaldo cancelado por el usuario."
-InstallCanceled = "Instalacion cancelada por el usuario."
-NoTaskToCancel = "No hay tarea para cancelar."
-TaskCancelled = "[CANCELADO] Tarea cancelada por el usuario."
-LogFolderMissing = "Carpeta de registros no encontrada."
-StartingTask = "-> Iniciando tarea:"
-TaskFinished = "=== Tarea finalizada:"
-SelectBackupFolder = "Seleccione carpeta para guardar respaldo"
-SelectDriverFolder = "Seleccione carpeta con archivos .inf"
-ScheduleCreated = "Tarea programada creada!"
-ScheduleRemoved = "Tarea programada eliminada."
-RestorePointCreated = "Punto de restauracion creado!"
-RestorePointFailed = "Error al crear punto de restauracion."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracion de proxy eliminada."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros eliminados."
-LanguageChanged = "Idioma cambiado a:"
-HistoryEmpty = "No hay historial de actualizaciones."
-SettingsTitle = "Configuracion"
-ScheduleTitle = "Programar Actualizaciones"
-FilterTitle = "Filtros de Controladores"
-HistoryTitle = "Historial de Actualizaciones"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensual"
-Time = "Hora:"
-ProxyLabel = "Direccion Proxy:"
-ClassFilter = "Filtrar por Clase:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpiar"
-Close = "Cerrar"
-Enable = "Habilitar"
-Disable = "Deshabilitar"
-Remove = "Eliminar Programacion"
-}
-"fr" = @{
-AppTitle = "Installateur de Pilotes Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Rechercher et installer les pilotes Rikor" # Updated text
-BtnDownloadAndInstall = "Télécharger et installer les pilotes Rikor" # NEW: Localization for new button
-BtnScan = "Analyser les Pilotes"
-BtnBackup = "Sauvegarder"
-BtnInstall = "Installer depuis Dossier"
-BtnCancel = "Annuler"
-BtnOpenLogs = "Ouvrir Journaux"
-BtnDarkMode = "Mode Sombre"
-BtnLightMode = "Mode Clair"
-BtnSchedule = "Planifier"
-BtnRestorePoint = "Point de Restauration"
-BtnHistory = "Historique"
-BtnSettings = "Parametres"
-BtnFilters = "Filtres"
-TaskRunning = "Une tache est deja en cours. Annulez-la d'abord."
-PermissionError = "Executez ce script en tant qu'Administrateur."
-BackupCanceled = "Sauvegarde annulee."
-InstallCanceled = "Installation annulee."
-NoTaskToCancel = "Aucune tache a annuler."
-TaskCancelled = "[ANNULE] Tache annulee."
-LogFolderMissing = "Dossier des journaux manquant."
-StartingTask = "-> Demarrage de la tache:"
-TaskFinished = "=== Tache terminee:"
-SelectBackupFolder = "Selectionnez le dossier de sauvegarde"
-SelectDriverFolder = "Selectionnez le dossier avec les fichiers .inf"
-ScheduleCreated = "Tache planifiee creee!"
-ScheduleRemoved = "Tache planifiee supprimee."
-RestorePointCreated = "Point de restauration cree!"
-RestorePointFailed = "Echec de creation du point de restauration."
-ProxyConfigured = "Proxy configure:"
-ProxyCleared = "Parametres proxy effaces."
-FilterApplied = "Filtre applique:"
-FilterCleared = "Filtres effaces."
-LanguageChanged = "Langue changee en:"
-HistoryEmpty = "Aucun historique trouve."
-SettingsTitle = "Parametres"
-ScheduleTitle = "Planifier les Mises a Jour"
-FilterTitle = "Filtres des Pilotes"
-HistoryTitle = "Historique des Mises a Jour"
-Daily = "Quotidien"
-Weekly = "Hebdomadaire"
-Monthly = "Mensuel"
-Time = "Heure:"
-ProxyLabel = "Adresse Proxy:"
-ClassFilter = "Filtrer par Classe:"
-ManufacturerFilter = "Filtrer par Fabricant:"
-Apply = "Appliquer"
-Clear = "Effacer"
-Close = "Fermer"
-Enable = "Activer"
-Disable = "Desactiver"
-Remove = "Supprimer Planification"
-}
-"de" = @{
-AppTitle = "Rikor Treiber-Installationsprogramm"
-# BtnWU removed
-BtnCheckUpdates = "Treiber suchen und installieren (Rikor)" # Updated text
-BtnDownloadAndInstall = "Treiber herunterladen und installieren (Rikor)" # NEW: Localization for new button
-BtnScan = "Treiber scannen"
-BtnBackup = "Sicherung"
-BtnInstall = "Aus Ordner installieren"
-BtnCancel = "Abbrechen"
-BtnOpenLogs = "Protokolle"
-BtnDarkMode = "Dunkelmodus"
-BtnLightMode = "Hellmodus"
-BtnSchedule = "Zeitplan"
-BtnRestorePoint = "Wiederherstellungspunkt"
-BtnHistory = "Verlauf"
-BtnSettings = "Einstellungen"
-BtnFilters = "Filter"
-TaskRunning = "Eine Aufgabe laeuft bereits."
-PermissionError = "Fuehren Sie dieses Skript als administrator aus."
-BackupCanceled = "Sicherung abgebrochen."
-InstallCanceled = "Installation abgebrochen."
-NoTaskToCancel = "Keine Aufgabe zum Abbrechen."
-TaskCancelled = "[ABGEBROCHEN] Aufgabe abgebrochen."
-LogFolderMissing = "Protokollordner fehlt."
-StartingTask = "-> Starte Aufgabe:"
-TaskFinished = "=== Aufgabe beendet:"
-SelectBackupFolder = "Sicherungsordner auswaehlen"
-SelectDriverFolder = "Ordner mit .inf-Dateien auswaehlen"
-ScheduleCreated = "Geplante Aufgabe erstellt!"
-ScheduleRemoved = "Geplante Aufgabe entfernt."
-RestorePointCreated = "Wiederherstellungspunkt erstellt!"
-RestorePointFailed = "Fehler beim Erstellen des Wiederherstellungspunkts."
-ProxyConfigured = "Proxy konfiguriert:"
-ProxyCleared = "Proxy-Einstellungen geloescht."
-FilterApplied = "Filter angewendet:"
-FilterCleared = "Filter geloescht."
-LanguageChanged = "Sprache geaendert zu:"
-HistoryEmpty = "Kein Verlauf gefunden."
-SettingsTitle = "Einstellungen"
-ScheduleTitle = "Updates planen"
-FilterTitle = "Treiberfilter"
-HistoryTitle = "Update-Verlauf"
-Daily = "Taeglich"
-Weekly = "Woechentlich"
-Monthly = "Monatlich"
-Time = "Zeit:"
-ProxyLabel = "Proxy-Adresse:"
-ClassFilter = "Nach Klasse filtern:"
-ManufacturerFilter = "Nach Hersteller filtern:"
-Apply = "Anwenden"
-Clear = "Loeschen"
-Close = "Schliessen"
-Enable = "Aktivieren"
-Disable = "Deaktivieren"
-Remove = "Zeitplan entfernen"
-}
-"pt" = @{
-AppTitle = "Instalador de Drivers Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Pesquisar e Instalar Drivers Rikor" # Updated text
-BtnDownloadAndInstall = "Baixar e Instalar Drivers Rikor" # NEW: Localization for new button
-BtnScan = "Escanear Drivers"
-BtnBackup = "Backup"
-BtnInstall = "Instalar da Pasta"
-BtnCancel = "Cancelar"
-BtnOpenLogs = "Abrir Logs"
-BtnDarkMode = "Modo Escuro"
-BtnLightMode = "Modo Claro"
-BtnSchedule = "Agendar"
-BtnRestorePoint = "Ponto de Restauracao"
-BtnHistory = "Historico"
-BtnSettings = "Configuracoes"
-BtnFilters = "Filtros"
-TaskRunning = "Uma tarefa ja esta em execucao."
-PermissionError = "Execute este script como Administrador."
-BackupCanceled = "Backup cancelado."
-InstallCanceled = "Instalacao cancelada."
-NoTaskToCancel = "Nenhuma tarefa para cancelar."
-TaskCancelled = "[CANCELADO] Tarefa cancelada."
-LogFolderMissing = "Pasta de logs nao encontrada."
-StartingTask = "-> Iniciando tarefa:"
-TaskFinished = "=== Tarefa concluida:"
-SelectBackupFolder = "Selecione a pasta de backup"
-SelectDriverFolder = "Selecione a pasta com arquivos .inf"
-ScheduleCreated = "Tarefa agendada criada!"
-ScheduleRemoved = "Tarefa agendada removida."
-RestorePointCreated = "Ponto de restauracao criado!"
-RestorePointFailed = "Falha ao criar ponto de restauracao."
-ProxyConfigured = "Proxy configurado:"
-ProxyCleared = "Configuracoes de proxy limpas."
-FilterApplied = "Filtro aplicado:"
-FilterCleared = "Filtros limpos."
-LanguageChanged = "Idioma alterado para:"
-HistoryEmpty = "Nenhum historico encontrado."
-SettingsTitle = "Configuracoes"
-ScheduleTitle = "Agendar Atualizacoes"
-FilterTitle = "Filtros de Drivers"
-HistoryTitle = "Historico de Atualizacoes"
-Daily = "Diario"
-Weekly = "Semanal"
-Monthly = "Mensal"
-Time = "Hora:"
-ProxyLabel = "Endereco Proxy:"
-ClassFilter = "Filtrar por Classe:"
-ManufacturerFilter = "Filtrar por Fabricante:"
-Apply = "Aplicar"
-Clear = "Limpar"
-Close = "Fechar"
-Enable = "Habilitar"
-Disable = "Desabilitar"
-Remove = "Remover Agendamento"
-}
-"it" = @{
-AppTitle = "Installatore Driver Rikor"
-# BtnWU removed
-BtnCheckUpdates = "Cerca e installa driver Rikor" # Updated text
-BtnDownloadAndInstall = "Scarica e installa driver Rikor" # NEW: Localization for new button
-BtnScan = "Scansiona Driver"
-BtnBackup = "Backup"
-BtnInstall = "Installa da Cartella"
-BtnCancel = "Annulla"
-BtnOpenLogs = "Apri Log"
-BtnDarkMode = "Modalita Scura"
-BtnLightMode = "Modalita Chiara"
-BtnSchedule = "Pianifica"
-BtnRestorePoint = "Punto di Ripristino"
-BtnHistory = "Cronologia"
-BtnSettings = "Impostazioni"
-BtnFilters = "Filtri"
-TaskRunning = "Un'attivita e gia in esecuzione."
-PermissionError = "Esegui questo script come Amministratore."
-BackupCanceled = "Backup annullato."
-InstallCanceled = "Installazione annullata."
-NoTaskToCancel = "Nessuna attivita da annullare."
-TaskCancelled = "[ANNULLATO] Attivita annullata."
-LogFolderMissing = "Cartella log mancante."
-StartingTask = "-> Avvio attivita:"
-TaskFinished = "=== Attivita completata:"
-SelectBackupFolder = "Seleziona cartella di backup"
-SelectDriverFolder = "Seleziona cartella con file .inf"
-ScheduleCreated = "Attivita pianificata creata!"
-ScheduleRemoved = "Attivita pianificata rimossa."
-RestorePointCreated = "Punto di ripristino creato!"
-RestorePointFailed = "Errore nella creazione del punto di ripristino."
-ProxyConfigured = "Proxy configurato:"
-ProxyCleared = "Impostazioni proxy cancellate."
-FilterApplied = "Filtro applicato:"
-FilterCleared = "Filtri cancellati."
-LanguageChanged = "Lingua cambiata in:"
-HistoryEmpty = "Nessuna cronologia trovata."
-SettingsTitle = "Impostazioni"
-ScheduleTitle = "Pianifica Aggiornamenti"
-FilterTitle = "Filtri Driver"
-HistoryTitle = "Cronologia Aggiornamenti"
-Daily = "Giornaliero"
-Weekly = "Settimanale"
-Monthly = "Mensile"
-Time = "Ora:"
-ProxyLabel = "Indirizzo Proxy:"
-ClassFilter = "Filtra per Classe:"
-ManufacturerFilter = "Filtra per Produttore:"
-Apply = "Applica"
-Clear = "Cancella"
-Close = "Chiudi"
-Enable = "Abilita"
-Disable = "Disabilita"
-Remove = "Rimuovi Pianificazione"
-}
 }
 # Get localized string
 function Get-LocalizedString([string]$key) {
@@ -590,31 +309,68 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
 "DownloadAndInstallDrivers" { # NEW: Silent mode case for download and install
     Write-SilentLog "Silent mode: Downloading and installing drivers from Rikor archive..."
     
-    # Define the public ZIP URL here (REPLACE WITH ACTUAL LINK YOU GET FROM NEXTCLOUD SHARE OR GOOGLE DRIVE)
-    # Example for Google Drive: $zipUrl = "https://drive.google.com/uc?export=download&id=FILE_ID"
-    $zipUrl = "https://drive.google.com/uc?export=download&id=14_iaT8zdS800GpL76CSVb5vBQN7whZ8w" # <--- INSERTED YOUR GOOGLE DRIVE LINK
-
-    # Check if Rikor server is available first
-    $rikorServerAvailable = $false
+    # Get computer model to determine which driver pack to download
+    $computerModel = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
+    Write-SilentLog "Detected computer model: $computerModel"
+    
+    # Load Nextcloud URLs from online JSON file
+    $modelsFileUrl = "https://nc.rikor.com/index.php/s/BfBKYyW9HdoFfz9/download"  # URL to the online models.json file
+    $nextcloudUrls = @{}
+    
     try {
-        # Test connection to the URL
-        # Use proper WebRequest with HEAD method to check availability (instead of Invoke-WebRequest -Method Head)
+        # Attempt to download the models file
         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $request = [System.Net.WebRequest]::Create($zipUrl)
-        $request.Method = "HEAD"
-        $request.Timeout = 10000  # 10 seconds timeout
-        $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
         
-        $response = $request.GetResponse()
-        if ($response.StatusCode -eq 200) {
-            $rikorServerAvailable = $true
-        }
-        $response.Close()
-        if ($response.StatusCode -eq 200) {
-            $rikorServerAvailable = $true
-        }
+        $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
+        $nextcloudUrls = $modelsJsonString | ConvertFrom-Json -AsHashtable
+        Write-SilentLog "Loaded models mapping from online file"
     } catch {
-        Write-SilentLog "[INFO] Rikor server is not accessible: $_"
+        Write-SilentLog "Error downloading or parsing models from online file: $_"
+        Write-SilentLog "Attempting to load from local models.json file as fallback"
+        
+        # Fallback to local file if online retrieval fails
+        $modelsFilePath = Join-Path $PSScriptRoot "models.json"
+        if (Test-Path $modelsFilePath) {
+            try {
+                $nextcloudUrls = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json -AsHashtable
+                Write-SilentLog "Loaded models mapping from local fallback file"
+            } catch {
+                Write-SilentLog "Error loading models from local fallback file: $_"
+            }
+        }
+    }
+    
+    # Determine the appropriate URL based on model
+    $zipUrl = $null
+    if ($nextcloudUrls.ContainsKey($computerModel)) {
+        $zipUrl = $nextcloudUrls[$computerModel]
+        Write-SilentLog "Using Rikor Server for download"
+        
+        # Check if Rikor server is available
+        $rikorServerAvailable = $false
+        try {
+            # Test connection to the URL using WebRequest with HEAD method (correct way to check availability)
+            [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+            
+            $request = [System.Net.WebRequest]::Create($zipUrl)
+            $request.Method = "HEAD"
+            $request.Timeout = 15000  # 15 seconds timeout
+            $request.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+            
+            $response = $request.GetResponse()
+            if ($response.StatusCode -eq 200) {
+                $rikorServerAvailable = $true
+            }
+            $response.Close()
+        } catch {
+            Write-SilentLog "[INFO] Rikor server is not accessible: $_"
+        }
+    } else {
+        Write-SilentLog "Model '$computerModel' not in predefined list, checking Microsoft Update"
+        # Skip Nextcloud download and go directly to Microsoft Update
+        $rikorServerAvailable = $false
     }
 
     if (-not $rikorServerAvailable) {
@@ -1630,14 +1386,33 @@ switch ($taskName) {
     $computerModel = (Get-CimInstance -ClassName Win32_ComputerSystem).Model
     L "Detected computer model: $computerModel"
     
-    # Define Nextcloud URLs based on computer model (for now, just two sample models)
-    # Replace these with actual Nextcloud share links
-    $nextcloudUrls = @{
-        "RIKOR L3P" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
-        "ARZ103.2" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
-        "RIKOR L5P" = "https://nc.rikor.com/index.php/s/YdEZY8NjMB8kXRA/download"
-        "RIKOR L3C RL-AC01" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
-	# Add more models as needed
+    # Load Nextcloud URLs from online JSON file
+    $modelsFileUrl = "https://nc.rikor.com/index.php/s/BfBKYyW9HdoFfz9/download"  # URL to the online models.json file
+    $nextcloudUrls = @{}
+    
+    try {
+        # Attempt to download the models file
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+        $webClient = New-Object System.Net.WebClient
+        $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
+        
+        $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
+        $nextcloudUrls = $modelsJsonString | ConvertFrom-Json -AsHashtable
+        L "Loaded models mapping from online file"
+    } catch {
+        L "Error downloading or parsing models from online file: $_"
+        L "Attempting to load from local models.json file as fallback"
+        
+        # Fallback to local file if online retrieval fails
+        $modelsFilePath = Join-Path $PSScriptRoot "models.json"
+        if (Test-Path $modelsFilePath) {
+            try {
+                $nextcloudUrls = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json -AsHashtable
+                L "Loaded models mapping from local fallback file"
+            } catch {
+                L "Error loading models from local fallback file: $_"
+            }
+        }
     }
     
     # Determine the appropriate URL based on model
