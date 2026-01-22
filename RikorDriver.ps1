@@ -1636,8 +1636,8 @@ switch ($taskName) {
         "RIKOR L3P" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
         "ARZ103.2" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
         "RIKOR L5P" = "https://nc.rikor.com/index.php/s/YdEZY8NjMB8kXRA/download"
-        "RIKOR L3С RL-AC01" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
-        # Add more models as needed
+        "RIKOR L3C RL-AC01" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
+	# Add more models as needed
     }
     
     # Determine the appropriate URL based on model
@@ -3005,6 +3005,4 @@ $form.Add_Shown({
 $form.Activate()
 Update-ButtonContainerPadding
 })
-
 [void]$form.ShowDialog()
-
