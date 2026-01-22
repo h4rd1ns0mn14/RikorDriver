@@ -860,23 +860,26 @@ function Start-BackgroundTask {
                         
                         # Define helper function for download with progress
                         function Download-WithProgress {
-                            param([string]$Url, [string]$Path)
+                            param([string]$Url, [string]$Path, [string]$LogFile)
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                             
-                            # Use GetNewClosure to ensure $logPath is captured safely
+                            # Use GetNewClosure to ensure $LogFile is captured safely
                             $evt = {
                                 param($sender, $e)
                                 if ($e.TotalBytesToReceive -gt 0) {
                                     $p = [math]::Round(($e.BytesReceived / $e.TotalBytesToReceive) * 100, 0)
                                     $mb = [math]::Round($e.BytesReceived / 1MB, 1)
                                     $totalMb = [math]::Round($e.TotalBytesToReceive / 1MB, 1)
+                                    
                                     # Log progress for UI to parse: DL_PROGRESS:50:100.5MB/200MB
-                                    if ($p % 2 -eq 0) { 
+                                    # Update every 2% or if 0/100
+                                    if ($p % 2 -eq 0 -or $p -eq 0 -or $p -eq 100) { 
                                         $t = (Get-Date).ToString("s")
                                         try {
-                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB" -f $t, $p, $mb, $totalMb
-                                            Add-Content -Path $logPath -Value $msg -ErrorAction SilentlyContinue
+                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
+                                            # Use .NET File Append for atomic write without locking issues
+                                            [System.IO.File]::AppendAllText($LogFile, $msg)
                                         } catch {}
                                     }
                                 }
@@ -886,7 +889,7 @@ function Start-BackgroundTask {
                             $wc.DownloadFile($Url, $Path)
                         }
                         
-                        Download-WithProgress -Url $zipUrl -Path $zipPath
+                        Download-WithProgress -Url $zipUrl -Path $zipPath -LogFile $logPath
                         L "Download completed."
                         
                         if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
