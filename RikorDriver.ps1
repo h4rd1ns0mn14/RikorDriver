@@ -710,44 +710,17 @@ $status.BorderStyle = 'None'
 $status.Font = New-Object Drawing.Font("Consolas", 10)
 $statusBorderPanel.Controls.Add($status)
 
-# Progress Panel (Download + Overall)
+# Progress Panel (Overall Only)
 $progressPanel = New-Object Windows.Forms.Panel
 $progressPanel.Dock = 'Bottom'
-$progressPanel.Height = 60
+$progressPanel.Height = 36
 $progressPanel.Padding = '0,8,0,0'
 $contentPanel.Controls.Add($progressPanel)
 
-# Download Progress
-$downloadProgressPanel = New-Object Windows.Forms.Panel
-$downloadProgressPanel.Dock = 'Top'
-$downloadProgressPanel.Height = 26
-$downloadProgressPanel.Padding = '0,0,0,4'
-$progressPanel.Controls.Add($downloadProgressPanel)
-
-$downloadProgressBorder = New-Object Windows.Forms.Panel
-$downloadProgressBorder.Dock = 'Fill'
-$downloadProgressBorder.Padding = '1,1,1,1'
-$downloadProgressPanel.Controls.Add($downloadProgressBorder)
-
-$downloadProgress = New-Object Windows.Forms.ProgressBar
-$downloadProgress.Dock = 'Fill'
-$downloadProgress.Style = 'Continuous'
-$downloadProgress.Value = 0
-$downloadProgressBorder.Controls.Add($downloadProgress)
-
-$downloadLabel = New-Object Windows.Forms.Label
-$downloadLabel.Text = "Download: 0%"
-$downloadLabel.Dock = 'Right'
-$downloadLabel.Width = 120
-$downloadLabel.TextAlign = 'MiddleRight'
-$downloadLabel.Font = New-Object Drawing.Font("Segoe UI", 8.5)
-$downloadProgressPanel.Controls.Add($downloadLabel)
-
 # Overall Progress
 $overallProgressPanel = New-Object Windows.Forms.Panel
-$overallProgressPanel.Dock = 'Bottom'
-$overallProgressPanel.Height = 26
-$overallProgressPanel.Padding = '0,4,0,0'
+$overallProgressPanel.Dock = 'Fill'
+$overallProgressPanel.Padding = '0,0,0,4'
 $progressPanel.Controls.Add($overallProgressPanel)
 
 $overallProgressBorder = New-Object Windows.Forms.Panel
@@ -1011,14 +984,7 @@ $timer.Add_Tick({
             }
             
             # Progress parsing
-            # Find the last progress update in the log buffer
-            $progressLine = $lines | Where-Object { $_ -match "DL_PROGRESS:(\d+):(.*)" } | Select-Object -Last 1
-            if ($progressLine -and $progressLine -match "DL_PROGRESS:(\d+):(.*)") {
-                $dlPercent = [int]$matches[1]
-                $dlInfo = $matches[2]
-                $downloadProgress.Value = $dlPercent
-                $downloadLabel.Text = "$dlPercent% ($dlInfo)"
-            }
+            # (Download progress bar removed by user request)
             
             # Overall Progress
             $contentStr = $lines -join "`n"
@@ -1026,8 +992,6 @@ $timer.Add_Tick({
             if ($contentStr -match "Downloading") { $p = 10 }
             if ($contentStr -match "Download completed") { 
                 $p = 30
-                $downloadProgress.Value = 100
-                $downloadLabel.Text = "Done"
             }
             if ($contentStr -match "Extracting") { $p = 40 }
             if ($contentStr -match "Extraction completed") { $p = 50 }
@@ -1043,8 +1007,6 @@ $timer.Add_Tick({
 
             if ($contentStr -match "Completed") { 
                 $p = 100
-                $downloadProgress.Value = 100
-                $downloadLabel.Text = "Done"
             }
             if ($p -gt 0) { 
                 $progress.Value = $p 
@@ -1126,7 +1088,6 @@ function Set-Theme {
     $overallProgressPanel.BackColor = $colors.Background
     $overallProgressBorder.BackColor = $colors.Border
     
-    $downloadLabel.ForeColor = $colors.Text
     $overallLabel.ForeColor = $colors.Text
     
     $statusBar.BackColor = $colors.StatusBar
@@ -1512,8 +1473,6 @@ function Show-SettingsDialog {
 function Invoke-DownloadAndInstallDrivers {
     $status.Clear()
     $progress.Value = 0
-    $downloadProgress.Value = 0
-    $downloadLabel.Text = "Download: 0%"
     $statusLabel.Text = "  Downloading and installing drivers from Rikor..."
     Start-BackgroundTask -Name "DownloadAndInstallDrivers" -TaskArgs @()
 }
@@ -1556,7 +1515,6 @@ function Invoke-CancelTask {
             $global:CurrentJob = $null
             $timer.Stop()
             $progress.Value = 0
-            $downloadProgress.Value = 0
             $statusLabel.Text = "  Task cancelled"
             Add-StatusUI $form $status "Task cancelled by user."
         } else {
