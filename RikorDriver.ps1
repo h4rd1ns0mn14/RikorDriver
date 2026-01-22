@@ -72,6 +72,8 @@ Enable = "Enable"
 Disable = "Disable"
 Remove = "Remove Schedule"
 }
+}
+
 # Get localized string
 function Get-LocalizedString([string]$key) {
 $lang = $global:CurrentLanguage
