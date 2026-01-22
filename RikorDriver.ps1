@@ -835,9 +835,9 @@ function Start-BackgroundTask {
                         foreach($key in $tempObj.PSObject.Properties.Name) { 
                             $val = $tempObj.$key
                             if ($val -is [string]) {
-                                $nextcloudUrls[$key] = $val
+                                $nextcloudUrls[$key] = $val.Trim().Trim('`"').Trim()
                             } elseif ($val.url) {
-                                $nextcloudUrls[$key] = $val.url
+                                $nextcloudUrls[$key] = $val.url.Trim().Trim('`"').Trim()
                                 if ($val.size) { $nextcloudSizes[$key] = $val.size }
                             }
                         }
@@ -891,7 +891,10 @@ function Start-BackgroundTask {
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                             
-                            # Use GetNewClosure to ensure $LogFile and $ExpectedSize are captured safely
+                            # State object to track progress and avoid excessive file writes (IO Locking)
+                            $state = @{ LastPercent = -1 }
+                            
+                            # Use GetNewClosure to ensure $LogFile, $ExpectedSize, and $state are captured
                             $evt = {
                                 param($sender, $e)
                                 $total = $e.TotalBytesToReceive
@@ -899,16 +902,17 @@ function Start-BackgroundTask {
                                 
                                 if ($total -gt 0) {
                                     $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
-                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                    $totalMb = [math]::Round($total / 1MB, 1)
                                     
-                                    # Log progress for UI to parse: DL_PROGRESS:50:100.5MB/200MB
-                                    # Update every 1% or if 0/100
-                                    if ($p % 1 -eq 0 -or $p -eq 0 -or $p -eq 100) { 
+                                    # Only write to log if percentage CHANGED to prevent file locking from rapid writes
+                                    if ($p -ne $state.LastPercent) {
+                                        $state.LastPercent = $p
+                                        
+                                        $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                        $totalMb = [math]::Round($total / 1MB, 1)
                                         $t = (Get-Date).ToString("s")
+                                        
                                         try {
                                             $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
-                                            # Use .NET File Append for atomic write without locking issues
                                             [System.IO.File]::AppendAllText($LogFile, $msg)
                                         } catch {}
                                     }
@@ -918,6 +922,9 @@ function Start-BackgroundTask {
                             $wc.add_DownloadProgressChanged($evt)
                             $wc.DownloadFile($Url, $Path)
                         }
+                        
+                        L "Starting download from: $zipUrl"
+                        if ($expectedSize -gt 0) { L "Expected file size: $([math]::Round($expectedSize / 1MB, 2)) MB" }
                         
                         Download-WithProgress -Url $zipUrl -Path $zipPath -LogFile $logPath -ExpectedSize $expectedSize
                         L "Download completed."
