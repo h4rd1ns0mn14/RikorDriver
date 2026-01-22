@@ -940,22 +940,28 @@ function Start-BackgroundTask {
                                 } 
                                 # If total size is UNKNOWN (Nextcloud), log MB downloaded every 5 seconds
                                 else {
-                                    if (($now - $state.LastTime).TotalSeconds -ge 5) {
-                                        $state.LastTime = $now
-                                        $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                        $state.LastMb = $mb # Storing MB here for this branch
-                                        
-                                        $t = $now.ToString("s")
-                                        try {
-                                            # Special format for unknown size: DL_UnknownSize:MB
-                                            $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
-                                            [System.IO.File]::AppendAllText($LogFile, $msg)
-                                        } catch {}
-                                    }
-                                }
-                            }.GetNewClosure()
+                                     if (($now - $state.LastTime).TotalSeconds -ge 5) {
+                                         $state.LastTime = $now
+                                         $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                         $state.LastMb = $mb # Storing MB here for this branch
+                                         
+                                         $t = $now.ToString("s")
+                                         try {
+                                             # Special format for unknown size: DL_UnknownSize:MB
+                                             $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
+                                             [System.IO.File]::AppendAllText($LogFile, $msg)
+                                         } catch {}
+                                     }
+                                 }
+                             }.GetNewClosure()
                             
                             $wc.add_DownloadProgressChanged($evt)
+                            
+                            # Force initial message so user knows it started
+                            $t = (Get-Date).ToString("s")
+                            $msg = "{0} - Download started...`r`n" -f $t
+                            try { [System.IO.File]::AppendAllText($LogFile, $msg) } catch {}
+                            
                             $wc.DownloadFile($Url, $Path)
                             $wc.Dispose()
                         }
@@ -1057,6 +1063,13 @@ $timer.Add_Tick({
             # Progress parsing
             # (Download progress bar removed by user request)
             
+            # Check for "Downloaded: X MB" messages to update status label
+            $dlUnknownLine = $lines | Where-Object { $_ -match "Downloaded:\s+([\d\.]+)\s+MB" } | Select-Object -Last 1
+            if ($dlUnknownLine -and $dlUnknownLine -match "Downloaded:\s+([\d\.]+)\s+MB") {
+                 $mb = $matches[1]
+                 $statusLabel.Text = "  Downloading... ($mb MB)"
+            }
+
             # Overall Progress
             $contentStr = $lines -join "`n"
             $p = 0
