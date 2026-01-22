@@ -907,27 +907,48 @@ function Start-BackgroundTask {
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                             
-                            # State object to track progress and avoid excessive file writes (IO Locking)
-                            $state = @{ LastPercent = -1 }
+                            # State object to track progress and timestamps
+                            $state = @{ 
+                                LastMb = -1 
+                                LastTime = [DateTime]::MinValue
+                            }
                             
                             # Use GetNewClosure to ensure $LogFile and $state are captured
                             $evt = {
                                 param($sender, $e)
                                 $total = $e.TotalBytesToReceive
+                                $now = Get-Date
                                 
+                                # If total size is known, use percentage logic
                                 if ($total -gt 0) {
                                     $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
+                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
                                     
-                                    # Only write to log if percentage CHANGED to prevent file locking from rapid writes
-                                    if ($p -ne $state.LastPercent) {
-                                        $state.LastPercent = $p
+                                    # Update if percentage changed OR if 5 seconds passed (for slow connections)
+                                    if ($p -ne $state.LastMb -or ($now - $state.LastTime).TotalSeconds -ge 5) {
+                                        $state.LastMb = $p # Storing percent here for this branch
+                                        $state.LastTime = $now
                                         
-                                        $mb = [math]::Round($e.BytesReceived / 1MB, 1)
                                         $totalMb = [math]::Round($total / 1MB, 1)
-                                        $t = (Get-Date).ToString("s")
+                                        $t = $now.ToString("s")
                                         
                                         try {
                                             $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
+                                            [System.IO.File]::AppendAllText($LogFile, $msg)
+                                        } catch {}
+                                    }
+                                } 
+                                # If total size is UNKNOWN (Nextcloud), log MB downloaded every 5 seconds
+                                else {
+                                    if (($now - $state.LastTime).TotalSeconds -ge 5) {
+                                        $state.LastTime = $now
+                                        $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                        $state.LastMb = $mb # Storing MB here for this branch
+                                        
+                                        $t = $now.ToString("s")
+                                        try {
+                                            # Special format for unknown size: DL_UnknownSize:MB
+                                            $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
                                             [System.IO.File]::AppendAllText($LogFile, $msg)
                                         } catch {}
                                     }
