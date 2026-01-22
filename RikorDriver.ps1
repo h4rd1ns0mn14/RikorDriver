@@ -793,7 +793,6 @@ function Start-BackgroundTask {
                     # Load Nextcloud URLs
                     $modelsFileUrl = "https://nc.rikor.com/index.php/s/BfBKYyW9HdoFfz9/download"
                     $nextcloudUrls = @{}
-                    $nextcloudSizes = @{}
                     
                     try {
                         [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -803,7 +802,6 @@ function Start-BackgroundTask {
                         $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
                         $tempObj = $modelsJsonString | ConvertFrom-Json
                         $nextcloudUrls = @{}
-                        $nextcloudSizes = @{}
                         
                         foreach($key in $tempObj.PSObject.Properties.Name) { 
                             $val = $tempObj.$key
@@ -811,7 +809,6 @@ function Start-BackgroundTask {
                                 $nextcloudUrls[$key] = $val.Trim().Trim('`"').Trim()
                             } elseif ($val.url) {
                                 $nextcloudUrls[$key] = $val.url.Trim().Trim('`"').Trim()
-                                if ($val.size) { $nextcloudSizes[$key] = $val.size }
                             }
                         }
                         L "Loaded models mapping from online file"
@@ -820,12 +817,10 @@ function Start-BackgroundTask {
                     }
                     
                     $zipUrl = $null
-                    $expectedSize = 0
                     $rikorServerAvailable = $false
                     
                     if ($nextcloudUrls.ContainsKey($computerModel)) {
                         $zipUrl = $nextcloudUrls[$computerModel]
-                        if ($nextcloudSizes.ContainsKey($computerModel)) { $expectedSize = $nextcloudSizes[$computerModel] }
                         L "Found driver URL for $computerModel"
                         
                         try {
@@ -860,18 +855,17 @@ function Start-BackgroundTask {
                         
                         # Define helper function for download with progress
                         function Download-WithProgress {
-                            param([string]$Url, [string]$Path, [string]$LogFile, [int64]$ExpectedSize = 0)
+                            param([string]$Url, [string]$Path, [string]$LogFile)
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                             
                             # State object to track progress and avoid excessive file writes (IO Locking)
                             $state = @{ LastPercent = -1 }
                             
-                            # Use GetNewClosure to ensure $LogFile, $ExpectedSize, and $state are captured
+                            # Use GetNewClosure to ensure $LogFile and $state are captured
                             $evt = {
                                 param($sender, $e)
                                 $total = $e.TotalBytesToReceive
-                                if ($total -le 0) { $total = $ExpectedSize }
                                 
                                 if ($total -gt 0) {
                                     $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
@@ -894,12 +888,12 @@ function Start-BackgroundTask {
                             
                             $wc.add_DownloadProgressChanged($evt)
                             $wc.DownloadFile($Url, $Path)
+                            $wc.Dispose()
                         }
                         
                         L "Starting download from Rikor Server..."
-                        if ($expectedSize -gt 0) { L "Expected file size: $([math]::Round($expectedSize / 1MB, 2)) MB" }
                         
-                        Download-WithProgress -Url $zipUrl -Path $zipPath -LogFile $logPath -ExpectedSize $expectedSize
+                        Download-WithProgress -Url $zipUrl -Path $zipPath -LogFile $logPath
                         L "Download completed."
                         
                         if (-not (Test-Path $zipPath) -or (Get-Item $zipPath).Length -eq 0) {
@@ -1110,7 +1104,7 @@ function Show-HistoryDialog {
     $historyForm.Size = '750,500'
     $historyForm.StartPosition = "CenterParent"
     $historyForm.BackColor = $colors.Background
-    $historyForm.TopMost = $true
+    $historyForm.TopMost = $false
     
     $header = New-Object Windows.Forms.Label
     $header.Text = "Update History"
@@ -1157,7 +1151,7 @@ function Show-ScheduleDialog {
     $schedForm.Size = '420,300'
     $schedForm.StartPosition = "CenterParent"
     $schedForm.BackColor = $colors.Background
-    $schedForm.TopMost = $true
+    $schedForm.TopMost = $false
     
     $header = New-Object Windows.Forms.Label
     $header.Text = "Schedule Updates"
@@ -1271,7 +1265,7 @@ function Show-FiltersDialog {
     $filterForm.Size = '420,260'
     $filterForm.StartPosition = "CenterParent"
     $filterForm.BackColor = $colors.Background
-    $filterForm.TopMost = $true
+    $filterForm.TopMost = $false
     
     $header = New-Object Windows.Forms.Label
     $header.Text = "Driver Filters"
@@ -1374,7 +1368,7 @@ function Show-SettingsDialog {
     $settingsForm.Size = '500,340'
     $settingsForm.StartPosition = "CenterParent"
     $settingsForm.BackColor = $colors.Background
-    $settingsForm.TopMost = $true
+    $settingsForm.TopMost = $false
     
     $header = New-Object Windows.Forms.Label
     $header.Text = "Settings"
@@ -1584,8 +1578,8 @@ $form.Add_FormClosing({
 })
 
 Set-Theme -Dark $global:DarkModeEnabled
-
-$form.Topmost = $true
+    
+$form.Topmost = $false
 $form.Add_Shown({
     $form.Activate()
     Update-ButtonContainerPadding
