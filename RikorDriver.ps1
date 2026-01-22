@@ -204,10 +204,6 @@ function Set-ScheduledUpdate {
             # We are running from memory (IEX). Save to Documents folder to persist it.
             $scriptPath = Join-Path $LogBase "RikorDriver.ps1"
             
-            # If we can't find the source code content (complex in IEX), we might need to download it again or warn.
-            # Assuming we can just copy current logic is hard. 
-            # Best effort: Use the known URL or check if the user has the file.
-            
             # Since 'irm | iex' is the usage, let's assume we download the latest version to install it.
             $downloadUrl = "https://raw.githubusercontent.com/h4rd1ns0mn14/RikorDriver/refs/heads/main/RikorDriver.ps1"
             try {
@@ -419,27 +415,6 @@ if ($Silent -and $Task) {
             Write-SilentLog "Completed"
         }
         
-        "ScanDrivers" {
-            Write-SilentLog "Scanning installed drivers..."
-            try {
-                $drivers = Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, InfName, Class, DriverDate
-                if ($global:FilterSettings.Class) {
-                    $drivers = $drivers | Where-Object { $_.Class -like "*$($global:FilterSettings.Class)*" }
-                }
-                if ($global:FilterSettings.Manufacturer) {
-                    $drivers = $drivers | Where-Object { $_.Manufacturer -like "*$($global:FilterSettings.Manufacturer)*" }
-                }
-                Write-SilentLog "Found $($drivers.Count) drivers."
-                
-                $csvPath = Join-Path (Split-Path $logFile) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
-                $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
-                Write-SilentLog "Exported to: $csvPath"
-            } catch {
-                Write-SilentLog "[ERROR] $_"
-            }
-            Write-SilentLog "Completed"
-        }
-        
         default {
             Write-SilentLog "Unknown task: $Task"
         }
@@ -546,12 +521,8 @@ $menuActions = New-Object Windows.Forms.ToolStripMenuItem
 $menuActions.Text = "&Actions"
 
 $menuDownloadAndInstall = New-Object Windows.Forms.ToolStripMenuItem
-$menuDownloadAndInstall.Text = "Download and Install Rikor Drivers"
+$menuDownloadAndInstall.Text = "Download and Install Rikor drivers"
 $menuDownloadAndInstall.ShortcutKeys = [System.Windows.Forms.Keys]::F6
-
-$menuScan = New-Object Windows.Forms.ToolStripMenuItem
-$menuScan.Text = "Scan Installed Drivers"
-$menuScan.ShortcutKeys = [System.Windows.Forms.Keys]::F7
 
 $menuSeparator2 = New-Object Windows.Forms.ToolStripSeparator
 
@@ -568,7 +539,7 @@ $menuCancel = New-Object Windows.Forms.ToolStripMenuItem
 $menuCancel.Text = "Cancel Task"
 $menuCancel.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::Q
 
-$menuActions.DropDownItems.AddRange(@($menuDownloadAndInstall, $menuScan, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel))
+$menuActions.DropDownItems.AddRange(@($menuDownloadAndInstall, $menuSeparator2, $menuBackup, $menuInstall, $menuSeparator3, $menuCancel))
 
 # Tools Menu
 $menuTools = New-Object Windows.Forms.ToolStripMenuItem
@@ -616,7 +587,7 @@ $buttonContainer.Padding = '0,8,0,8'
 $toolbarPanel.Controls.Add($buttonContainer)
 
 function Update-ButtonContainerPadding {
-    $totalButtonWidth = 160 + 155 + 120 + 140 + 110 + (4 * 12)
+    $totalButtonWidth = 240 + 120 + 140 + 110 + (3 * 12)
     $availableWidth = $toolbarPanel.ClientSize.Width
     $leftPadding = [Math]::Max(0, [int](($availableWidth - $totalButtonWidth) / 2))
     $buttonContainer.Padding = "$leftPadding,8,0,8"
@@ -656,11 +627,8 @@ function New-ModernButton {
     return $btn
 }
 
-$btnDownloadAndInstall = New-ModernButton -Text "Download & Install" -Width 160 -Primary $true
+$btnDownloadAndInstall = New-ModernButton -Text "Download and Install Rikor drivers" -Width 240 -Primary $true
 $btnDownloadAndInstall.Margin = '0,0,12,0'
-
-$btnScan = New-ModernButton -Text "Scan Drivers" -Width 155 -Primary $true
-$btnScan.Margin = '0,0,12,0'
 
 $btnBackup = New-ModernButton -Text "Backup" -Width 120
 $btnBackup.Margin = '0,0,12,0'
@@ -671,7 +639,7 @@ $btnInstall.Margin = '0,0,12,0'
 $btnCancel = New-ModernButton -Text "Cancel" -Width 110
 $btnCancel.Margin = '0,0,0,0'
 
-$buttonContainer.Controls.AddRange(@($btnDownloadAndInstall, $btnScan, $btnBackup, $btnInstall, $btnCancel))
+$buttonContainer.Controls.AddRange(@($btnDownloadAndInstall, $btnBackup, $btnInstall, $btnCancel))
 
 $toolbarSeparator = New-Object Windows.Forms.Panel
 $toolbarSeparator.Dock = 'Top'
@@ -728,22 +696,64 @@ $status.BorderStyle = 'None'
 $status.Font = New-Object Drawing.Font("Cascadia Code, Consolas, Courier New", 9.5)
 $statusBorderPanel.Controls.Add($status)
 
+# Progress Panel (Download + Overall)
 $progressPanel = New-Object Windows.Forms.Panel
 $progressPanel.Dock = 'Bottom'
-$progressPanel.Height = 36
-$progressPanel.Padding = '0,8,0,8'
+$progressPanel.Height = 60
+$progressPanel.Padding = '0,8,0,0'
 $contentPanel.Controls.Add($progressPanel)
 
-$progressBorderPanel = New-Object Windows.Forms.Panel
-$progressBorderPanel.Dock = 'Fill'
-$progressBorderPanel.Padding = '1,1,1,1'
-$progressPanel.Controls.Add($progressBorderPanel)
+# Download Progress
+$downloadProgressPanel = New-Object Windows.Forms.Panel
+$downloadProgressPanel.Dock = 'Top'
+$downloadProgressPanel.Height = 26
+$downloadProgressPanel.Padding = '0,0,0,4'
+$progressPanel.Controls.Add($downloadProgressPanel)
+
+$downloadProgressBorder = New-Object Windows.Forms.Panel
+$downloadProgressBorder.Dock = 'Fill'
+$downloadProgressBorder.Padding = '1,1,1,1'
+$downloadProgressPanel.Controls.Add($downloadProgressBorder)
+
+$downloadProgress = New-Object Windows.Forms.ProgressBar
+$downloadProgress.Dock = 'Fill'
+$downloadProgress.Style = 'Continuous'
+$downloadProgress.Value = 0
+$downloadProgressBorder.Controls.Add($downloadProgress)
+
+$downloadLabel = New-Object Windows.Forms.Label
+$downloadLabel.Text = "Download: 0%"
+$downloadLabel.Dock = 'Right'
+$downloadLabel.Width = 120
+$downloadLabel.TextAlign = 'MiddleRight'
+$downloadLabel.Font = New-Object Drawing.Font("Segoe UI", 8.5)
+$downloadProgressPanel.Controls.Add($downloadLabel)
+
+# Overall Progress
+$overallProgressPanel = New-Object Windows.Forms.Panel
+$overallProgressPanel.Dock = 'Bottom'
+$overallProgressPanel.Height = 26
+$overallProgressPanel.Padding = '0,4,0,0'
+$progressPanel.Controls.Add($overallProgressPanel)
+
+$overallProgressBorder = New-Object Windows.Forms.Panel
+$overallProgressBorder.Dock = 'Fill'
+$overallProgressBorder.Padding = '1,1,1,1'
+$overallProgressPanel.Controls.Add($overallProgressBorder)
 
 $progress = New-Object Windows.Forms.ProgressBar
 $progress.Dock = 'Fill'
 $progress.Style = 'Continuous'
 $progress.Value = 0
-$progressBorderPanel.Controls.Add($progress)
+$overallProgressBorder.Controls.Add($progress)
+
+$overallLabel = New-Object Windows.Forms.Label
+$overallLabel.Text = "Overall: 0%"
+$overallLabel.Dock = 'Right'
+$overallLabel.Width = 120
+$overallLabel.TextAlign = 'MiddleRight'
+$overallLabel.Font = New-Object Drawing.Font("Segoe UI", 8.5)
+$overallProgressPanel.Controls.Add($overallLabel)
 
 $headerLabel = New-Object Windows.Forms.Label
 $headerLabel.Text = "Output Console"
@@ -754,7 +764,7 @@ $headerLabel.TextAlign = 'MiddleLeft'
 $contentPanel.Controls.Add($headerLabel)
 
 $timer = New-Object Windows.Forms.Timer
-$timer.Interval = 1000
+$timer.Interval = 500
 
 # -------------------------
 # Background job helpers
@@ -809,7 +819,6 @@ function Start-BackgroundTask {
                         L "Loaded models mapping from online file"
                     } catch {
                         L "Error loading online models.json: $_"
-                        # Fallback logic here if needed (omitted since we likely run from memory)
                     }
                     
                     $zipUrl = $null
@@ -836,41 +845,7 @@ function Start-BackgroundTask {
                     
                     if (-not $rikorServerAvailable) {
                         L "[INFO] Rikor server unavailable or model unknown. Falling back to Microsoft Update..."
-                        
-                        try {
-                            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
-                            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
-                            L "Searching for updates..."
-                            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
-                            
-                            if ($SearchResult.Updates.Count -eq 0) {
-                                L "No updates found."
-                            } else {
-                                L "Found $($SearchResult.Updates.Count) update(s). Downloading..."
-                                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
-                                foreach ($Update in $SearchResult.Updates) {
-                                    if ($Update.EulaAccepted -eq $false) { $Update.AcceptEula() }
-                                    $UpdatesToDownload.Add($Update) | Out-Null
-                                }
-                                $Downloader = $UpdateSession.CreateUpdateDownloader()
-                                $Downloader.Updates = $UpdatesToDownload
-                                $Downloader.Download()
-                                
-                                L "Installing..."
-                                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
-                                foreach ($Update in $SearchResult.Updates) {
-                                    if ($Update.IsDownloaded) { $UpdatesToInstall.Add($Update) | Out-Null }
-                                }
-                                if ($UpdatesToInstall.Count -gt 0) {
-                                    $Installer = $UpdateSession.CreateUpdateInstaller()
-                                    $Installer.Updates = $UpdatesToInstall
-                                    $Res = $Installer.Install()
-                                    L "Installed. Result: $($Res.ResultCode)"
-                                }
-                            }
-                        } catch {
-                            L "[ERROR] Microsoft Update failed: $_"
-                        }
+                        L "Microsoft Update is not supported in this simplified version."
                         L "Completed"
                         return
                     }
@@ -888,18 +863,25 @@ function Start-BackgroundTask {
                             param([string]$Url, [string]$Path)
                             $wc = New-Object System.Net.WebClient
                             $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
-                            $wc.add_DownloadProgressChanged({
+                            
+                            # Use GetNewClosure to ensure $logPath is captured safely
+                            $evt = {
                                 param($sender, $e)
                                 if ($e.TotalBytesToReceive -gt 0) {
                                     $p = [math]::Round(($e.BytesReceived / $e.TotalBytesToReceive) * 100, 0)
-                                    # Write special log marker for UI to pick up
-                                    # We can't update UI directly from job, but we can log it
-                                    # Limit log frequency to avoid flooding
-                                    if ($p % 10 -eq 0) { 
-                                        # L "Downloading... $p% Complete" 
+                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                    $totalMb = [math]::Round($e.TotalBytesToReceive / 1MB, 1)
+                                    # Log progress for UI to parse: DL_PROGRESS:50:100.5MB/200MB
+                                    if ($p % 2 -eq 0) { 
+                                        $t = (Get-Date).ToString("s")
+                                        try {
+                                            Add-Content -Path $logPath -Value ("$t - DL_PROGRESS:$p:$mb MB/$totalMb MB") -ErrorAction SilentlyContinue
+                                        } catch {}
                                     }
                                 }
-                            })
+                            }.GetNewClosure()
+                            
+                            $wc.add_DownloadProgressChanged($evt)
                             $wc.DownloadFile($Url, $Path)
                         }
                         
@@ -936,19 +918,6 @@ function Start-BackgroundTask {
                     } finally {
                         if (Test-Path $tempDir) { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
                     }
-                    L "Completed"
-                }
-                
-                "ScanDrivers" {
-                    L "Scanning installed drivers..."
-                    $drivers = Get-CimInstance Win32_PnPSignedDriver | Select-Object DeviceName, Manufacturer, DriverVersion, InfName, Class, DriverDate
-                    if ($filterClass) { $drivers = $drivers | Where-Object { $_.Class -like "*$filterClass*" } }
-                    if ($filterMfr) { $drivers = $drivers | Where-Object { $_.Manufacturer -like "*$filterMfr*" } }
-                    
-                    L "Found $($drivers.Count) drivers."
-                    $csvPath = Join-Path (Split-Path $logPath) "InstalledDrivers_$((Get-Date).ToString('yyyyMMdd_HHmmss')).csv"
-                    $drivers | Sort-Object DeviceName | Export-Csv -Path $csvPath -NoTypeInformation -Encoding UTF8
-                    L "Exported to: $csvPath"
                     L "Completed"
                 }
                 
@@ -1000,19 +969,46 @@ $timer.Add_Tick({
                 $form.Invoke($invoke)
             }
             
-            # Simple heuristic progress
+            # Progress parsing
+            # Find the last progress update in the log buffer
+            $progressLine = $lines | Where-Object { $_ -match "DL_PROGRESS:(\d+):(.*)" } | Select-Object -Last 1
+            if ($progressLine -and $progressLine -match "DL_PROGRESS:(\d+):(.*)") {
+                $dlPercent = [int]$matches[1]
+                $dlInfo = $matches[2]
+                $downloadProgress.Value = $dlPercent
+                $downloadLabel.Text = "$dlPercent% ($dlInfo)"
+            }
+            
+            # Overall Progress
             $contentStr = $lines -join "`n"
             $p = 0
-            if ($contentStr -match "Downloading") { $p = 20 }
+            if ($contentStr -match "Downloading") { $p = 10 }
+            if ($contentStr -match "Download completed") { 
+                $p = 30
+                $downloadProgress.Value = 100
+                $downloadLabel.Text = "Done"
+            }
             if ($contentStr -match "Extracting") { $p = 40 }
+            if ($contentStr -match "Extraction completed") { $p = 50 }
             if ($contentStr -match "Installing") { $p = 60 }
-            if ($contentStr -match "\[(\d+)\/(\d+)\]") {
+            
+            # Find last installation progress
+            $instLine = $lines | Where-Object { $_ -match "\[(\d+)\/(\d+)\]" } | Select-Object -Last 1
+            if ($instLine -and $instLine -match "\[(\d+)\/(\d+)\]") {
                 $curr = [int]$matches[1]
                 $tot = [int]$matches[2]
-                if ($tot -gt 0) { $p = 60 + [int](($curr / $tot) * 35) }
+                if ($tot -gt 0) { $p = 60 + [int](($curr / $tot) * 40) }
             }
-            if ($contentStr -match "Completed") { $p = 100 }
-            if ($p -gt 0) { $progress.Value = $p }
+
+            if ($contentStr -match "Completed") { 
+                $p = 100
+                $downloadProgress.Value = 100
+                $downloadLabel.Text = "Done"
+            }
+            if ($p -gt 0) { 
+                $progress.Value = $p 
+                $overallLabel.Text = "$p%"
+            }
         }
         
         if ($null -ne $global:CurrentJob) {
@@ -1083,6 +1079,14 @@ function Set-Theme {
     
     $progressPanel.BackColor = $colors.Background
     $progressBorderPanel.BackColor = $colors.Border
+    
+    $downloadProgressPanel.BackColor = $colors.Background
+    $downloadProgressBorder.BackColor = $colors.Border
+    $overallProgressPanel.BackColor = $colors.Background
+    $overallProgressBorder.BackColor = $colors.Border
+    
+    $downloadLabel.ForeColor = $colors.Text
+    $overallLabel.ForeColor = $colors.Text
     
     $statusBar.BackColor = $colors.StatusBar
     $statusLabel.BackColor = $colors.StatusBar
@@ -1467,15 +1471,10 @@ function Show-SettingsDialog {
 function Invoke-DownloadAndInstallDrivers {
     $status.Clear()
     $progress.Value = 0
+    $downloadProgress.Value = 0
+    $downloadLabel.Text = "Download: 0%"
     $statusLabel.Text = "  Downloading and installing drivers from Rikor..."
     Start-BackgroundTask -Name "DownloadAndInstallDrivers" -TaskArgs @()
-}
-
-function Invoke-ScanDrivers {
-    $status.Clear()
-    $progress.Value = 0
-    $statusLabel.Text = "  Scanning installed drivers..."
-    Start-BackgroundTask -Name "ScanDrivers" -TaskArgs @()
 }
 
 function Invoke-BackupDrivers {
@@ -1516,6 +1515,7 @@ function Invoke-CancelTask {
             $global:CurrentJob = $null
             $timer.Stop()
             $progress.Value = 0
+            $downloadProgress.Value = 0
             $statusLabel.Text = "  Task cancelled"
             Add-StatusUI $form $status "Task cancelled by user."
         } else {
@@ -1557,13 +1557,11 @@ function Invoke-CreateRestorePoint {
 # Event Handlers
 # -------------------------
 $btnDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
-$btnScan.Add_Click({ Invoke-ScanDrivers })
 $btnBackup.Add_Click({ Invoke-BackupDrivers })
 $btnInstall.Add_Click({ Invoke-InstallDrivers })
 $btnCancel.Add_Click({ Invoke-CancelTask })
 
 $menuDownloadAndInstall.Add_Click({ Invoke-DownloadAndInstallDrivers })
-$menuScan.Add_Click({ Invoke-ScanDrivers })
 $menuBackup.Add_Click({ Invoke-BackupDrivers })
 $menuInstall.Add_Click({ Invoke-InstallDrivers })
 $menuCancel.Add_Click({ Invoke-CancelTask })
