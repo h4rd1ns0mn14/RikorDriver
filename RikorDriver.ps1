@@ -938,12 +938,13 @@ function Start-BackgroundTask {
                                         } catch {}
                                     }
                                 } 
-                                # If total size is UNKNOWN (Nextcloud), log MB downloaded every 5 seconds
-                                else {
-                                     if (($now - $state.LastTime).TotalSeconds -ge 5) {
+                                # If total size is UNKNOWN (Nextcloud), log MB downloaded every 2 seconds
+                                 else {
+                                     # Force update every 2 seconds or if it's the first update
+                                     if ($state.LastMb -eq -1 -or ($now - $state.LastTime).TotalSeconds -ge 2) {
                                          $state.LastTime = $now
                                          $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                         $state.LastMb = $mb # Storing MB here for this branch
+                                         $state.LastMb = $mb
                                          
                                          $t = $now.ToString("s")
                                          try {
