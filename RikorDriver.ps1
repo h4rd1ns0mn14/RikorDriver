@@ -450,36 +450,36 @@ $global:UIColors = @{
     # Dark Theme
     Dark = @{
         Background = [System.Drawing.Color]::FromArgb(18, 18, 18)
-        Surface = [System.Drawing.Color]::FromArgb(30, 30, 30)
-        SurfaceHover = [System.Drawing.Color]::FromArgb(45, 45, 45)
-        Primary = [System.Drawing.Color]::FromArgb(156, 39, 176)
-        PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206)
-        Secondary = [System.Drawing.Color]::FromArgb(66, 66, 66)
-        Text = [System.Drawing.Color]::FromArgb(240, 240, 240)
-        TextSecondary = [System.Drawing.Color]::FromArgb(170, 170, 170)
-        Border = [System.Drawing.Color]::FromArgb(60, 60, 60)
+        Surface = [System.Drawing.Color]::FromArgb(32, 32, 32)
+        SurfaceHover = [System.Drawing.Color]::FromArgb(48, 48, 48)
+        Primary = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
+        PrimaryHover = [System.Drawing.Color]::FromArgb(97, 93, 210)
+        Secondary = [System.Drawing.Color]::FromArgb(50, 50, 50)
+        Text = [System.Drawing.Color]::FromArgb(245, 245, 245)
+        TextSecondary = [System.Drawing.Color]::FromArgb(160, 160, 160)
+        Border = [System.Drawing.Color]::FromArgb(40, 40, 40)
         Success = [System.Drawing.Color]::FromArgb(76, 175, 80)
         Warning = [System.Drawing.Color]::FromArgb(255, 152, 0)
         Error = [System.Drawing.Color]::FromArgb(244, 67, 54)
-        MenuBar = [System.Drawing.Color]::FromArgb(25, 25, 25)
-        StatusBar = [System.Drawing.Color]::FromArgb(126, 34, 152)
+        MenuBar = [System.Drawing.Color]::FromArgb(24, 24, 24)
+        StatusBar = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
     }
     # Light Theme
     Light = @{
-        Background = [System.Drawing.Color]::FromArgb(255, 255, 255)
-        Surface = [System.Drawing.Color]::FromArgb(245, 247, 250)
-        SurfaceHover = [System.Drawing.Color]::FromArgb(235, 238, 242)
-        Primary = [System.Drawing.Color]::FromArgb(156, 39, 176)
-        PrimaryHover = [System.Drawing.Color]::FromArgb(186, 74, 206)
-        Secondary = [System.Drawing.Color]::FromArgb(224, 224, 224)
-        Text = [System.Drawing.Color]::FromArgb(33, 33, 33)
-        TextSecondary = [System.Drawing.Color]::FromArgb(117, 117, 117)
-        Border = [System.Drawing.Color]::FromArgb(224, 224, 224)
+        Background = [System.Drawing.Color]::FromArgb(250, 250, 252) # Cooler white
+        Surface = [System.Drawing.Color]::FromArgb(255, 255, 255)
+        SurfaceHover = [System.Drawing.Color]::FromArgb(240, 242, 245)
+        Primary = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
+        PrimaryHover = [System.Drawing.Color]::FromArgb(97, 93, 210)
+        Secondary = [System.Drawing.Color]::FromArgb(235, 235, 240)
+        Text = [System.Drawing.Color]::FromArgb(30, 30, 35)
+        TextSecondary = [System.Drawing.Color]::FromArgb(100, 100, 110)
+        Border = [System.Drawing.Color]::FromArgb(230, 230, 235)
         Success = [System.Drawing.Color]::FromArgb(67, 160, 71)
         Warning = [System.Drawing.Color]::FromArgb(251, 140, 0)
         Error = [System.Drawing.Color]::FromArgb(229, 57, 53)
         MenuBar = [System.Drawing.Color]::FromArgb(255, 255, 255)
-        StatusBar = [System.Drawing.Color]::FromArgb(156, 39, 176)
+        StatusBar = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
     }
 }
 
@@ -493,10 +493,10 @@ function Get-ThemeColors {
 # -------------------------
 $form = New-Object Windows.Forms.Form
 $form.Text = $AppTitle
-$form.Size = '1050,720'
+$form.Size = '1100,750'
 $form.MinimumSize = '1050,720'
 $form.StartPosition = "CenterScreen"
-$form.Font = New-Object Drawing.Font("Segoe UI", 9.5)
+$form.Font = New-Object Drawing.Font("Segoe UI", 10)
 
 # -------------------------
 # Menu Strip
@@ -616,14 +616,14 @@ function New-ModernButton {
     $btn = New-Object System.Windows.Forms.Button
     $btn.Text = $Text
     $btn.Width = $Width
-    $btn.Height = 38
+    $btn.Height = 42
     $btn.FlatStyle = "Flat"
     $btn.FlatAppearance.BorderSize = 0
     $btn.Cursor = [System.Windows.Forms.Cursors]::Hand
-    $btn.Font = New-Object Drawing.Font("Segoe UI Semibold", 9)
+    $btn.Font = New-Object Drawing.Font("Segoe UI Semibold", 10)
     $btn.Tag = $Primary
     $btn.TextAlign = 'MiddleCenter'
-    $btn.Region = New-RoundedRegion -Width $Width -Height 38 -Radius 6
+    $btn.Region = New-RoundedRegion -Width $Width -Height 42 -Radius 12
     return $btn
 }
 
@@ -673,7 +673,7 @@ $statusBar.Controls.Add($versionLabel)
 # -------------------------
 $contentPanel = New-Object Windows.Forms.Panel
 $contentPanel.Dock = 'Fill'
-$contentPanel.Padding = '16,16,16,8'
+$contentPanel.Padding = '24,24,24,12'
 
 $form.Controls.Add($contentPanel)
 $form.Controls.Add($statusBar)
@@ -684,7 +684,7 @@ $form.MainMenuStrip = $menuStrip
 
 $statusBorderPanel = New-Object Windows.Forms.Panel
 $statusBorderPanel.Dock = 'Fill'
-$statusBorderPanel.Padding = '1,1,1,1'
+$statusBorderPanel.Padding = '1,1,1,1' # Minimal border
 $contentPanel.Controls.Add($statusBorderPanel)
 
 $status = New-Object Windows.Forms.RichTextBox
@@ -693,7 +693,7 @@ $status.ReadOnly = $true
 $status.Dock = 'Fill'
 $status.ScrollBars = 'Vertical'
 $status.BorderStyle = 'None'
-$status.Font = New-Object Drawing.Font("Cascadia Code, Consolas, Courier New", 9.5)
+$status.Font = New-Object Drawing.Font("Consolas", 10)
 $statusBorderPanel.Controls.Add($status)
 
 # Progress Panel (Download + Overall)
