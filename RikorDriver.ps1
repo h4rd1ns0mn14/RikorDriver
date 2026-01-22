@@ -838,14 +838,62 @@ function Start-BackgroundTask {
                         L "Model '$computerModel' not in predefined list."
                     }
                     
+                    function Install-FromMicrosoftUpdate {
+                        param($LogFunction)
+                        
+                        & $LogFunction "[INFO] Starting Microsoft Update check..."
+                        try {
+                            $UpdateSession = New-Object -ComObject Microsoft.Update.Session
+                            $UpdateSearcher = $UpdateSession.CreateUpdateSearcher()
+                            $UpdateSearcher.ServerSelection = 0 # ssDefault
+                            
+                            & $LogFunction "Searching for driver updates..."
+                            $SearchResult = $UpdateSearcher.Search("IsInstalled=0 and Type='Driver'")
+                            
+                            if ($SearchResult.Updates.Count -eq 0) {
+                                & $LogFunction "No driver updates found via Microsoft Update."
+                            } else {
+                                & $LogFunction "Found $($SearchResult.Updates.Count) driver update(s)."
+                                
+                                $UpdatesToDownload = New-Object -ComObject Microsoft.Update.UpdateColl
+                                foreach ($Update in $SearchResult.Updates) {
+                                    if ($Update.EulaAccepted -eq $false) { $Update.AcceptEula() }
+                                    $UpdatesToDownload.Add($Update) | Out-Null
+                                }
+                                
+                                & $LogFunction "Downloading updates..."
+                                $Downloader = $UpdateSession.CreateUpdateDownloader()
+                                $Downloader.Updates = $UpdatesToDownload
+                                $Downloader.Download()
+                                
+                                & $LogFunction "Installing updates..."
+                                $Installer = $UpdateSession.CreateUpdateInstaller()
+                                
+                                $UpdatesToInstall = New-Object -ComObject Microsoft.Update.UpdateColl
+                                foreach ($Update in $SearchResult.Updates) {
+                                    if ($Update.IsDownloaded) { $UpdatesToInstall.Add($Update) | Out-Null }
+                                }
+                                
+                                if ($UpdatesToInstall.Count -gt 0) {
+                                    $Installer.Updates = $UpdatesToInstall
+                                    $InstallResult = $Installer.Install()
+                                    & $LogFunction "Installation finished. Result: $($InstallResult.ResultCode). Reboot: $($InstallResult.RebootRequired)"
+                                }
+                            }
+                        } catch {
+                            & $LogFunction "[ERROR] Microsoft Update failed: $_"
+                        }
+                    }
+                    
                     if (-not $rikorServerAvailable) {
                         L "[INFO] Rikor server unavailable or model unknown. Falling back to Microsoft Update..."
-                        L "Microsoft Update is not supported in this simplified version."
+                        Install-FromMicrosoftUpdate -LogFunction $function:L
                         L "Completed"
                         return
                     }
                     
                     # Download from Rikor
+                    $rikorInstallSuccess = $false
                     $tempDir = Join-Path $env:TEMP "RikorDriversTemp_$(Get-Date -Format 'yyyyMMddHHmmss')"
                     try {
                         New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
@@ -920,12 +968,20 @@ function Start-BackgroundTask {
                             }
                         }
                         L "Installation process finished."
+                        $rikorInstallSuccess = $true
                         
                     } catch {
-                        L "[ERROR] $_"
+                        L "[ERROR] Rikor installation failed: $_"
+                        $rikorInstallSuccess = $false
                     } finally {
                         if (Test-Path $tempDir) { Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue }
                     }
+                    
+                    if (-not $rikorInstallSuccess) {
+                        L "[INFO] Rikor installation was unsuccessful. Falling back to Microsoft Update..."
+                        Install-FromMicrosoftUpdate -LogFunction $function:L
+                    }
+                    
                     L "Completed"
                 }
                 
