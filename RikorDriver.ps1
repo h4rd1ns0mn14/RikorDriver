@@ -314,7 +314,7 @@ if ($Silent -and $Task) {
             
             if ($nextcloudUrls.ContainsKey($computerModel)) {
                 $zipUrl = $nextcloudUrls[$computerModel]
-                Write-SilentLog "Using Rikor Server for download: $zipUrl"
+                Write-SilentLog "Using Rikor Server for download"
                 
                 try {
                     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -896,7 +896,7 @@ function Start-BackgroundTask {
                             $wc.DownloadFile($Url, $Path)
                         }
                         
-                        L "Starting download from: $zipUrl"
+                        L "Starting download from Rikor Server..."
                         if ($expectedSize -gt 0) { L "Expected file size: $([math]::Round($expectedSize / 1MB, 2)) MB" }
                         
                         Download-WithProgress -Url $zipUrl -Path $zipPath -LogFile $logPath -ExpectedSize $expectedSize
