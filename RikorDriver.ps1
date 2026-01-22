@@ -326,8 +326,9 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
         
         $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
-        $nextcloudUrls = $modelsJsonString | ConvertFrom-Json -AsHashtable
-        Write-SilentLog "Loaded models mapping from online file"
+$tempObj = $modelsJsonString | ConvertFrom-Json.$key }; $ht }
+        $tempObj = $modelsJsonString | ConvertFrom-Json
+        foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
     } catch {
         Write-SilentLog "Error downloading or parsing models from online file: $_"
         Write-SilentLog "Attempting to load from local models.json file as fallback"
@@ -336,8 +337,9 @@ Add-HistoryEntry -TaskName "CheckDriverUpdates" -Status "Failed" -Details $_.Exc
         $modelsFilePath = Join-Path $PSScriptRoot "models.json"
         if (Test-Path $modelsFilePath) {
             try {
-                $nextcloudUrls = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json -AsHashtable
-                Write-SilentLog "Loaded models mapping from local fallback file"
+$tempObj = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json.$key }; $ht }
+                $tempObj = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json
+                foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
             } catch {
                 Write-SilentLog "Error loading models from local fallback file: $_"
             }
@@ -1399,7 +1401,9 @@ switch ($taskName) {
         $webClient.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
         
         $modelsJsonString = $webClient.DownloadString($modelsFileUrl)
-        $nextcloudUrls = $modelsJsonString | ConvertFrom-Json -AsHashtable
+$tempObj = $modelsJsonString | ConvertFrom-Json.$key }; $ht }
+$nextcloudUrls = @{}
+foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
         L "Loaded models mapping from online file"
     } catch {
         L "Error downloading or parsing models from online file: $_"
@@ -1409,7 +1413,9 @@ switch ($taskName) {
         $modelsFilePath = Join-Path $PSScriptRoot "models.json"
         if (Test-Path $modelsFilePath) {
             try {
-                $nextcloudUrls = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json -AsHashtable
+$tempObj = Get-Content -Path $modelsFilePath -Raw | ConvertFrom-Json.$key }; $ht }
+$nextcloudUrls = @{}
+foreach($key in $tempObj.PSObject.Properties.Name) { $nextcloudUrls[$key] = $tempObj.$key }
                 L "Loaded models mapping from local fallback file"
             } catch {
                 L "Error loading models from local fallback file: $_"
