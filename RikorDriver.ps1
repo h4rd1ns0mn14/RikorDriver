@@ -1636,7 +1636,7 @@ switch ($taskName) {
         "RIKOR L3P" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
         "ARZ103.2" = "https://nc.rikor.com/index.php/s/PqCq7gMMeMdgjxi/download"
         "RIKOR L5P" = "https://nc.rikor.com/index.php/s/YdEZY8NjMB8kXRA/download"
-        "RIKOR L3С" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
+        "RIKOR L3С RL-AC01" = "https://nc.rikor.com/index.php/s/CMxbqA7ximjEHC9/download"
         # Add more models as needed
     }
     
@@ -3007,3 +3007,4 @@ Update-ButtonContainerPadding
 })
 
 [void]$form.ShowDialog()
+
