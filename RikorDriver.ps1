@@ -919,40 +919,36 @@ function Start-BackgroundTask {
                                 $total = $e.TotalBytesToReceive
                                 $now = Get-Date
                                 
-                                # If total size is known, use percentage logic
-                                if ($total -gt 0) {
-                                    $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
-                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                    
-                                    # Update if percentage changed OR if 5 seconds passed (for slow connections)
-                                    if ($p -ne $state.LastMb -or ($now - $state.LastTime).TotalSeconds -ge 5) {
-                                        $state.LastMb = $p # Storing percent here for this branch
-                                        $state.LastTime = $now
-                                        
-                                        $totalMb = [math]::Round($total / 1MB, 1)
-                                        $t = $now.ToString("s")
-                                        
-                                        try {
-                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
-                                            [System.IO.File]::AppendAllText($LogFile, $msg)
-                                        } catch {}
-                                    }
-                                } 
-                                # If total size is UNKNOWN (Nextcloud), log MB downloaded every 2 seconds
-                                 else {
-                                     # Force update every 2 seconds or if it's the first update
-                                     if ($state.LastMb -eq -1 -or ($now - $state.LastTime).TotalSeconds -ge 2) {
+                                # ALWAYS log MB for debugging if total is 0 or -1 (Nextcloud often sends -1)
+                                if ($total -le 0) {
+                                     # Force update every 0.5 seconds or if it's the first update
+                                     if ($state.LastMb -eq -1 -or ($now - $state.LastTime).TotalSeconds -ge 0.5) {
                                          $state.LastTime = $now
                                          $mb = [math]::Round($e.BytesReceived / 1MB, 1)
                                          $state.LastMb = $mb
                                          
                                          $t = $now.ToString("s")
                                          try {
-                                             # Special format for unknown size: DL_UnknownSize:MB
                                              $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
                                              [System.IO.File]::AppendAllText($LogFile, $msg)
                                          } catch {}
                                      }
+                                 }
+                                 # If total size is known
+                                 else {
+                                    $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
+                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                    
+                                    if ($p -ne $state.LastMb -or ($now - $state.LastTime).TotalSeconds -ge 5) {
+                                        $state.LastMb = $p
+                                        $state.LastTime = $now
+                                        $totalMb = [math]::Round($total / 1MB, 1)
+                                        $t = $now.ToString("s")
+                                        try {
+                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
+                                            [System.IO.File]::AppendAllText($LogFile, $msg)
+                                        } catch {}
+                                    }
                                  }
                              }.GetNewClosure()
                             
