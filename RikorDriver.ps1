@@ -6,7 +6,6 @@
 param(
     [switch]$Silent,
     [string]$Task = "",
-    [string]$ProxyAddress = "",
     [string]$FilterClass = "",
     [string]$FilterManufacturer = ""
 )
@@ -39,9 +38,7 @@ if (!(Test-Path $LogBase)) { New-Item -ItemType Directory -Path $LogBase -Force 
 
 $global:CurrentJob = $null
 $global:CurrentTaskLog = $null
-$global:ProxySettings = @{ Enabled = $false; Address = "" }
 $global:FilterSettings = @{ Class = ""; Manufacturer = "" }
-$global:DarkModeEnabled = $false
 
 # -------------------------
 # Settings Management
@@ -50,24 +47,17 @@ function Import-Settings {
     if (Test-Path $SettingsFile) {
         try {
             $settings = Get-Content -Path $SettingsFile -Raw | ConvertFrom-Json
-            if ($settings.Proxy) {
-                $global:ProxySettings.Enabled = $settings.Proxy.Enabled
-                $global:ProxySettings.Address = $settings.Proxy.Address
-            }
             if ($settings.Filters) {
                 $global:FilterSettings.Class = $settings.Filters.Class
                 $global:FilterSettings.Manufacturer = $settings.Filters.Manufacturer
             }
-            if ($null -ne $settings.DarkMode) { $global:DarkModeEnabled = $settings.DarkMode }
         } catch {}
     }
 }
 
 function Export-Settings {
     $settings = @{
-        Proxy = $global:ProxySettings
         Filters = $global:FilterSettings
-        DarkMode = $global:DarkModeEnabled
     }
     $settings | ConvertTo-Json -Depth 3 | Set-Content -Path $SettingsFile -Encoding UTF8
 }
@@ -75,10 +65,6 @@ function Export-Settings {
 Import-Settings
 
 # Apply command-line parameters
-if ($ProxyAddress) {
-    $global:ProxySettings.Enabled = $true
-    $global:ProxySettings.Address = $ProxyAddress
-}
 if ($FilterClass) { $global:FilterSettings.Class = $FilterClass }
 if ($FilterManufacturer) { $global:FilterSettings.Manufacturer = $FilterManufacturer }
 
@@ -133,30 +119,7 @@ function Get-UpdateHistory {
     return @()
 }
 
-# -------------------------
-# Network Proxy Support
-# -------------------------
-function Set-ProxySettings {
-    param([string]$ProxyAddr, [bool]$Enable)
-    $global:ProxySettings.Address = $ProxyAddr
-    $global:ProxySettings.Enabled = $Enable
-    
-    if ($Enable -and $ProxyAddr) {
-        [System.Net.WebRequest]::DefaultWebProxy = New-Object System.Net.WebProxy($ProxyAddr, $true)
-        $env:HTTP_PROXY = $ProxyAddr
-        $env:HTTPS_PROXY = $ProxyAddr
-    } else {
-        [System.Net.WebRequest]::DefaultWebProxy = [System.Net.WebRequest]::GetSystemWebProxy()
-        Remove-Item Env:\HTTP_PROXY -ErrorAction SilentlyContinue
-        Remove-Item Env:\HTTPS_PROXY -ErrorAction SilentlyContinue
-    }
-    Export-Settings
-}
 
-# Apply proxy if configured
-if ($global:ProxySettings.Enabled -and $global:ProxySettings.Address) {
-    Set-ProxySettings -ProxyAddr $global:ProxySettings.Address -Enable $true
-}
 
 # -------------------------
 # System Restore Point
@@ -461,23 +424,6 @@ function Add-StatusUI {
 # Modern UI Color Scheme
 # -------------------------
 $global:UIColors = @{
-    # Dark Theme
-    Dark = @{
-        Background = [System.Drawing.Color]::FromArgb(18, 18, 18)
-        Surface = [System.Drawing.Color]::FromArgb(32, 32, 32)
-        SurfaceHover = [System.Drawing.Color]::FromArgb(48, 48, 48)
-        Primary = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
-        PrimaryHover = [System.Drawing.Color]::FromArgb(97, 93, 210)
-        Secondary = [System.Drawing.Color]::FromArgb(50, 50, 50)
-        Text = [System.Drawing.Color]::FromArgb(245, 245, 245)
-        TextSecondary = [System.Drawing.Color]::FromArgb(160, 160, 160)
-        Border = [System.Drawing.Color]::FromArgb(40, 40, 40)
-        Success = [System.Drawing.Color]::FromArgb(76, 175, 80)
-        Warning = [System.Drawing.Color]::FromArgb(255, 152, 0)
-        Error = [System.Drawing.Color]::FromArgb(244, 67, 54)
-        MenuBar = [System.Drawing.Color]::FromArgb(24, 24, 24)
-        StatusBar = [System.Drawing.Color]::FromArgb(77, 73, 190) # Pantone 2368 C
-    }
     # Light Theme
     Light = @{
         Background = [System.Drawing.Color]::FromArgb(250, 250, 252) # Cooler white
@@ -498,7 +444,6 @@ $global:UIColors = @{
 }
 
 function Get-ThemeColors {
-    if ($global:DarkModeEnabled) { return $global:UIColors.Dark }
     return $global:UIColors.Light
 }
 
@@ -573,17 +518,16 @@ $menuTools.DropDownItems.AddRange(@($menuRestorePoint, $menuSchedule, $menuFilte
 # View Menu
 $menuView = New-Object Windows.Forms.ToolStripMenuItem
 $menuView.Text = "&View"
-$menuToggleTheme = New-Object Windows.Forms.ToolStripMenuItem
-$menuToggleTheme.Text = "Dark Mode"
-$menuToggleTheme.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::T
-$menuView.DropDownItems.AddRange(@($menuToggleTheme))
+# Theme toggle removed
+# $menuView.DropDownItems.AddRange(@($menuToggleTheme))
 
 # Settings Menu
 $menuSettingsTop = New-Object Windows.Forms.ToolStripMenuItem
 $menuSettingsTop.Text = "&Settings"
 $menuSettingsTop.ShortcutKeys = [System.Windows.Forms.Keys]::Control -bor [System.Windows.Forms.Keys]::Oemcomma
 
-$menuStrip.Items.AddRange(@($menuFile, $menuActions, $menuTools, $menuView, $menuSettingsTop))
+# View Menu removed from strip as it is empty
+$menuStrip.Items.AddRange(@($menuFile, $menuActions, $menuTools, $menuSettingsTop))
 
 # -------------------------
 # Toolbar Panel
@@ -1484,70 +1428,23 @@ function Show-SettingsDialog {
     $settingsForm.Controls.Add($contentPanel)
     $settingsForm.Controls.Add($header)
     
-    $lblProxySection = New-Object Windows.Forms.Label
-    $lblProxySection.Text = "Network Proxy"
-    $lblProxySection.Location = '0,5'
-    $lblProxySection.Size = '150,20'
-    $lblProxySection.ForeColor = $colors.Primary
-    $contentPanel.Controls.Add($lblProxySection)
-    
-    $lblProxy = New-Object Windows.Forms.Label
-    $lblProxy.Text = "Proxy Address:"
-    $lblProxy.Location = '0,35'
-    $lblProxy.Size = '130,25'
-    $lblProxy.ForeColor = $colors.Text
-    $contentPanel.Controls.Add($lblProxy)
-    
-    $txtProxy = New-Object Windows.Forms.TextBox
-    $txtProxy.Location = '140,33'
-    $txtProxy.Size = '220,28'
-    $txtProxy.Text = $global:ProxySettings.Address
-    $contentPanel.Controls.Add($txtProxy)
-    
-    $chkProxy = New-Object Windows.Forms.CheckBox
-    $chkProxy.Text = "Enable"
-    $chkProxy.Location = '370,33'
-    $chkProxy.Size = '80,25'
-    $chkProxy.Checked = $global:ProxySettings.Enabled
-    $chkProxy.ForeColor = $colors.Text
-    $contentPanel.Controls.Add($chkProxy)
-    
-    $btnApplyProxy = New-Object Windows.Forms.Button
-    $btnApplyProxy.Text = "Apply"
-    $btnApplyProxy.Location = '140,70'
-    $btnApplyProxy.Size = '110,34'
-    $btnApplyProxy.FlatStyle = 'Flat'
-    $btnApplyProxy.BackColor = $colors.Primary
-    $btnApplyProxy.ForeColor = [System.Drawing.Color]::White
-    $btnApplyProxy.Add_Click({
-        Set-ProxySettings -ProxyAddr $txtProxy.Text -Enable $chkProxy.Checked
-        Add-StatusUI $form $status "Proxy settings updated."
-    })
-    $contentPanel.Controls.Add($btnApplyProxy)
-    
-    $separator = New-Object Windows.Forms.Label
-    $separator.Location = '0,120'
-    $separator.Size = '440,1'
-    $separator.BackColor = $colors.Border
-    $contentPanel.Controls.Add($separator)
-    
     $lblInfoSection = New-Object Windows.Forms.Label
     $lblInfoSection.Text = "Application Info"
-    $lblInfoSection.Location = '0,130'
+    $lblInfoSection.Location = '0,10'
     $lblInfoSection.Size = '150,20'
     $lblInfoSection.ForeColor = $colors.Primary
     $contentPanel.Controls.Add($lblInfoSection)
     
     $lblInfo = New-Object Windows.Forms.Label
     $lblInfo.Text = "Logs: $LogBase"
-    $lblInfo.Location = '0,155'
+    $lblInfo.Location = '0,35'
     $lblInfo.Size = '440,20'
     $lblInfo.ForeColor = $colors.TextSecondary
     $contentPanel.Controls.Add($lblInfo)
     
     $btnClose = New-Object Windows.Forms.Button
     $btnClose.Text = "Close"
-    $btnClose.Location = '170,210'
+    $btnClose.Location = '170,100'
     $btnClose.Size = '110,36'
     $btnClose.FlatStyle = 'Flat'
     $btnClose.BackColor = $colors.Secondary
@@ -1625,7 +1522,8 @@ function Invoke-OpenLogs {
 }
 
 function Invoke-ToggleTheme {
-    Set-Theme -Dark (-not $global:DarkModeEnabled)
+    # Theme toggling disabled by user request
+    Add-StatusUI $form $status "Theme switching is disabled."
 }
 
 function Invoke-CreateRestorePoint {
@@ -1656,7 +1554,7 @@ $menuBackup.Add_Click({ Invoke-BackupDrivers })
 $menuInstall.Add_Click({ Invoke-InstallDrivers })
 $menuCancel.Add_Click({ Invoke-CancelTask })
 $menuOpenLogs.Add_Click({ Invoke-OpenLogs })
-$menuToggleTheme.Add_Click({ Invoke-ToggleTheme })
+# $menuToggleTheme.Add_Click({ Invoke-ToggleTheme })
 $menuRestorePoint.Add_Click({ Invoke-CreateRestorePoint })
 $menuSchedule.Add_Click({ Show-ScheduleDialog })
 $menuHistory.Add_Click({ Show-HistoryDialog })
@@ -1674,7 +1572,8 @@ $form.Add_FormClosing({
     } catch {}
 })
 
-Set-Theme -Dark $global:DarkModeEnabled
+$global:DarkModeEnabled = $false
+Set-Theme -Dark $false
     
 $form.Topmost = $false
 $form.Add_Shown({
