@@ -933,13 +933,14 @@ function Start-BackgroundTask {
                                 # We can't easily run a timer in parallel in this scope structure, 
                                 # so we will fallback to the event approach but SIMPLIFIED.
                                 
-                                # RE-IMPLEMENTATION: Simple Event without complex state logic
+                                 # RE-IMPLEMENTATION: Simple Event without complex state logic
                                 $evt = {
                                     param($sender, $e)
                                     # Always log every ~1MB or so to ensure output
                                     $mb = [math]::Round($e.BytesReceived / 1MB, 1)
                                     $total = $e.TotalBytesToReceive
                                     
+                                    # Write to console directly using Host (for immediate feedback) and file
                                     # Simple throttling: Log only if MB changed significantly (0.5MB steps)
                                     if (-not $script:LastLoggedMB -or ($mb - $script:LastLoggedMB) -gt 0.5) {
                                         $script:LastLoggedMB = $mb
@@ -954,7 +955,9 @@ function Start-BackgroundTask {
                                             $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
                                         }
                                         
-                                        try { [System.IO.File]::AppendAllText($LogFile, $msg) } catch {}
+                                        try { 
+                                            [System.IO.File]::AppendAllText($LogFile, $msg) 
+                                        } catch {}
                                     }
                                 }.GetNewClosure()
                                 
