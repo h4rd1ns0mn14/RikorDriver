@@ -904,63 +904,70 @@ function Start-BackgroundTask {
                         # Define helper function for download with progress
                         function Download-WithProgress {
                             param([string]$Url, [string]$Path, [string]$LogFile)
-                            $wc = New-Object System.Net.WebClient
-                            $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                             
-                            # State object to track progress and timestamps
-                            $state = @{ 
-                                LastMb = -1 
-                                LastTime = [DateTime]::MinValue
-                            }
-                            
-                            # Use GetNewClosure to ensure $LogFile and $state are captured
-                            $evt = {
-                                param($sender, $e)
-                                $total = $e.TotalBytesToReceive
-                                $now = Get-Date
+                            try {
+                                $wc = New-Object System.Net.WebClient
+                                $wc.Headers.Add("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36")
                                 
-                                # ALWAYS log MB for debugging if total is 0 or -1 (Nextcloud often sends -1)
-                                if ($total -le 0) {
-                                     # Force update every 0.5 seconds or if it's the first update
-                                     if ($state.LastMb -eq -1 -or ($now - $state.LastTime).TotalSeconds -ge 0.5) {
-                                         $state.LastTime = $now
-                                         $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                         $state.LastMb = $mb
-                                         
-                                         $t = $now.ToString("s")
-                                         try {
-                                             $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
-                                             [System.IO.File]::AppendAllText($LogFile, $msg)
-                                         } catch {}
-                                     }
-                                 }
-                                 # If total size is known
-                                 else {
-                                    $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
-                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
-                                    
-                                    if ($p -ne $state.LastMb -or ($now - $state.LastTime).TotalSeconds -ge 5) {
-                                        $state.LastMb = $p
-                                        $state.LastTime = $now
-                                        $totalMb = [math]::Round($total / 1MB, 1)
-                                        $t = $now.ToString("s")
+                                # Use a Timer instead of Event for more reliable logging if events fail
+                                $timer = New-Object System.Timers.Timer
+                                $timer.Interval = 1000 # 1 second
+                                $timer.AutoReset = $true
+                                
+                                # Create a file stream to monitor size
+                                $monitoringAction = {
+                                    if (Test-Path $Path) {
                                         try {
-                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
+                                            $currentBytes = (Get-Item $Path).Length
+                                            $mb = [math]::Round($currentBytes / 1MB, 1)
+                                            $t = (Get-Date).ToString("s")
+                                            $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
                                             [System.IO.File]::AppendAllText($LogFile, $msg)
                                         } catch {}
                                     }
-                                 }
-                             }.GetNewClosure()
-                            
-                            $wc.add_DownloadProgressChanged($evt)
-                            
-                            # Force initial message so user knows it started
-                            $t = (Get-Date).ToString("s")
-                            $msg = "{0} - Download started...`r`n" -f $t
-                            try { [System.IO.File]::AppendAllText($LogFile, $msg) } catch {}
-                            
-                            $wc.DownloadFile($Url, $Path)
-                            $wc.Dispose()
+                                }
+                                
+                                $timerAction = { 
+                                    Register-ObjectEvent -InputObject $timer -EventName Elapsed -SourceIdentifier "DownloadTimer" -Action $monitoringAction | Out-Null 
+                                }
+                                # We can't easily run a timer in parallel in this scope structure, 
+                                # so we will fallback to the event approach but SIMPLIFIED.
+                                
+                                # RE-IMPLEMENTATION: Simple Event without complex state logic
+                                $evt = {
+                                    param($sender, $e)
+                                    # Always log every ~1MB or so to ensure output
+                                    $mb = [math]::Round($e.BytesReceived / 1MB, 1)
+                                    $total = $e.TotalBytesToReceive
+                                    
+                                    # Simple throttling: Log only if MB changed significantly (0.5MB steps)
+                                    if (-not $script:LastLoggedMB -or ($mb - $script:LastLoggedMB) -gt 0.5) {
+                                        $script:LastLoggedMB = $mb
+                                        $t = (Get-Date).ToString("s")
+                                        
+                                        $msg = ""
+                                        if ($total -gt 0) {
+                                            $p = [math]::Round(($e.BytesReceived / $total) * 100, 0)
+                                            $totalMb = [math]::Round($total / 1MB, 1)
+                                            $msg = "{0} - DL_PROGRESS:{1}:{2} MB/{3} MB`r`n" -f $t, $p, $mb, $totalMb
+                                        } else {
+                                            $msg = "{0} - Downloaded: {1} MB...`r`n" -f $t, $mb
+                                        }
+                                        
+                                        try { [System.IO.File]::AppendAllText($LogFile, $msg) } catch {}
+                                    }
+                                }.GetNewClosure()
+                                
+                                $wc.add_DownloadProgressChanged($evt)
+                                
+                                # Force initial message
+                                $t = (Get-Date).ToString("s")
+                                try { [System.IO.File]::AppendAllText($LogFile, "$t - Download started...`r`n") } catch {}
+                                
+                                $wc.DownloadFile($Url, $Path)
+                            } finally {
+                                if ($wc) { $wc.Dispose() }
+                            }
                         }
                         
                         L "Starting download from Rikor Server..."
